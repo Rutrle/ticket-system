@@ -5,6 +5,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
+    #testing view, to be deleted
     return render_template('base.html')
 
 @app.route('/home')
