@@ -1,7 +1,5 @@
-from flask import Flask, render_template
-
-app = Flask(__name__)
-
+from smart_ticket import app
+from flask import render_template
 
 @app.route('/')
 def index():
@@ -16,6 +14,3 @@ def home_page():
 @app.route('/about')
 def about_page():
     return render_template('about.html')
-
-
-app.run(debug=True)
