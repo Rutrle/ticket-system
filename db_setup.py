@@ -3,7 +3,7 @@ from datetime import datetime
 from smart_ticket.models import  User, Ticket
 
 '''
-script for deleting and recreating the database and filling it in with some data
+script for deleting and recreating the database and populating it in with some data
 '''
 
 
