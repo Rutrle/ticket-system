@@ -10,6 +10,7 @@ Flask = "^2.0.2"
 Flask-SQLAlchemy = "^2.5.1"
 Flask-Bcrypt = "^0.7.1"
 WTForms = "^3.0.1"
+Flask-WTF = "^1.0.0"
 
 [tool.poetry.dev-dependencies]
 

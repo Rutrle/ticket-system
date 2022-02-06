@@ -1,5 +1,8 @@
-from smart_ticket import app
-from flask import render_template
+from smart_ticket import app, db
+from flask import render_template, request
+from smart_ticket.forms import RegisterForm
+from smart_ticket.models import User, Ticket
+from datetime import datetime
 
 @app.route('/')
 def index():
@@ -14,3 +17,20 @@ def home_page():
 @app.route('/about')
 def about_page():
     return render_template('about.html')
+
+@app.route('/register', methods=['GET','POST'])
+def registration_page():
+    form = RegisterForm()
+    if request.method == 'POST':
+        print(form.username)
+        new_user = User(
+            username = form.username.data,
+            creation_time = datetime.now(),
+            email=form.email.data,
+            password_hash = form.password1.data
+        )
+        db.session.add(new_user)
+        db.session.commit()
+
+
+    return render_template('registration.html', form=form)
