@@ -1,4 +1,4 @@
-from smart_ticket import db
+from smart_ticket import db, bcrypt
 
 
 class User(db.Model):
@@ -11,6 +11,14 @@ class User(db.Model):
 
     def __repr__(self) -> str:
         return f" User {self.username}"
+
+    @property
+    def password(self):
+        return self.password_hash
+
+    @password.setter
+    def password(self, plain_text_password):
+        self.password_hash= bcrypt.generate_password_hash(plain_text_password).decode('utf-8')
 
 class Ticket(db.Model):
     id = db.Column(db.Integer(),primary_key = True)

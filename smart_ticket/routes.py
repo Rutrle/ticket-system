@@ -27,7 +27,7 @@ def registration_page():
             username = form.username.data,
             creation_time = datetime.now(),
             email=form.email.data,
-            password_hash = form.password1.data
+            password = form.password1.data
         )
         db.session.add(new_user)
         db.session.commit()
