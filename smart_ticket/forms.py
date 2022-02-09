@@ -20,3 +20,9 @@ class RegisterForm(FlaskForm):
         email_address = User.query.filter_by(email=checked_email.data).first()
         if email_address:
             raise ValidationError(f"Email address {checked_email.data} already exists! Please try different one")
+
+
+class OpenTicketForm(FlaskForm):
+    subject = StringField(label = 'Subject')
+    issue_text = TextAreaField(label='Problem description')
+    submit = SubmitField(label = 'Submit ticket')
