@@ -31,7 +31,7 @@
           </ul>
           <ul class="navbar-nav ml-auto"> 
             <li class="nav-item">
-              <a class="nav-link" href="#">Login</a>
+              <a class="nav-link" href="{{ url_for('login_page') }}">Login</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{{ url_for('registration_page') }}">Register</a>
@@ -46,7 +46,6 @@
             <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
               {{ message }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
                 </button>  
             </div>
         {% endfor %}

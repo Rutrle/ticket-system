@@ -1,8 +1,9 @@
 from smart_ticket import app, db
-from flask import render_template, request, flash
-from smart_ticket.forms import RegisterForm, OpenTicketForm
+from flask import redirect, render_template, request, flash, url_for
+from smart_ticket.forms import RegisterForm, LoginForm, OpenTicketForm
 from smart_ticket.models import User, Ticket
 from datetime import datetime
+from flask_login import login_user
 
 @app.route('/')
 def index():
@@ -36,6 +37,22 @@ def registration_page():
             flash(f'There was an error in User creation: {err_msg[0]}', category='danger')
 
     return render_template('registration.html', form=form)
+
+@app.route('/login', methods=['GET','POST'])
+def login_page():
+    form = LoginForm()
+
+    if request.method == 'POST' and form.validate():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user:
+            if user.check_attempted_password(form.password.data):
+                login_user(user)
+                flash("You have succesfully logged in!", category='success')
+                return redirect(url_for('home_page'))   ###### temporary, needs to change!
+        else:
+            flash('Wrong Username or password! Please try again.', category='danger')
+
+    return render_template('login.html', form=form)
 
 @app.route('/submit_ticket', methods=['GET','POST'])
 def create_ticket_page():

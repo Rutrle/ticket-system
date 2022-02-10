@@ -21,6 +21,11 @@ class RegisterForm(FlaskForm):
         if email_address:
             raise ValidationError(f"Email address {checked_email.data} already exists! Please try different one")
 
+class LoginForm(FlaskForm):
+    username = StringField(label = "Username")
+    password = PasswordField(label = "Password")
+    submit = SubmitField(label = 'Login')
+
 
 class OpenTicketForm(FlaskForm):
     subject = StringField(label = 'Subject')
