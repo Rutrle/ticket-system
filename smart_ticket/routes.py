@@ -3,10 +3,10 @@ from flask import redirect, render_template, request, flash, url_for
 from smart_ticket.forms import RegisterForm, LoginForm, OpenTicketForm
 from smart_ticket.models import User, Ticket
 from datetime import datetime
-from flask_login import login_user
+from flask_login import login_user, logout_user, login_required
 
 @app.route('/')
-def index():
+def index_():
     #testing view, to be deleted
     return render_template('base.html')
 
@@ -54,6 +54,15 @@ def login_page():
 
     return render_template('login.html', form=form)
 
+
+@app.route('/logout')
+@login_required
+def logout_page():
+    logout_user()
+    flash('You have logged out. Thanks for visiting!', category='info')
+    return redirect(url_for('home_page'))
+
+
 @app.route('/submit_ticket', methods=['GET','POST'])
 def create_ticket_page():
     form = OpenTicketForm()
@@ -71,3 +80,4 @@ def create_ticket_page():
             flash(f'There was an error in User creation: {err_msg[0]}', category='danger')
 
     return render_template('create_ticket.html', form=form)
+
