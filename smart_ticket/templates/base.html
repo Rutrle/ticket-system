@@ -8,7 +8,8 @@
     <link rel = "icon" href = "static/gear_icon.png" type = "image/x-icon">
    
     <title>
-      {% block title %} 
+      {% block title %}
+      Smart Ticket
       {% endblock %}
     </title>
 
@@ -23,16 +24,21 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
-            </li>
-            <li class="nav-item">
               <a class="nav-link active" href="{{ url_for('about_page') }}">About</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{{ url_for('create_ticket_page')}}">New ticket</a>
+            </li>
+            {% if current_user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link active" href="{{ url_for('ticket_list_page') }}">Unresolved tickets</a>
+            </li>
+            {% endif %}
           </ul>
           <ul class="navbar-nav ml-auto"> 
             {% if current_user.is_authenticated %}
             <li class="nav-item">
-              <a class="nav-link" >Welcome, {{ current_user.username }}</a>
+              <a class="nav-link">Welcome, {{ current_user.username }}</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{{ url_for('logout_page') }}">Logout</a>

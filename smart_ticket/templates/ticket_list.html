@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Smart Ticket - ticket list
+{% endblock title %}
+
+{% block content %}
+
+<div class="container">
+    <h2>Unresolved Tickets</h2>
+    <br>
+    <table class="table table-hover table-dark">
+        <thead>
+            <tr>
+                <!-- scope tag has no visual function, but can be used by screen readers, bots and so on-->
+                <th scope="col">ID</th>
+                <th scope="col">Subject</th>
+                <th scope="col">Creation time</th>
+                <th scope="col">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ticket in tickets %}
+            <tr>
+                <td>{{ticket.id}}</td>
+                <td>{{ticket.subject}}</td>
+                <td>{{ticket.creation_time}}</td>
+                <td style = "text-align:justify">{{ticket.issue_description}} $</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+
+{% endblock content %}
+

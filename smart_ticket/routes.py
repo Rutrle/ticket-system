@@ -81,3 +81,11 @@ def create_ticket_page():
 
     return render_template('create_ticket.html', form=form)
 
+@app.route('/ticket_list')
+@login_required
+def ticket_list_page():
+    unresolved_tickets = Ticket.query.filter_by(is_solved = False)
+    print(unresolved_tickets)
+    for ticket in unresolved_tickets:
+        print(ticket)
+    return render_template('ticket_list.html', tickets = unresolved_tickets)
