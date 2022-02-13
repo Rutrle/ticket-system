@@ -1,6 +1,8 @@
+from email.policy import default
 from smart_ticket import db, bcrypt
 from smart_ticket import login_manager
 from flask_login import UserMixin
+from datetime import datetime
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -8,7 +10,7 @@ def load_user(user_id):
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer(),primary_key = True)
-    creation_time = db.Column(db.DateTime(),nullable=False)
+    creation_time = db.Column(db.DateTime(),nullable=False, default = datetime.now())
     username = db.Column(db.String(length = 30), nullable=False, unique = True)
     email = db.Column(db.String(length = 30), nullable=False, unique = True)
     password_hash = db.Column(db.String(length = 30), nullable=False, unique = True)
@@ -33,7 +35,7 @@ class Ticket(db.Model):
     id = db.Column(db.Integer(),primary_key = True)
     subject = db.Column(db.String(length=30), nullable=False)
     issue_description = db.Column(db.Text(length=2500))
-    creation_time = db.Column(db.DateTime(),nullable=False)
+    creation_time = db.Column(db.DateTime(),nullable=False, default = datetime.now())
     author_id = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=True)
     is_solved = db.Column(db.Boolean(), nullable=False)
 

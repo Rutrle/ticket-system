@@ -15,6 +15,7 @@
                 <!-- scope tag has no visual function, but can be used by screen readers, bots and so on-->
                 <th scope="col">ID</th>
                 <th scope="col">Subject</th>
+                <th scope="col">Author</th>
                 <th scope="col">Creation time</th>
                 <th scope="col">Description</th>
             </tr>
@@ -24,8 +25,9 @@
             <tr>
                 <td>{{ticket.id}}</td>
                 <td>{{ticket.subject}}</td>
-                <td>{{ticket.creation_time}}</td>
-                <td style = "text-align:justify">{{ticket.issue_description}} $</td>
+                <td>{{ticket.author.username}}</td>
+                <td>{{ticket.creation_time |format_time}}</td>
+                <td style = "text-align:justify">{{ticket.issue_description}}</td>
             </tr>
             {% endfor %}
         </tbody>

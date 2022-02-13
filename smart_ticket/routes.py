@@ -1,9 +1,8 @@
 from smart_ticket import app, db
-from flask import redirect, render_template, request, flash, url_for
+from flask import redirect, render_template, request, flash, session, url_for
 from smart_ticket.forms import RegisterForm, LoginForm, OpenTicketForm
 from smart_ticket.models import User, Ticket
-from datetime import datetime
-from flask_login import login_user, logout_user, login_required
+from flask_login import current_user, login_user, logout_user, login_required
 
 @app.route('/')
 def index_():
@@ -25,7 +24,6 @@ def registration_page():
     if request.method == 'POST' and form.validate():
         new_user = User(
             username = form.username.data,
-            creation_time = datetime.now(),
             email=form.email.data,
             password = form.password1.data
         )
@@ -67,17 +65,22 @@ def logout_page():
 def create_ticket_page():
     form = OpenTicketForm()
     if request.method == 'POST' and form.validate():
+        
         new_ticket = Ticket(
             subject = form.subject.data,
-            creation_time = datetime.now(),
             issue_description=form.issue_text.data,
             is_solved =  False
         )
+
+        if current_user.is_authenticated:
+            new_ticket.author_id = current_user.id
+
         db.session.add(new_ticket)
         db.session.commit()
+        flash(f"ticket submitted succesfully", category="success")
     if form.errors !={}:
         for err_msg in form.errors.values():
-            flash(f'There was an error in User creation: {err_msg[0]}', category='danger')
+            flash(f'There was an error in submiting a ticket: {err_msg[0]}', category='danger')
 
     return render_template('create_ticket.html', form=form)
 
@@ -85,7 +88,13 @@ def create_ticket_page():
 @login_required
 def ticket_list_page():
     unresolved_tickets = Ticket.query.filter_by(is_solved = False)
-    print(unresolved_tickets)
     for ticket in unresolved_tickets:
-        print(ticket)
+        if ticket.author:
+            print(ticket.author.username)
     return render_template('ticket_list.html', tickets = unresolved_tickets)
+
+
+
+@app.template_filter('format_time')
+def format_time(timestamp):
+    return timestamp.strftime("%m/%d/%Y, %H:%M")
