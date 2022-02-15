@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Smart Ticket Ticket {{ ticket.id }}
+{% endblock title %}
+
+{% block content %}
+
+<div class = "container bg-dark m-5 p-5 mx-auto">
+    <h2>{{ticket.subject}}</h2>
+    <hr>
+    {% if ticket.is_solved %}
+    <h4>Closed<h4>
+    <p><strong>Solved by:</strong></p>
+    <p><strong>Solved on</strong></p>
+    {% endif %}
+    <p><strong> Posted on: </strong>{{ticket.creation_time|format_time}}</p>
+    {% if ticket.author.username|length  %}
+    <p><strong>Posted by: </strong>{{ticket.author.username}}</p>
+    {%  else %}
+    <p><strong>Posted by: Anonymous user</strong></p>
+    {% endif %}
+    <p><strong>Problem description:</strong></p>
+    <div class ="container border-white">
+        <p>{{ticket.issue_description}}</p>
+    </div>
+</div>
+
+{% endblock content %}

@@ -13,7 +13,7 @@ class User(db.Model, UserMixin):
     creation_time = db.Column(db.DateTime(),nullable=False, default = datetime.now())
     username = db.Column(db.String(length = 30), nullable=False, unique = True)
     email = db.Column(db.String(length = 30), nullable=False, unique = True)
-    password_hash = db.Column(db.String(length = 30), nullable=False, unique = True)
+    password_hash = db.Column(db.String(length = 50), nullable=False, unique = True)
     created_tickets = db.relationship('Ticket',backref='author', lazy=True)
 
     def __repr__(self) -> str:
@@ -37,7 +37,17 @@ class Ticket(db.Model):
     issue_description = db.Column(db.Text(length=2500))
     creation_time = db.Column(db.DateTime(),nullable=False, default = datetime.now())
     author_id = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=True)
-    is_solved = db.Column(db.Boolean(), nullable=False)
+    is_solved = db.Column(db.Boolean(), nullable=False, default = False)
+    log_messages = db.relationship('TicketLogMessage',backref='ticket', lazy=True)
 
     def __repr__(self) -> str:
         return f" Ticket No. {self.id}, : {self.subject}"
+
+
+
+class TicketLogMessage(db.Model):
+    id = db.Column(db.Integer(),primary_key = True)
+    posted_time = db.Column(db.DateTime(),nullable=False, default = datetime.now())
+    ticket_id = db.Column(db.Integer(), db.ForeignKey('ticket.id'), nullable=False)
+    message_text = db.Column(db.Text(length=1500))
+    

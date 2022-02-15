@@ -39,10 +39,10 @@ db.session.commit()
 u=User.query.filter_by(username='User3').first()
 print(u)
 
-tickets.append(Ticket(subject='Something broke',issue_description = "something has broken, it's not my fault",is_solved=False))
-tickets.append(Ticket(subject='Something else broke',issue_description = long_text, is_solved=False))
-tickets.append(Ticket(subject='lorem ipsum',issue_description = longer_text,is_solved=False))
-tickets.append(Ticket(subject='owned ticket',issue_description = "I belong to user3",author_id =u.id ,is_solved=False))
+tickets.append(Ticket(subject='Something broke',issue_description = "something has broken, it's not my fault"))
+tickets.append(Ticket(subject='Something else broke',issue_description = long_text))
+tickets.append(Ticket(subject='lorem ipsum',issue_description = longer_text))
+tickets.append(Ticket(subject='owned ticket',issue_description = "I belong to user3",author_id =u.id ))
 
 for ticket in tickets:
     db.session.add(ticket)

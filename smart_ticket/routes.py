@@ -69,7 +69,6 @@ def create_ticket_page():
         new_ticket = Ticket(
             subject = form.subject.data,
             issue_description=form.issue_text.data,
-            is_solved =  False
         )
 
         if current_user.is_authenticated:
@@ -93,6 +92,13 @@ def ticket_list_page():
             print(ticket.author.username)
     return render_template('ticket_list.html', tickets = unresolved_tickets)
 
+@app.route('/ticket/<int:id>')
+@login_required
+def ticket_detail_page(id:int):
+
+    ticket = Ticket.query.get_or_404(id)
+
+    return render_template('ticket_detail.html', ticket=ticket)
 
 
 @app.template_filter('format_time')
