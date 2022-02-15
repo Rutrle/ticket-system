@@ -31,7 +31,7 @@ tickets=[]
 users.append(User(username='User1', email='user1@mail.com',password='password'))
 users.append(User(username='User2', email='user2@mail.com',password='password2'))
 users.append(User(username='User3', email='user3@mail.com',password='password3'))
-
+users.append(User(username='Josef Smith', email='smith3@mail.com',password='password'))
 for user in users:
     db.session.add(user)
 db.session.commit()
@@ -48,6 +48,9 @@ for ticket in tickets:
     db.session.add(ticket)
 
 db.session.commit()
+
+
+
 
 t = Ticket.query.filter_by(subject='owned ticket').first()
 print(t)

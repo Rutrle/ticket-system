@@ -1,7 +1,7 @@
 from smart_ticket import app, db
 from flask import redirect, render_template, request, flash, session, url_for
 from smart_ticket.forms import RegisterForm, LoginForm, OpenTicketForm
-from smart_ticket.models import User, Ticket
+from smart_ticket.models import User, Ticket, TicketLogMessage
 from flask_login import current_user, login_user, logout_user, login_required
 
 @app.route('/')
@@ -76,7 +76,10 @@ def create_ticket_page():
 
         db.session.add(new_ticket)
         db.session.commit()
+        creation_log_msg = TicketLogMessage(ticket_id = new_ticket.id, message_text = "Ticket opened")
         flash(f"ticket submitted succesfully", category="success")
+        db.session.add(creation_log_msg)
+        db.session.commit()        
     if form.errors !={}:
         for err_msg in form.errors.values():
             flash(f'There was an error in submiting a ticket: {err_msg[0]}', category='danger')
@@ -86,10 +89,8 @@ def create_ticket_page():
 @app.route('/ticket_list')
 @login_required
 def ticket_list_page():
-    unresolved_tickets = Ticket.query.filter_by(is_solved = False)
-    for ticket in unresolved_tickets:
-        if ticket.author:
-            print(ticket.author.username)
+    unresolved_tickets = Ticket.query.filter_by(is_solved = False).order_by(Ticket.creation_time)
+
     return render_template('ticket_list.html', tickets = unresolved_tickets)
 
 @app.route('/ticket/<int:id>')

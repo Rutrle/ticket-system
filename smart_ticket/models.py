@@ -1,4 +1,3 @@
-from email.policy import default
 from smart_ticket import db, bcrypt
 from smart_ticket import login_manager
 from flask_login import UserMixin
@@ -42,12 +41,15 @@ class Ticket(db.Model):
 
     def __repr__(self) -> str:
         return f" Ticket No. {self.id}, : {self.subject}"
-
+    
 
 
 class TicketLogMessage(db.Model):
     id = db.Column(db.Integer(),primary_key = True)
+    author_id = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=True)
     posted_time = db.Column(db.DateTime(),nullable=False, default = datetime.now())
     ticket_id = db.Column(db.Integer(), db.ForeignKey('ticket.id'), nullable=False)
     message_text = db.Column(db.Text(length=1500))
     
+    def __repr__(self) -> str:
+        return f" Ticket log message {self.id}, for ticket {self.ticket.subject}"

@@ -31,3 +31,11 @@ class OpenTicketForm(FlaskForm):
     subject = StringField(label = 'Subject')
     issue_text = TextAreaField(label='Problem description')
     submit = SubmitField(label = 'Submit ticket')
+
+class NewTicketLogMessage(FlaskForm):
+    message_text = StringField(label="Update")
+    submit = SubmitField(label = 'Submit update')
+
+class CloseTicketLogMessage(FlaskForm):
+    message_text = StringField(label="Problem solution/answer")
+    submit = SubmitField(label = 'Close ticket')
