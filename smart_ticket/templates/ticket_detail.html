@@ -21,7 +21,7 @@ Smart Ticket Ticket {{ ticket.id }}
     <p><strong>Posted by: Anonymous user</strong></p>
     {% endif %}
     <p><strong>Problem description:</strong></p>
-    <div class ="container border-white">
+    <div class ="container">
         <p>{{ticket.issue_description}}</p>
     </div>
 
@@ -44,25 +44,25 @@ Smart Ticket Ticket {{ ticket.id }}
                 {% endfor %}
             </tbody>
         </table>
+    </div>
+    <row class="bg-dark container">
+        <div class=" bg-dark col-6 w-50" >
+            <form method="POST">
+                <h3>Write an update</h3>
+
+                {{form.hidden_tag()}}
+
+                {{form.message_text(class="form-control w-10",placeholder="Issue update")}}
+                <br>
+
+                {{form.submit(class="btn btn-lg btn-block btn-primary")}}
+                <br>
+            </form>
+        </div>
+    </row>
+
         
-    </div>
-    <row> 
-    <div class="container col-6 " style="float:left;">
-    <form method="POST">
-        <h3>Write an update</h3>
 
-        {{form.hidden_tag()}}
-
-        {{form.message_text(class="form-control",placeholder="Issue update")}}
-        <br>
-
-        {{form.submit(class="btn btn-lg btn-block btn-primary")}}
-        <br>
-    </form>
-    </div>
-
-
-</row>
 </div>
 
 {% endblock content %}
