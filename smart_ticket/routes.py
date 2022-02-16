@@ -1,6 +1,6 @@
 from smart_ticket import app, db
 from flask import redirect, render_template, request, flash, session, url_for
-from smart_ticket.forms import RegisterForm, LoginForm, OpenTicketForm
+from smart_ticket.forms import RegisterForm, LoginForm, OpenTicketForm, NewTicketLogMessage
 from smart_ticket.models import User, Ticket, TicketLogMessage
 from flask_login import current_user, login_user, logout_user, login_required
 
@@ -93,13 +93,27 @@ def ticket_list_page():
 
     return render_template('ticket_list.html', tickets = unresolved_tickets)
 
-@app.route('/ticket/<int:id>')
+@app.route('/ticket/<int:current_ticket_id>', methods=['GET','POST'])
 @login_required
-def ticket_detail_page(id:int):
+def ticket_detail_page(current_ticket_id:int):
 
-    ticket = Ticket.query.get_or_404(id)
+    ticket = Ticket.query.get_or_404(current_ticket_id)
+    msg_log = TicketLogMessage.query.filter_by(ticket_id = ticket.id) #.order_by(creation_time)
 
-    return render_template('ticket_detail.html', ticket=ticket)
+    form = NewTicketLogMessage()
+
+    if request.method == 'POST':
+        new_log_message = TicketLogMessage(
+            author_id =  current_user.id,
+            ticket_id = current_ticket_id,
+            message_text = form.message_text.data
+        )
+
+        db.session.add(new_log_message)
+        db.session.commit()
+
+
+    return render_template('ticket_detail.html', ticket=ticket, msg_log=msg_log, form =form)
 
 
 @app.template_filter('format_time')

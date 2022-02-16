@@ -14,6 +14,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(length = 30), nullable=False, unique = True)
     password_hash = db.Column(db.String(length = 50), nullable=False, unique = True)
     created_tickets = db.relationship('Ticket',backref='author', lazy=True)
+    created_ticket_log_messages = db.relationship('TicketLogMessage',backref='author', lazy=True)
 
     def __repr__(self) -> str:
         return f" User {self.username}"
@@ -47,7 +48,7 @@ class Ticket(db.Model):
 class TicketLogMessage(db.Model):
     id = db.Column(db.Integer(),primary_key = True)
     author_id = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=True)
-    posted_time = db.Column(db.DateTime(),nullable=False, default = datetime.now())
+    creation_time = db.Column(db.DateTime(),nullable=False, default = datetime.now())
     ticket_id = db.Column(db.Integer(), db.ForeignKey('ticket.id'), nullable=False)
     message_text = db.Column(db.Text(length=1500))
     

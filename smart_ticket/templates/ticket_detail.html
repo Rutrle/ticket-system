@@ -24,6 +24,45 @@ Smart Ticket Ticket {{ ticket.id }}
     <div class ="container border-white">
         <p>{{ticket.issue_description}}</p>
     </div>
+
+    <div class ="container m-5">
+        <table class="table table-dark">
+            <thead>
+                <tr>
+                    <th scope="col" style="width: 15%">Posted</th>
+                    <th scope="col" style="width: 15%">Author</th>
+                    <th scope="col" style="width: 70%">Status update/Message</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for msg in msg_log %}
+                    <tr>
+                        <td>{{msg.creation_time|format_time}}</td>
+                        <td>{{msg.author.username}}</td>
+                        <td>{{msg.message_text}}</td>
+                    </tr>      
+                {% endfor %}
+            </tbody>
+        </table>
+        
+    </div>
+    <row> 
+    <div class="container col-6 " style="float:left;">
+    <form method="POST">
+        <h3>Write an update</h3>
+
+        {{form.hidden_tag()}}
+
+        {{form.message_text(class="form-control",placeholder="Issue update")}}
+        <br>
+
+        {{form.submit(class="btn btn-lg btn-block btn-primary")}}
+        <br>
+    </form>
+    </div>
+
+
+</row>
 </div>
 
 {% endblock content %}

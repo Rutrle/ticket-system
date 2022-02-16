@@ -33,9 +33,9 @@ class OpenTicketForm(FlaskForm):
     submit = SubmitField(label = 'Submit ticket')
 
 class NewTicketLogMessage(FlaskForm):
-    message_text = StringField(label="Update")
+    message_text = TextAreaField(label="Update", validators=[DataRequired(), Length(min=5  , max=1500)])
     submit = SubmitField(label = 'Submit update')
 
 class CloseTicketLogMessage(FlaskForm):
-    message_text = StringField(label="Problem solution/answer")
+    message_text = TextAreaField(label="Problem solution/answer")
     submit = SubmitField(label = 'Close ticket')
