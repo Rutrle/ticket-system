@@ -1,7 +1,7 @@
 from re import T
 from smart_ticket import db
 from datetime import datetime
-from smart_ticket.models import  User, Ticket
+from smart_ticket.models import  User, Ticket, TicketLogMessage
 
 '''
 script for deleting and recreating the database and filling it in with some data
@@ -27,6 +27,7 @@ longer_text = """Ullamco deserunt deserunt officia ad nisi consequat adipisicing
             """
 users=[]
 tickets=[]
+ticket_creation_logs=[]
 
 users.append(User(username='User1', email='user1@mail.com',password='password'))
 users.append(User(username='User2', email='user2@mail.com',password='password2'))
@@ -49,8 +50,13 @@ for ticket in tickets:
 
 db.session.commit()
 
+for ticket in tickets:
+    ticket_creation_logs.append(TicketLogMessage(ticket_id=ticket.id, message_text = "Ticket opened"))
 
+for ticket_log in ticket_creation_logs:
+    db.session.add(ticket_log)
 
+db.session.commit()
 
 t = Ticket.query.filter_by(subject='owned ticket').first()
 print(t)
