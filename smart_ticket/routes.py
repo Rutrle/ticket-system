@@ -77,9 +77,11 @@ def create_ticket_page():
         db.session.add(new_ticket)
         db.session.commit()
         creation_log_msg = TicketLogMessage(ticket_id = new_ticket.id, message_text = "Ticket opened")
-        flash(f"ticket submitted succesfully", category="success")
+        
         db.session.add(creation_log_msg)
-        db.session.commit()        
+        db.session.commit()
+               
+        flash(f"ticket submitted succesfully", category="success") 
     if form.errors !={}:
         for err_msg in form.errors.values():
             flash(f'There was an error in submiting a ticket: {err_msg[0]}', category='danger')
