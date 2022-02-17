@@ -60,6 +60,13 @@ def logout_page():
     flash('You have logged out. Thanks for visiting!', category='info')
     return redirect(url_for('home_page'))
 
+@app.route('/user_detail/<int:id>')
+@login_required
+def user_detail_page(id:int):
+    user = User.query.get_or_404(id)
+
+    return render_template('user_detail.html', user=user)
+
 
 @app.route('/submit_ticket', methods=['GET','POST'])
 def create_ticket_page():
