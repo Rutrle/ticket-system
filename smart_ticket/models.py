@@ -33,7 +33,7 @@ class User(db.Model, UserMixin):
 
 class Ticket(db.Model):
     id = db.Column(db.Integer(),primary_key = True)
-    subject = db.Column(db.String(length=30), nullable=False)
+    subject = db.Column(db.String(length=45), nullable=False)
     issue_description = db.Column(db.Text(length=2500))
     creation_time = db.Column(db.DateTime(),nullable=False, default = datetime.now())
     author_id = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=True)

@@ -22,20 +22,16 @@ class RegisterForm(FlaskForm):
             raise ValidationError(f"Email address {checked_email.data} already exists! Please try different one")
 
 class LoginForm(FlaskForm):
-    username = StringField(label = "Username")
-    password = PasswordField(label = "Password")
+    username = StringField(label = "Username",validators=[DataRequired()])
+    password = PasswordField(label = "Password",validators=[DataRequired()])
     submit = SubmitField(label = 'Login')
 
 
 class OpenTicketForm(FlaskForm):
-    subject = StringField(label = 'Subject')
-    issue_text = TextAreaField(label='Problem description')
+    subject = StringField(label = 'Subject',validators=[DataRequired(), Length(min=5  , max=45)])
+    issue_text = TextAreaField(label='Problem description', validators=[DataRequired(), Length(min=0  , max=2500)])
     submit = SubmitField(label = 'Submit ticket')
 
 class NewTicketLogMessage(FlaskForm):
     message_text = TextAreaField(label="Update", validators=[DataRequired(), Length(min=5  , max=1500)])
     submit = SubmitField(label = 'Submit update')
-
-class CloseTicketLogMessage(FlaskForm):
-    message_text = TextAreaField(label="Problem solution/answer")
-    submit = SubmitField(label = 'Close ticket')
