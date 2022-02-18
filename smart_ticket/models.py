@@ -1,10 +1,14 @@
+from sqlalchemy import ForeignKey, Column, Table
 from smart_ticket import db, bcrypt
 from smart_ticket import login_manager
 from flask_login import UserMixin
 from datetime import datetime
 
 
-
+current_solvers_association_table = Table('current_solvers_association',db.Model.metadata,
+    Column('user_id',ForeignKey('user.id'), primary_key = True),
+    Column('ticket_id',ForeignKey('ticket.id'), primary_key = True)
+)
 
 
 @login_manager.user_loader
@@ -20,6 +24,7 @@ class User(db.Model, UserMixin):
     #created_tickets = db.relationship('Ticket', back_populates='author', lazy=True)
     #solved_tickets = db.relationship('Ticket', back_populates='solver', lazy=True)
     created_ticket_log_messages = db.relationship('TicketLogMessage',backref='author', lazy=True)
+    currently_solving = db.relationship("Ticket",secondary = current_solvers_association_table,  back_populates = "current_solvers" )
 
     def __repr__(self) -> str:
         return f" User {self.username}"
@@ -47,6 +52,8 @@ class Ticket(db.Model):
 
     solver_id = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=True)
     solver =  db.relationship("User", foreign_keys =[solver_id])
+
+    current_solvers = db.relationship("User", secondary = current_solvers_association_table, back_populates = "currently_solving" )
 
     is_solved = db.Column(db.Boolean(), nullable=False, default = False)
     log_messages = db.relationship('TicketLogMessage',backref='ticket', lazy=True)
