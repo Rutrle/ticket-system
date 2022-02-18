@@ -44,6 +44,7 @@ tickets.append(Ticket(subject='Something broke',issue_description = "something h
 tickets.append(Ticket(subject='Something else broke',issue_description = long_text))
 tickets.append(Ticket(subject='lorem ipsum',issue_description = longer_text))
 tickets.append(Ticket(subject='owned ticket',issue_description = "I belong to user3",author_id =u.id ))
+tickets.append(Ticket(subject='solved ticket',issue_description = "Iwas solved by user3",author_id =u.id, solver_id = u.id, is_solved=True ))
 
 for ticket in tickets:
     db.session.add(ticket)

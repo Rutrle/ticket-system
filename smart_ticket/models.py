@@ -3,6 +3,10 @@ from smart_ticket import login_manager
 from flask_login import UserMixin
 from datetime import datetime
 
+
+
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -13,7 +17,8 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(length = 30), nullable=False, unique = True)
     email = db.Column(db.String(length = 30), nullable=False, unique = True)
     password_hash = db.Column(db.String(length = 50), nullable=False, unique = True)
-    created_tickets = db.relationship('Ticket',backref='author', lazy=True)
+    #created_tickets = db.relationship('Ticket', back_populates='author', lazy=True)
+    #solved_tickets = db.relationship('Ticket', back_populates='solver', lazy=True)
     created_ticket_log_messages = db.relationship('TicketLogMessage',backref='author', lazy=True)
 
     def __repr__(self) -> str:
@@ -36,7 +41,13 @@ class Ticket(db.Model):
     subject = db.Column(db.String(length=45), nullable=False)
     issue_description = db.Column(db.Text(length=2500))
     creation_time = db.Column(db.DateTime(),nullable=False, default = datetime.now())
+
     author_id = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=True)
+    author = db.relationship("User", foreign_keys =[author_id])
+
+    solver_id = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=True)
+    solver =  db.relationship("User", foreign_keys =[solver_id])
+
     is_solved = db.Column(db.Boolean(), nullable=False, default = False)
     log_messages = db.relationship('TicketLogMessage',backref='ticket', lazy=True)
 
