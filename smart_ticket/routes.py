@@ -1,6 +1,6 @@
 from smart_ticket import app, db
 from flask import redirect, render_template, request, flash, session, url_for
-from smart_ticket.forms import RegisterForm, LoginForm, OpenTicketForm, NewTicketLogMessage
+from smart_ticket.forms import RegisterForm, LoginForm, OpenTicketForm, NewTicketLogMessage, AssignTicket2Self
 from smart_ticket.models import User, Ticket, TicketLogMessage
 from flask_login import current_user, login_user, logout_user, login_required
 
@@ -21,7 +21,8 @@ def about_page():
 @app.route('/register', methods=['GET','POST'])
 def registration_page():
     form = RegisterForm()
-    if request.method == 'POST' and form.validate():
+
+    if form.validate_on_submit():
         new_user = User(
             username = form.username.data,
             email=form.email.data,
@@ -40,7 +41,7 @@ def registration_page():
 def login_page():
     form = LoginForm()
 
-    if request.method == 'POST' and form.validate():
+    if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user:
             if user.check_attempted_password(form.password.data):
@@ -71,8 +72,8 @@ def user_detail_page(id:int):
 @app.route('/submit_ticket', methods=['GET','POST'])
 def create_ticket_page():
     form = OpenTicketForm()
-    if request.method == 'POST' and form.validate():
-        
+
+    if form.validate_on_submit():
         new_ticket = Ticket(
             subject = form.subject.data,
             issue_description=form.issue_text.data,
@@ -109,20 +110,44 @@ def ticket_detail_page(current_ticket_id:int):
     ticket = Ticket.query.get_or_404(current_ticket_id)
     msg_log = TicketLogMessage.query.filter_by(ticket_id = ticket.id) #.order_by(creation_time)
 
-    form = NewTicketLogMessage()
+    new_log_msg_form = NewTicketLogMessage()
+    assign_2_self_form = AssignTicket2Self()
 
     if request.method == 'POST':
-        new_log_message = TicketLogMessage(
-            author_id =  current_user.id,
-            ticket_id = current_ticket_id,
-            message_text = form.message_text.data
-        )
+        if 'submit_new_log_ticket' in request.form and new_log_msg_form.validate():
 
-        db.session.add(new_log_message)
-        db.session.commit()
+                new_log_message = TicketLogMessage(
+                    author_id =  current_user.id,
+                    ticket_id = current_ticket_id,
+                    message_text = new_log_msg_form.message_text.data
+                )
 
+                db.session.add(new_log_message)
+                db.session.commit()
 
-    return render_template('ticket_detail.html', ticket=ticket, msg_log=msg_log, form =form)
+        elif 'assign_2_self' in request.form and assign_2_self_form.validate():
+            if current_user in  ticket.current_solvers:
+                flash(f'You are already assigned to ticket {ticket.subject}', category='warning')
+
+            else:
+                ticket.current_solvers.append(current_user)
+                new_log_message = TicketLogMessage(
+                    author_id =  current_user.id,
+                    ticket_id = current_ticket_id,
+                    message_text = f'User {current_user.username} started solving this issue'
+                )
+
+                db.session.add(new_log_message)
+                db.session.add(ticket)
+                db.session.commit()
+
+                flash(f'You have been succesfully assigned to ticket {ticket.subject}', category='success')
+
+        if assign_2_self_form.errors !={}:
+            for err_msg in form.errors.values():
+                flash(f'There was an error: {err_msg[0]}', category='danger')
+
+    return render_template('ticket_detail.html', ticket=ticket, msg_log=msg_log, form =new_log_msg_form,assign_2_self_form=assign_2_self_form)
 
 
 @app.template_filter('format_time')

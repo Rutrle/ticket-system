@@ -55,11 +55,18 @@ Smart Ticket Ticket {{ ticket.id }}
                 {{form.message_text(class="form-control w-10",placeholder="Issue update")}}
                 <br>
 
-                {{form.submit(class="btn btn-lg btn-block btn-primary")}}
+                {{form.submit_new_log_ticket(class="btn btn-lg btn-block btn-primary")}}
                 <br>
             </form>
         </div>
     </row>
+</div>
+
+<div>
+    <form method="POST">
+    {{form.hidden_tag()}} 
+    {{assign_2_self_form.assign_2_self(class="btn btn-lg btn-block btn-primary")}}
+    </form>
 </div>
 
 {% endblock content %}

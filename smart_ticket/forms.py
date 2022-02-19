@@ -34,4 +34,7 @@ class OpenTicketForm(FlaskForm):
 
 class NewTicketLogMessage(FlaskForm):
     message_text = TextAreaField(label="Update", validators=[DataRequired(), Length(min=5  , max=1500)])
-    submit = SubmitField(label = 'Submit update')
+    submit_new_log_ticket = SubmitField(label = 'Submit update')
+
+class AssignTicket2Self(FlaskForm):
+    assign_2_self = SubmitField(label = 'Start solving')
