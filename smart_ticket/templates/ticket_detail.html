@@ -5,68 +5,69 @@ Smart Ticket Ticket {{ ticket.id }}
 {% endblock title %}
 
 {% block content %}
-
-<div class = "container bg-dark m-5 p-5 mx-auto">
-    <h2>{{ticket.subject}}</h2>
-    <hr>
-    {% if ticket.is_solved %}
-    <h4>Closed<h4>
-    <p><strong>Solved by:</strong></p>
-    <p><strong>Solved on</strong></p>
-    {% endif %}
-    <p><strong> Posted on: </strong>{{ticket.creation_time|format_time}}</p>
-    {% if ticket.author.username|length  %}
-    <p><strong>Posted by: </strong>{{ticket.author.username}}</p>
-    {%  else %}
-    <p><strong>Posted by: Anonymous user</strong></p>
-    {% endif %}
-    <p><strong>Problem description:</strong></p>
-    <div class ="container">
-        <p>{{ticket.issue_description}}</p>
-    </div>
-
-    <div class ="container m-5">
-        <table class="table table-dark">
-            <thead>
-                <tr>
-                    <th scope="col" style="width: 15%">Posted</th>
-                    <th scope="col" style="width: 15%">Author</th>
-                    <th scope="col" style="width: 70%">Status update/Message</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for msg in msg_log %}
-                    <tr>
-                        <td>{{msg.creation_time|format_time}}</td>
-                        <td>{{msg.author.username}}</td>
-                        <td>{{msg.message_text}}</td>
-                    </tr>      
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <row class="bg-dark container">
-        <div class=" bg-dark col-6 w-50" >
-            <form method="POST">
-                <h3>Write an update</h3>
-
-                {{form.hidden_tag()}}
-
-                {{form.message_text(class="form-control w-10",placeholder="Issue update")}}
-                <br>
-
-                {{form.submit_new_log_ticket(class="btn btn-lg btn-block btn-primary")}}
-                <br>
-            </form>
+<div class="row bg-dark m-5 p-5 mx-auto">
+    <div class = "container  col-8">
+        <h2>{{ticket.subject}}</h2>
+        <hr>
+        {% if ticket.is_solved %}
+        <h4>Closed</h4>
+        <p><strong>Solved by:</strong></p>
+        <p><strong>Solved on</strong></p>
+        {% endif %}
+        <p><strong> Posted on: </strong>{{ticket.creation_time|format_time}}</p>
+        {% if ticket.author.username|length  %}
+        <a><strong>Posted by: </strong>{{ticket.author.username}}</p>
+        {%  else %}
+        <p><strong>Posted by: Anonymous user</strong></p>
+        {% endif %}
+        <p><strong>Problem description:</strong></p>
+        <div class ="container">
+            <p>{{ticket.issue_description}}</p>
         </div>
-    </row>
-</div>
 
-<div>
-    <form method="POST">
-    {{form.hidden_tag()}} 
-    {{assign_2_self_form.assign_2_self(class="btn btn-lg btn-block btn-primary")}}
-    </form>
+        <div class ="container m-5">
+            <table class="table table-dark">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width: 15%">Posted</th>
+                        <th scope="col" style="width: 15%">Author</th>
+                        <th scope="col" style="width: 70%">Status update/Message</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for msg in msg_log %}
+                        <tr>
+                            <td>{{msg.creation_time|format_time}}</td>
+                            <td>{{msg.author.username}}</td>
+                            <td>{{msg.message_text}}</td>
+                        </tr>      
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <row class="bg-dark container">
+            <div class=" bg-dark col-6 w-50" >
+                <form method="POST">
+                    <h3>Write an update</h3>
+
+                    {{form.hidden_tag()}}
+
+                    {{form.message_text(class="form-control w-10",placeholder="Issue update")}}
+                    <br>
+
+                    {{form.submit_new_log_ticket(class="btn btn-lg btn-block btn-primary")}}
+                    <br>
+                </form>
+            </div>
+        </row>
+    </div>
+
+    <div class = 'col-4'>
+        <form method="POST">
+        {{form.hidden_tag()}} 
+        {{assign_2_self_form.assign_2_self(class="btn btn-lg btn-block btn-primary")}}
+        </form>
+    </div>
 </div>
 
 {% endblock content %}

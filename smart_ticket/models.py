@@ -59,7 +59,7 @@ class Ticket(db.Model):
     log_messages = db.relationship('TicketLogMessage',backref='ticket', lazy=True)
 
     def __repr__(self) -> str:
-        return f" Ticket No. {self.id}, : {self.subject}"
+        return f" Ticket No. {self.id} : {self.subject}"
     
 
 

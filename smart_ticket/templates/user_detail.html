@@ -12,6 +12,13 @@ Smart Ticket - User detail
         <p>Email: {{user.email}}</p>
         <hr>
         <h2>Currently solving:</h2>
-        <p>{{user.currently_solving }}</p>
+        
+        {% for ticket in user.currently_solving %}
+        <a href="{{ url_for('ticket_detail_page', current_ticket_id=ticket.id) }}">
+        {{ticket}}
+        </a>
+        </p>
+        {% endfor %}
+
 </div>
 {% endblock content %}
