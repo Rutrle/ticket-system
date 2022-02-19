@@ -1,6 +1,6 @@
 from smart_ticket import app, db
 from flask import redirect, render_template, request, flash, session, url_for
-from smart_ticket.forms import RegisterForm, LoginForm, OpenTicketForm, NewTicketLogMessage, AssignTicket2Self
+from smart_ticket.forms import RegisterForm, LoginForm, OpenTicketForm, NewTicketLogMessage, AssignTicket2Self, UnassignTicket2Self
 from smart_ticket.models import User, Ticket, TicketLogMessage
 from flask_login import current_user, login_user, logout_user, login_required
 
@@ -112,6 +112,7 @@ def ticket_detail_page(current_ticket_id:int):
 
     new_log_msg_form = NewTicketLogMessage()
     assign_2_self_form = AssignTicket2Self()
+    unassign_from_self_form =UnassignTicket2Self()
 
     if request.method == 'POST':
         if 'submit_new_log_ticket' in request.form and new_log_msg_form.validate():
@@ -144,10 +145,25 @@ def ticket_detail_page(current_ticket_id:int):
                 flash(f'You have been succesfully assigned to ticket {ticket.subject}', category='success')
 
         if assign_2_self_form.errors !={}:
-            for err_msg in form.errors.values():
+            for err_msg in assign_2_self_form.errors.values():
                 flash(f'There was an error: {err_msg[0]}', category='danger')
 
-    return render_template('ticket_detail.html', ticket=ticket, msg_log=msg_log, form =new_log_msg_form,assign_2_self_form=assign_2_self_form)
+        elif 'unassign_from_self' in request.form and unassign_from_self_form.validate():
+            if current_user not in  ticket.current_solvers:
+                flash(f'You are not assigned to ticket {ticket.subject}', category='danger')
+            else:
+                ticket.current_solvers.remove(current_user) ################################################## maybe try/except - handling of user sending the request twice?
+                new_log_message = TicketLogMessage(
+                        author_id =  current_user.id,
+                        ticket_id = current_ticket_id,
+                        message_text = f'User {current_user.username} is no longer solving this issue'
+                    )
+                db.session.add(new_log_message)
+                db.session.add(ticket)
+                db.session.commit()
+                flash(f'You are no longer assigned to ticket {ticket.subject}', category='warning')
+
+    return render_template('ticket_detail.html', ticket=ticket, msg_log=msg_log, form =new_log_msg_form,assign_2_self_form=assign_2_self_form,unassign_from_self_form=unassign_from_self_form)
 
 
 @app.template_filter('format_time')

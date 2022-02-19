@@ -38,3 +38,6 @@ class NewTicketLogMessage(FlaskForm):
 
 class AssignTicket2Self(FlaskForm):
     assign_2_self = SubmitField(label = 'Start solving')
+
+class UnassignTicket2Self(FlaskForm):
+    unassign_from_self = SubmitField(label = 'Stop solving')
