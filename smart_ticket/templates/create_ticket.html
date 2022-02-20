@@ -5,22 +5,26 @@ Smart Ticket Create Ticket
 {% endblock %}
 
 {% block content %}
-<body class="text-center"> 
-    <div class="container"> 
 
-        <form method="POST" class="form-register", style="color:white">
-            {{form.hidden_tag()}}
-            <h1 class="h3 mb-3">Let's create a new ticket!</h1>
-            <br>
-            {{form.subject.label()}}
-            {{form.subject(class="form-control",placeholder="Ticket Subject")}}
+<div class = "container p-5">
+    <div class = "container bg-dark p-5">
+        <h1 class="h1 mb-3">Let's create a new ticket!</h1>
+        <hr>
+        <div class = "text-center"> 
+            <form method="POST" class="form-register", style="color:white">
+                {{form.hidden_tag()}}
 
-            {{form.issue_text.label()}}
-            {{form.issue_text(class="form-control",placeholder="Please describe our problem")}}
-            <br>
+                {{form.subject.label(class="col-form-label-lg")}}
+                {{form.subject(class="form-control",placeholder="Ticket Subject")}}
 
-            {{form.submit(class="btn btn-lg btn-block btn-primary")}}
-        </form>
+                {{form.issue_text.label(class="col-form-label-lg")}}
+                {{form.issue_text(class="form-control",placeholder="Please describe our problem")}}
+                <br>
+
+                {{form.submit(class="btn btn-lg btn-block btn-primary")}}
+            </form>
+        </div>  
     </div>
-</body>
+</div>
+
 {% endblock %}
