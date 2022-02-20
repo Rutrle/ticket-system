@@ -51,7 +51,7 @@ class RemoveFromWatchlist(FlaskForm):
 class TicketFilter(FlaskForm):
     filter_by = SelectField(choices=[('all_active','All active issues'),
                                     ('user_watchlist','On my watchlist'),
-                                    ('user_is_solving','Solved by me')],
+                                    ('user_is_solving','Being solved by me')],
                                      label='Choose Filter')
     sort_by =SelectField(choices=[('c_time_asc','Creation time ascending \u2191'),
                                     ('c_time_desc','Creation time descending \u2193'),

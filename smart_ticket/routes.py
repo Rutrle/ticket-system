@@ -116,11 +116,16 @@ def ticket_list_page():
 
     if filter_form.validate_on_submit():
         order_by_text = sort_dict[filter_form.sort_by.data]
-        shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False).outerjoin(Ticket.author).order_by(text(order_by_text))
+        shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False)\
+                        .outerjoin(Ticket.author).order_by(text(order_by_text))
+
         if filter_form.filter_by.data == 'user_watchlist':
-            shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False,Ticket.currently_on_watchlist.contains(current_user)).outerjoin(Ticket.author).order_by(text(order_by_text))
+            shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False,Ticket.currently_on_watchlist.contains(current_user))\
+                            .outerjoin(Ticket.author).order_by(text(order_by_text))
+                            
         elif filter_form.filter_by.data == 'user_is_solving':
-            shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False,Ticket.current_solvers.contains(current_user)).outerjoin(Ticket.author).order_by(text(order_by_text))
+            shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False,Ticket.current_solvers.contains(current_user))\
+                            .outerjoin(Ticket.author).order_by(text(order_by_text))
  
     return render_template('ticket_list.html', tickets = shown_tickets, filter_form=filter_form)
 
