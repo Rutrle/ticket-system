@@ -1,6 +1,6 @@
 from smart_ticket import app, db
 from flask import redirect, render_template, request, flash, session, url_for
-from smart_ticket.forms import RegisterForm, LoginForm, OpenTicketForm, NewTicketLogMessage, AssignTicket2Self, UnassignTicket2Self
+from smart_ticket.forms import RegisterForm, LoginForm, OpenTicketForm, NewTicketLogMessage, AssignTicket2Self, UnassignTicket2Self,AddToWatchlist,RemoveFromWatchlist
 from smart_ticket.models import User, Ticket, TicketLogMessage
 from flask_login import current_user, login_user, logout_user, login_required
 
@@ -115,6 +115,9 @@ def ticket_detail_page(current_ticket_id:int):
     new_log_msg_form = NewTicketLogMessage()
     assign_2_self_form = AssignTicket2Self()
     unassign_from_self_form =UnassignTicket2Self()
+    add_to_watchlist_form = AddToWatchlist()
+    remove_from_watchlist_form= RemoveFromWatchlist()
+
 
     if request.method == 'POST':
         if 'submit_new_log_ticket' in request.form and new_log_msg_form.validate():
@@ -167,8 +170,27 @@ def ticket_detail_page(current_ticket_id:int):
                 currently_solving_users = User.query.filter(User.currently_solving.any(id =current_ticket_id)).all()
                 flash(f'You are no longer assigned to ticket {ticket.subject}', category='warning')
 
-    return render_template('ticket_detail.html', ticket=ticket, msg_log=msg_log, form =new_log_msg_form,assign_2_self_form=assign_2_self_form,unassign_from_self_form=unassign_from_self_form, currently_solving_users = currently_solving_users)
+    return render_template('ticket_detail.html', ticket=ticket, msg_log=msg_log, form =new_log_msg_form,assign_2_self_form=assign_2_self_form,unassign_from_self_form=unassign_from_self_form, currently_solving_users = currently_solving_users, add_to_watchlist_form=add_to_watchlist_form,remove_from_watchlist_form=remove_from_watchlist_form)
 
+@app.route('/ticket/<int:current_ticket_id>/add_2_watchlist', methods=['POST'])
+@login_required
+def add_to_watchlist(current_ticket_id:int):
+    user = current_user
+    ticket = Ticket.query.get_or_404(current_ticket_id)
+    user.current_watchlist.append(ticket)
+    db.session.add(user)
+    db.session.commit()    
+    return redirect(url_for('ticket_detail_page', current_ticket_id=current_ticket_id))
+
+@app.route('/ticket/<int:current_ticket_id>/remove_from_watchlist', methods=['POST'])
+@login_required
+def remove_from_watchlist(current_ticket_id:int):
+    user = current_user
+    ticket = Ticket.query.get_or_404(current_ticket_id)
+    user.current_watchlist.remove(ticket)
+    db.session.add(user)
+    db.session.commit()    
+    return redirect(url_for('ticket_detail_page', current_ticket_id=current_ticket_id))
 
 @app.template_filter('format_time')
 def format_time(timestamp):

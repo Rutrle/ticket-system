@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Smart Ticket Ticket {{ ticket.id }}
+    Smart Ticket Ticket {{ ticket.id }}
 {% endblock title %}
 
 {% block content %}
@@ -64,26 +64,42 @@ Smart Ticket Ticket {{ ticket.id }}
         </div>
         <div class = "col bg-dark m-4">
             <div class = "container m-2">
-            <h3>Current solvers:</h3>
-            {% for solver in currently_solving_users %}
-            <a href="{{ url_for('user_detail_page', id = solver.id ) }}">{{solver.username}}</a>
-            {% endfor %}
-            <hr>
+                <h3>Current solvers:</h3>
+                    {% for solver in currently_solving_users %}
+                        <a href="{{ url_for('user_detail_page', id = solver.id ) }}">{{solver.username}}</a>
+                    {% endfor %}
+                <hr>
             </div>
-        <div class = "d-flex justify-content-center">   
-        {% if current_user not in ticket.current_solvers %}
-  
-            <form method="POST">
-                {{form.hidden_tag()}} 
-                {{assign_2_self_form.assign_2_self(class="btn btn-lg btn-block btn-primary")}}
-            </form>
-        {% else %} 
-            <form method="POST">
-                {{form.hidden_tag()}} 
-                {{unassign_from_self_form.unassign_from_self(class="btn btn-lg btn-block btn-warning")}}
-            </form>
-        {% endif %}
-        </div>
+            <div class = "d-flex justify-content-center">   
+                {% if current_user not in ticket.current_solvers %}
+                    <form method="POST">
+                        {{form.hidden_tag()}} 
+                        {{assign_2_self_form.assign_2_self(class="btn btn-lg btn-block btn-primary")}}
+                    </form>
+                {% else %} 
+                    <form method="POST">
+                        {{form.hidden_tag()}} 
+                        {{unassign_from_self_form.unassign_from_self(class="btn btn-lg btn-block btn-warning")}}
+                    </form>
+                {% endif %}
+            </div>
+            <div class = "container">
+                <h6>This ticket is currently not on your watchlist</h6>
+                <div class = "d-flex justify-content-center">
+                    {% if current_user not in ticket.currently_on_watchlist %}
+                    <form method="POST" action="{{url_for('add_to_watchlist', current_ticket_id = ticket.id)}}">
+                        {{form.hidden_tag()}} 
+                        {{add_to_watchlist_form.add_to_watchlist(class="btn btn-lg btn-block btn-warning")}}
+                    </form>
+                    {% else %}
+
+                    <form method="POST" action="{{url_for('remove_from_watchlist', current_ticket_id = ticket.id)}}">
+                        {{form.hidden_tag()}} 
+                        {{remove_from_watchlist_form.remove_from_watchlist(class="btn btn-lg btn-block btn-warning")}}
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -6,10 +6,8 @@ from smart_ticket.models import  User, Ticket, TicketLogMessage
 '''
 script for deleting and recreating the database and filling it in with some data
 
-also used for trying out database communication during development
+also used for trying out database communication during development - these parts will be deleted later
 '''
-
-
 
 
 db.drop_all()

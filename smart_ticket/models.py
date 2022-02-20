@@ -10,6 +10,10 @@ current_solvers_association_table = Table('current_solvers_association',db.Model
     Column('ticket_id',ForeignKey('ticket.id'), primary_key = True)
 )
 
+ticket_watchlist_association_table = Table('ticket_watchlist_association',db.Model.metadata,
+    Column('user_id',ForeignKey('user.id'), primary_key = True),
+    Column('ticket_id',ForeignKey('ticket.id'), primary_key = True)
+)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -21,10 +25,9 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(length = 30), nullable=False, unique = True)
     email = db.Column(db.String(length = 30), nullable=False, unique = True)
     password_hash = db.Column(db.String(length = 50), nullable=False, unique = True)
-    #created_tickets = db.relationship('Ticket', back_populates='author', lazy=True)
-    #solved_tickets = db.relationship('Ticket', back_populates='solver', lazy=True)
     created_ticket_log_messages = db.relationship('TicketLogMessage',backref='author', lazy=True)
-    currently_solving = db.relationship("Ticket",secondary = current_solvers_association_table,  back_populates = "current_solvers" )
+    currently_solving = db.relationship("Ticket",secondary = current_solvers_association_table,  back_populates = "current_solvers")
+    current_watchlist = db.relationship("Ticket",secondary = ticket_watchlist_association_table,  back_populates = "currently_on_watchlist")
 
     def __repr__(self) -> str:
         return f" User {self.username}"
@@ -54,6 +57,7 @@ class Ticket(db.Model):
     solver =  db.relationship("User", foreign_keys =[solver_id])
 
     current_solvers = db.relationship("User", secondary = current_solvers_association_table, back_populates = "currently_solving" )
+    currently_on_watchlist = db.relationship("User", secondary = ticket_watchlist_association_table, back_populates = "current_watchlist" )
 
     is_solved = db.Column(db.Boolean(), nullable=False, default = False)
     log_messages = db.relationship('TicketLogMessage',backref='ticket', lazy=True)

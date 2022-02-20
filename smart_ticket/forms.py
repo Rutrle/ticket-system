@@ -41,3 +41,9 @@ class AssignTicket2Self(FlaskForm):
 
 class UnassignTicket2Self(FlaskForm):
     unassign_from_self = SubmitField(label = 'Stop solving')
+
+class AddToWatchlist(FlaskForm):
+    add_to_watchlist = SubmitField(label = 'Add to watchlist')
+
+class RemoveFromWatchlist(FlaskForm):
+    remove_from_watchlist = SubmitField(label = 'Remove from watchlist')
