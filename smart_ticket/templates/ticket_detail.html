@@ -63,6 +63,13 @@ Smart Ticket Ticket {{ ticket.id }}
             </row>
         </div>
         <div class = "col bg-dark m-4">
+            <div class = "container m-2">
+            <h3>Current solvers:</h3>
+            {% for solver in currently_solving_users %}
+            <a href="{{ url_for('user_detail_page', id = solver.id ) }}">{{solver.username}}</a>
+            {% endfor %}
+            <hr>
+            </div>
         <div class = "d-flex justify-content-center">   
         {% if current_user not in ticket.current_solvers %}
   

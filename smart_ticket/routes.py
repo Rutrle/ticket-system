@@ -109,6 +109,8 @@ def ticket_detail_page(current_ticket_id:int):
 
     ticket = Ticket.query.get_or_404(current_ticket_id)
     msg_log = TicketLogMessage.query.filter_by(ticket_id = ticket.id) #.order_by(creation_time)
+    currently_solving_users = User.query.filter(User.currently_solving.any(id =current_ticket_id)).all()
+
 
     new_log_msg_form = NewTicketLogMessage()
     assign_2_self_form = AssignTicket2Self()
@@ -141,6 +143,7 @@ def ticket_detail_page(current_ticket_id:int):
                 db.session.add(new_log_message)
                 db.session.add(ticket)
                 db.session.commit()
+                currently_solving_users = User.query.filter(User.currently_solving.any(id =current_ticket_id)).all()
 
                 flash(f'You have been succesfully assigned to ticket {ticket.subject}', category='success')
 
@@ -161,9 +164,10 @@ def ticket_detail_page(current_ticket_id:int):
                 db.session.add(new_log_message)
                 db.session.add(ticket)
                 db.session.commit()
+                currently_solving_users = User.query.filter(User.currently_solving.any(id =current_ticket_id)).all()
                 flash(f'You are no longer assigned to ticket {ticket.subject}', category='warning')
 
-    return render_template('ticket_detail.html', ticket=ticket, msg_log=msg_log, form =new_log_msg_form,assign_2_self_form=assign_2_self_form,unassign_from_self_form=unassign_from_self_form)
+    return render_template('ticket_detail.html', ticket=ticket, msg_log=msg_log, form =new_log_msg_form,assign_2_self_form=assign_2_self_form,unassign_from_self_form=unassign_from_self_form, currently_solving_users = currently_solving_users)
 
 
 @app.template_filter('format_time')
