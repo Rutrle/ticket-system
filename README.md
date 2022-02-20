@@ -8,7 +8,6 @@
 
 <h3>TO DO:</h3>
 <ul>
-    <li>form hidden tags should belong to correct forms</li>
     <li>force-title ticket subjects</li>
     <li>add different times to generated users and tickets in db_setup.py</li>
 </ul>

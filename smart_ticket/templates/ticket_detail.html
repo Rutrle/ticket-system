@@ -73,12 +73,12 @@
             <div class = "d-flex justify-content-center">   
                 {% if current_user not in ticket.current_solvers %}
                     <form method="POST">
-                        {{form.hidden_tag()}} 
+                        {{assign_2_self_form.hidden_tag()}} 
                         {{assign_2_self_form.assign_2_self(class="btn btn-lg btn-block btn-primary")}}
                     </form>
                 {% else %} 
                     <form method="POST">
-                        {{form.hidden_tag()}} 
+                        {{unassign_from_self_form.hidden_tag()}} 
                         {{unassign_from_self_form.unassign_from_self(class="btn btn-lg btn-block btn-warning")}}
                     </form>
                 {% endif %}
@@ -89,7 +89,7 @@
                     <h6>This ticket is not on your watchlist</h6>
                     <div class = "d-flex justify-content-center">
                         <form method="POST" action="{{url_for('add_to_watchlist', current_ticket_id = ticket.id)}}">
-                            {{form.hidden_tag()}} 
+                            {{add_to_watchlist_form.hidden_tag()}} 
                             {{add_to_watchlist_form.add_to_watchlist(class="btn btn-lg btn-block btn-warning")}}
                         </form>
                     </div>
@@ -97,7 +97,7 @@
                 <h6>This ticket is on your watchlist</h6>
                     <div class = "d-flex justify-content-center">
                         <form method="POST" action="{{url_for('remove_from_watchlist', current_ticket_id = ticket.id)}}">
-                            {{form.hidden_tag()}} 
+                            {{remove_from_watchlist_form.hidden_tag()}} 
                             {{remove_from_watchlist_form.remove_from_watchlist(class="btn btn-lg btn-block btn-warning")}}
                         </form>
                     </div>
