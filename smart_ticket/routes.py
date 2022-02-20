@@ -1,6 +1,7 @@
+from operator import contains
 from smart_ticket import app, db
 from flask import redirect, render_template, request, flash, session, url_for
-from smart_ticket.forms import RegisterForm, LoginForm, OpenTicketForm, NewTicketLogMessage, AssignTicket2Self, UnassignTicket2Self,AddToWatchlist,RemoveFromWatchlist
+from smart_ticket.forms import RegisterForm, LoginForm, OpenTicketForm, NewTicketLogMessage, AssignTicket2Self, UnassignTicket2Self,AddToWatchlist,RemoveFromWatchlist,TicketFilter
 from smart_ticket.models import User, Ticket, TicketLogMessage
 from flask_login import current_user, login_user, logout_user, login_required
 
@@ -96,12 +97,20 @@ def create_ticket_page():
 
     return render_template('create_ticket.html', form=form)
 
-@app.route('/ticket_list')
+@app.route('/ticket_list', methods = ['GET','POST'])
 @login_required
 def ticket_list_page():
-    unresolved_tickets = Ticket.query.filter_by(is_solved = False).order_by(Ticket.creation_time)
+    filter_form = TicketFilter()
+    shown_tickets = Ticket.query.filter_by(is_solved = False).order_by(Ticket.creation_time)
+    shown_tickets.filter_by()
+    if filter_form.validate_on_submit():
+        if filter_form.filter_by.data == 'user_watchlist':
+            shown_tickets = Ticket.query.filter(Ticket.currently_on_watchlist.contains(current_user)).order_by(Ticket.creation_time)
+        elif filter_form.filter_by.data == 'user_is_solving':
+            shown_tickets = Ticket.query.filter(Ticket.current_solvers.contains(current_user)).order_by(Ticket.creation_time)
+        
 
-    return render_template('ticket_list.html', tickets = unresolved_tickets)
+    return render_template('ticket_list.html', tickets = shown_tickets, filter_form=filter_form)
 
 @app.route('/ticket/<int:current_ticket_id>', methods=['GET','POST'])
 @login_required

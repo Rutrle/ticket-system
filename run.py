@@ -1,4 +1,3 @@
-from distutils.log import debug
 from smart_ticket import app
 
 

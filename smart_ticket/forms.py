@@ -1,6 +1,6 @@
 from smart_ticket.models import User, Ticket
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, PasswordField, EmailField, SubmitField, validators
+from wtforms import StringField, TextAreaField, PasswordField, EmailField, SubmitField, SelectField
 from wtforms.validators import Length, EqualTo, Email, DataRequired, ValidationError
 
 class RegisterForm(FlaskForm):
@@ -47,3 +47,7 @@ class AddToWatchlist(FlaskForm):
 
 class RemoveFromWatchlist(FlaskForm):
     remove_from_watchlist = SubmitField(label = 'Remove from watchlist')
+
+class TicketFilter(FlaskForm):
+    filter_by = SelectField(choices=[('all_active','All active issues'),('user_watchlist','On my watchlist'),('user_is_solving','Solved by me')], label='Choose Filter')
+    search = SubmitField(label = "Apply filter")
