@@ -48,8 +48,8 @@ def login_page():
                 login_user(user)
                 flash("You have succesfully logged in!", category='success')
                 return redirect(url_for('home_page'))   ###### temporary, needs to change!
-        else:
-            flash('Wrong Username or password! Please try again.', category='danger')
+        
+        flash('Wrong Username or password! Please try again.', category='danger')
 
     return render_template('login.html', form=form)
 
@@ -108,7 +108,7 @@ def ticket_list_page():
 def ticket_detail_page(current_ticket_id:int):
 
     ticket = Ticket.query.get_or_404(current_ticket_id)
-    msg_log = TicketLogMessage.query.filter_by(ticket_id = ticket.id) #.order_by(creation_time)
+    msg_log = TicketLogMessage.query.filter_by(ticket_id = ticket.id).order_by(TicketLogMessage.creation_time)
     currently_solving_users = User.query.filter(User.currently_solving.any(id =current_ticket_id)).all()
 
 
