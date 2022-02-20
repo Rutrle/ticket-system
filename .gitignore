@@ -1,4 +1,4 @@
 .venv
 *.db
 
-smart_ticket\__pycache__
+__pycache__/
