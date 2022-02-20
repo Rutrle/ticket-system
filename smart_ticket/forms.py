@@ -49,5 +49,15 @@ class RemoveFromWatchlist(FlaskForm):
     remove_from_watchlist = SubmitField(label = 'Remove from watchlist')
 
 class TicketFilter(FlaskForm):
-    filter_by = SelectField(choices=[('all_active','All active issues'),('user_watchlist','On my watchlist'),('user_is_solving','Solved by me')], label='Choose Filter')
-    search = SubmitField(label = "Apply filter")
+    filter_by = SelectField(choices=[('all_active','All active issues'),
+                                    ('user_watchlist','On my watchlist'),
+                                    ('user_is_solving','Solved by me')],
+                                     label='Choose Filter')
+    sort_by =SelectField(choices=[('c_time_asc','Creation time ascending \u2191'),
+                                    ('c_time_desc','Creation time descending \u2193'),
+                                    ('author_asc','Author ascending \u2191'),
+                                    ('author_desc','Author descending \u2193'),
+                                    ('subject_asc','Subject ascending \u2191'),
+                                    ('subject_desc','Subject descending \u2193')],
+                                    label='Sort by')
+    search = SubmitField(label = "Apply")
