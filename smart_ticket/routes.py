@@ -177,9 +177,16 @@ def ticket_detail_page(current_ticket_id:int):
 def add_to_watchlist(current_ticket_id:int):
     user = current_user
     ticket = Ticket.query.get_or_404(current_ticket_id)
-    user.current_watchlist.append(ticket)
-    db.session.add(user)
-    db.session.commit()    
+
+    if ticket not in user.current_watchlist:
+        user.current_watchlist.append(ticket)
+        db.session.add(user)
+        db.session.commit()    
+
+        flash(f"{ticket} was added to your watchlist",category='success')
+    else:
+        flash(f"{ticket} is already on your watchlist",category='danger')
+
     return redirect(url_for('ticket_detail_page', current_ticket_id=current_ticket_id))
 
 @app.route('/ticket/<int:current_ticket_id>/remove_from_watchlist', methods=['POST'])
@@ -187,9 +194,14 @@ def add_to_watchlist(current_ticket_id:int):
 def remove_from_watchlist(current_ticket_id:int):
     user = current_user
     ticket = Ticket.query.get_or_404(current_ticket_id)
-    user.current_watchlist.remove(ticket)
-    db.session.add(user)
-    db.session.commit()    
+    if ticket in user.current_watchlist:
+        user.current_watchlist.remove(ticket)
+        db.session.add(user)
+        db.session.commit()
+
+        flash(f"{ticket} was removed from your watchlist",category='warning')
+    else:
+        flash(f"{ticket} is not on your watchlist, it can't be removed from it",category='danger')
     return redirect(url_for('ticket_detail_page', current_ticket_id=current_ticket_id))
 
 @app.template_filter('format_time')

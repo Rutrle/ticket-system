@@ -83,22 +83,26 @@
                     </form>
                 {% endif %}
             </div>
-            <div class = "container">
-                <h6>This ticket is currently not on your watchlist</h6>
-                <div class = "d-flex justify-content-center">
-                    {% if current_user not in ticket.currently_on_watchlist %}
-                    <form method="POST" action="{{url_for('add_to_watchlist', current_ticket_id = ticket.id)}}">
-                        {{form.hidden_tag()}} 
-                        {{add_to_watchlist_form.add_to_watchlist(class="btn btn-lg btn-block btn-warning")}}
-                    </form>
-                    {% else %}
-
-                    <form method="POST" action="{{url_for('remove_from_watchlist', current_ticket_id = ticket.id)}}">
-                        {{form.hidden_tag()}} 
-                        {{remove_from_watchlist_form.remove_from_watchlist(class="btn btn-lg btn-block btn-warning")}}
-                    </form>
-                    {% endif %}
-                </div>
+            <hr>
+            <div class = "container">   
+                {% if current_user not in ticket.currently_on_watchlist %}
+                    <h6>This ticket is not on your watchlist</h6>
+                    <div class = "d-flex justify-content-center">
+                        <form method="POST" action="{{url_for('add_to_watchlist', current_ticket_id = ticket.id)}}">
+                            {{form.hidden_tag()}} 
+                            {{add_to_watchlist_form.add_to_watchlist(class="btn btn-lg btn-block btn-warning")}}
+                        </form>
+                    </div>
+                {% else %}
+                <h6>This ticket is on your watchlist</h6>
+                    <div class = "d-flex justify-content-center">
+                        <form method="POST" action="{{url_for('remove_from_watchlist', current_ticket_id = ticket.id)}}">
+                            {{form.hidden_tag()}} 
+                            {{remove_from_watchlist_form.remove_from_watchlist(class="btn btn-lg btn-block btn-warning")}}
+                        </form>
+                    </div>
+                {% endif %}
+                
             </div>
         </div>
     </div>
