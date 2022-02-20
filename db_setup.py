@@ -40,9 +40,9 @@ print(u)
 
 tickets.append(Ticket(subject='Something broke',issue_description = "something has broken, it's not my fault"))
 tickets.append(Ticket(subject='Something else broke',issue_description = long_text))
-tickets.append(Ticket(subject='lorem ipsum',issue_description = longer_text))
-tickets.append(Ticket(subject='owned ticket',issue_description = "I belong to user3",author_id =u.id ))
-tickets.append(Ticket(subject='solved ticket',issue_description = "Iwas solved by user3",author_id =u.id, solver_id = u.id, is_solved=True ))
+tickets.append(Ticket(subject='Lorem ipsum',issue_description = longer_text))
+tickets.append(Ticket(subject='Owned ticket',issue_description = "I belong to user3",author_id =u.id ))
+tickets.append(Ticket(subject='Solved ticket',issue_description = "Iwas solved by user3",author_id =u.id, solver_id = u.id, is_solved=True ))
 
 for ticket in tickets:
     db.session.add(ticket)
@@ -57,7 +57,8 @@ for ticket_log in ticket_creation_logs:
 
 db.session.commit()
 
-t = Ticket.query.filter_by(subject='owned ticket').first()
+
+t = Ticket.query.filter_by(subject='Owned ticket').first()
 print(t)
 print(t.author)
 print(t.creation_time)

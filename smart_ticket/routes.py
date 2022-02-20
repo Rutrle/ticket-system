@@ -77,7 +77,7 @@ def create_ticket_page():
 
     if form.validate_on_submit():
         new_ticket = Ticket(
-            subject = form.subject.data,
+            subject = form.subject.data.capitalize(),
             issue_description=form.issue_text.data,
         )
 

@@ -8,6 +8,10 @@
 
 <h3>TO DO:</h3>
 <ul>
-    <li>force-title ticket subjects</li>
     <li>add different times to generated users and tickets in db_setup.py</li>
+    <li>use blueprints</li>
+    <li>add archive of solved tickets</li>
+    <li>add admin</li>
+    <li>add more things to user</li>
+    <li>add rich text editor</li>
 </ul>
