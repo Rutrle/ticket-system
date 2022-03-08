@@ -1,4 +1,3 @@
-from operator import contains
 from smart_ticket import app, db
 from flask import redirect, render_template, request, flash, session, url_for
 from smart_ticket.forms import RegisterForm, LoginForm, OpenTicketForm, NewTicketLogMessage, AssignTicket2Self, UnassignTicket2Self,AddToWatchlist,RemoveFromWatchlist,TicketFilter
@@ -230,6 +229,3 @@ def remove_from_watchlist(current_ticket_id:int):
         flash(f"{ticket} is not on your watchlist, it can't be removed from it",category='danger')
     return redirect(url_for('ticket_detail_page', current_ticket_id=current_ticket_id))
 
-@app.template_filter('format_time')
-def format_time(timestamp):
-    return timestamp.strftime("%m/%d/%Y, %H:%M")

@@ -10,4 +10,5 @@ db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 
 login_manager = LoginManager(app)
-from smart_ticket import routes
+from smart_ticket import routes, filters
+
