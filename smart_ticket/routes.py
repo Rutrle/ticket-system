@@ -229,3 +229,10 @@ def remove_from_watchlist(current_ticket_id:int):
         flash(f"{ticket} is not on your watchlist, it can't be removed from it",category='danger')
     return redirect(url_for('ticket_detail_page', current_ticket_id=current_ticket_id))
 
+@app.route('/archive')
+@login_required
+def archive_page():
+    tickets = Ticket.query.filter(Ticket.is_solved == True).all()
+    print(tickets)
+
+    return render_template('archive.html', tickets=tickets)
