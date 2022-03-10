@@ -53,18 +53,25 @@ class Ticket(db.Model):
     author_id = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=True)
     author = db.relationship("User", foreign_keys =[author_id])
 
-    solver_id = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=True)
-    solver =  db.relationship("User", foreign_keys =[solver_id])
-
     current_solvers = db.relationship("User", secondary = current_solvers_association_table, back_populates = "currently_solving" )
     currently_on_watchlist = db.relationship("User", secondary = ticket_watchlist_association_table, back_populates = "current_watchlist" )
 
     is_solved = db.Column(db.Boolean(), nullable=False, default = False)
+    solved_on = db.Column(db.DateTime(), nullable=True)
+
+    solver_id = db.Column(db.Integer(), db.ForeignKey('user.id'), nullable=True)
+    solver =  db.relationship("User", foreign_keys =[solver_id])
+
     log_messages = db.relationship('TicketLogMessage',backref='ticket', lazy=True)
 
     def __repr__(self) -> str:
         return f" Ticket No. {self.id} : {self.subject}"
     
+    def solve_ticket(self, solver):
+        self.solver_id = solver.id
+        self.is_solved = True
+        self.solved_on = datetime.now()
+
     
 
 

@@ -233,6 +233,5 @@ def remove_from_watchlist(current_ticket_id:int):
 @login_required
 def archive_page():
     tickets = Ticket.query.filter(Ticket.is_solved == True).all()
-    print(tickets)
 
     return render_template('archive.html', tickets=tickets)

@@ -1,22 +1,23 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Smart Ticket - ticket list
+    Smart Ticket - Archive
 {% endblock title %}
 
 {% block content %}
 
 <div class="container">
     <br>
-    <h2>Unresolved Tickets</h2>
+    <h2>Archive</h2>
     <hr>
     <br>
     <table class="table table-hover table-dark">
         <thead>
             <tr>
-                <!-- scope tag has no visual function, but can be used by screen readers, bots and so on-->
                 <th scope="col">ID</th>
                 <th scope="col">Subject</th>
+                <th scope="col">Solver</th>
+                <th scope="col">Solved on</th>
                 <th scope="col">Author</th>
                 <th scope="col">Creation time</th>
                 <th scope="col">Description</th>
@@ -29,8 +30,10 @@
             <tr>
                 <td>{{ticket.id}}</td>
                 <td>{{ticket.subject}}</td>
+                <td>{{ticket.solver.username}}</td>
+                <td>{{ticket.solved_on|format_time}}</td>
                 <td>{{ticket.author.username}}</td>
-                <td>{{ticket.creation_time |format_time}}</td>
+                <td>{{ticket.creation_time|format_time}}</td>
                 <td style = "text-align:justify">
                     <div class="text-truncate-container">
                         <p class="text-truncate-container p-0 m-0"> 
