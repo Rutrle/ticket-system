@@ -61,3 +61,21 @@ class TicketFilter(FlaskForm):
                                     ('subject_desc','Subject descending \u2193')],
                                     label='Sort by')
     search = SubmitField(label = "Apply")
+
+class ArchiveTicketFilter(FlaskForm):
+    filter_by = SelectField(choices=[('all_solved','All solved issues'),
+                                    ('user_watchlist','On my watchlist'),
+                                    ('user_has_solved','Solved by me')],
+                                     label='Choose Filter')
+    sort_by =SelectField(choices=[('solve_time_asc','Time of solution ascending \u2191'),
+                                    ('solve_time_desc','Time of solution descending \u2193'),
+                                    ('c_time_asc','Creation time ascending \u2191'),
+                                    ('c_time_desc','Creation time descending \u2193'),
+                                    ('solver_asc','Solver ascending \u2191'),
+                                    ('solver_desc','Solver descending \u2193'),
+                                    ('author_asc','Author ascending \u2191'),
+                                    ('author_desc','Author descending \u2193'),
+                                    ('subject_asc','Subject ascending \u2191'),
+                                    ('subject_desc','Subject descending \u2193')],
+                                    label='Sort by')
+    search = SubmitField(label = "Apply")

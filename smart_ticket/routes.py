@@ -1,6 +1,6 @@
 from smart_ticket import app, db
 from flask import redirect, render_template, request, flash, session, url_for
-from smart_ticket.forms import RegisterForm, LoginForm, OpenTicketForm, NewTicketLogMessage, AssignTicket2Self, UnassignTicket2Self,AddToWatchlist,RemoveFromWatchlist,TicketFilter
+from smart_ticket.forms import RegisterForm, LoginForm, OpenTicketForm, NewTicketLogMessage, AssignTicket2Self, UnassignTicket2Self,AddToWatchlist,RemoveFromWatchlist,TicketFilter, ArchiveTicketFilter
 from smart_ticket.models import User, Ticket, TicketLogMessage
 from flask_login import current_user, login_user, logout_user, login_required
 from sqlalchemy.sql import text
@@ -110,19 +110,22 @@ def ticket_list_page():
                 'subject_desc':'ticket.subject desc',
     }
     order_by_text = sort_dict['c_time_asc']
+    print(request.method)
 
     shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False).outerjoin(Ticket.author).order_by(text(order_by_text))
 
     if filter_form.validate_on_submit():
-        order_by_text = sort_dict[filter_form.sort_by.data]
-        shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False)\
-                        .outerjoin(Ticket.author).order_by(text(order_by_text))
+        if filter_form.filter_by.data == 'all_active':
+            order_by_text = sort_dict[filter_form.sort_by.data]
+            shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False)\
+                            .outerjoin(Ticket.author).order_by(text(order_by_text))
 
-        if filter_form.filter_by.data == 'user_watchlist':
+        elif filter_form.filter_by.data == 'user_watchlist':
             shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False,Ticket.currently_on_watchlist.contains(current_user))\
                             .outerjoin(Ticket.author).order_by(text(order_by_text))
                             
         elif filter_form.filter_by.data == 'user_is_solving':
+            print('here')
             shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False,Ticket.current_solvers.contains(current_user))\
                             .outerjoin(Ticket.author).order_by(text(order_by_text))
  
@@ -229,9 +232,36 @@ def remove_from_watchlist(current_ticket_id:int):
         flash(f"{ticket} is not on your watchlist, it can't be removed from it",category='danger')
     return redirect(url_for('ticket_detail_page', current_ticket_id=current_ticket_id))
 
-@app.route('/archive')
+@app.route('/archive', methods = ['GET','POST'])
 @login_required
 def archive_page():
+    form = ArchiveTicketFilter()
     tickets = Ticket.query.filter(Ticket.is_solved == True).all()
+    
+    sort_dict = {'c_time_asc':'ticket_creation_time',
+                'c_time_desc':'ticket_creation_time desc',
+                'author_asc': 'user.username',
+                'author_desc': 'user.username desc',
+                'subject_asc':'ticket.subject',
+                'subject_desc':'ticket.subject desc',
+    }
+    ''' 
+    order_by_text = sort_dict['c_time_asc']
 
-    return render_template('archive.html', tickets=tickets)
+    shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False).outerjoin(Ticket.author).order_by(text(order_by_text))
+
+    if form.validate_on_submit():
+        order_by_text = sort_dict[filter_form.sort_by.data]
+        shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False)\
+                        .outerjoin(Ticket.author).order_by(text(order_by_text))
+
+        if form.filter_by.data == 'useraw_watchlist':
+            shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False,Ticket.currently_on_watchlist.contains(current_user))\
+                            .outerjoin(Ticket.author).order_by(text(order_by_text))
+                            
+        elif form.filter_by.data == 'user_is_solving':
+            shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False,Ticket.current_solvers.contains(current_user))\
+                            .outerjoin(Ticket.author).order_by(text(order_by_text))    
+    '''
+
+    return render_template('archive.html', tickets=tickets, form=form)
