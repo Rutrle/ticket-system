@@ -254,8 +254,9 @@ def archive_page():
     else:
         user_to_outerjoin = Ticket.author
 
-    order_by_text = sort_dict['solve_time_asc']
-    tickets = db.session.query(Ticket).filter(Ticket.is_solved == True).outerjoin(user_to_outerjoin).order_by(text(order_by_text))
+    if request.method == 'GET':
+        order_by_text = sort_dict['solve_time_asc']
+        tickets = db.session.query(Ticket).filter(Ticket.is_solved == True).outerjoin(user_to_outerjoin).order_by(text(order_by_text))
     
     if filter_form.validate_on_submit():
         order_by_text = sort_dict[filter_form.sort_by.data]
