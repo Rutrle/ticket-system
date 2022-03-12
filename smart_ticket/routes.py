@@ -1,6 +1,6 @@
 from smart_ticket import app, db
 from flask import redirect, render_template, request, flash, session, url_for
-from smart_ticket.forms import RegisterForm, LoginForm, OpenTicketForm, NewTicketLogMessage, AssignTicket2Self, UnassignTicket2Self,AddToWatchlist,RemoveFromWatchlist,TicketFilter, ArchiveTicketFilter
+from smart_ticket.forms import RegisterForm, LoginForm, OpenTicketForm, NewTicketLogMessage, AssignTicket2Self, UnassignTicket2Self,AddToWatchlist,RemoveFromWatchlist,TicketFilter, ArchiveTicketFilter,ConfirmTicketSolution
 from smart_ticket.models import User, Ticket, TicketLogMessage
 from flask_login import current_user, login_user, logout_user, login_required
 from sqlalchemy.sql import text
@@ -141,9 +141,10 @@ def ticket_detail_page(current_ticket_id:int):
 
     new_log_msg_form = NewTicketLogMessage()
     assign_2_self_form = AssignTicket2Self()
-    unassign_from_self_form =UnassignTicket2Self()
+    unassign_from_self_form = UnassignTicket2Self()
     add_to_watchlist_form = AddToWatchlist()
-    remove_from_watchlist_form= RemoveFromWatchlist()
+    remove_from_watchlist_form = RemoveFromWatchlist()
+    confirm_solution_form = ConfirmTicketSolution()
 
 
     if request.method == 'POST':
@@ -197,7 +198,7 @@ def ticket_detail_page(current_ticket_id:int):
                 currently_solving_users = User.query.filter(User.currently_solving.any(id =current_ticket_id)).all()
                 flash(f'You are no longer assigned to ticket {ticket.subject}', category='warning')
 
-    return render_template('ticket_detail.html', ticket=ticket, msg_log=msg_log, form =new_log_msg_form,assign_2_self_form=assign_2_self_form,unassign_from_self_form=unassign_from_self_form, currently_solving_users = currently_solving_users, add_to_watchlist_form=add_to_watchlist_form,remove_from_watchlist_form=remove_from_watchlist_form)
+    return render_template('ticket_detail.html', ticket=ticket, msg_log=msg_log, form =new_log_msg_form,assign_2_self_form=assign_2_self_form,unassign_from_self_form=unassign_from_self_form, currently_solving_users = currently_solving_users, add_to_watchlist_form=add_to_watchlist_form,remove_from_watchlist_form=remove_from_watchlist_form, confirm_solution_form=confirm_solution_form)
 
 @app.route('/ticket/<int:current_ticket_id>/add_2_watchlist', methods=['POST'])
 @login_required

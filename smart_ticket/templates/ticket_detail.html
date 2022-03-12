@@ -62,6 +62,12 @@
                     </form>
                 </div>
             </row>
+            <div class="container">
+                {% include 'includes/solve_modal.html' %}
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ConfirmSolution">
+                    Solve ticket
+                </button>
+            </div>
             {% else %}
             <div class=" bg-dark  w-50" >
                 <form method="POST">
@@ -125,5 +131,5 @@
         </div>
     </div>
 </div>
-
 {% endblock content %}
+

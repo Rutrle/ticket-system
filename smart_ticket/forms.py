@@ -79,3 +79,7 @@ class ArchiveTicketFilter(FlaskForm):
                                     ('subject_desc','Subject descending \u2193')],
                                     label='Sort by')
     search = SubmitField(label = "Apply")
+
+class ConfirmTicketSolution(FlaskForm):
+    solution_text = TextAreaField(label="Describe ticket solution", validators=[DataRequired(), Length(min=5  , max=1500)])
+    solve_ticket = SubmitField(label = "Confirm Solution")
