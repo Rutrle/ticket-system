@@ -1,6 +1,5 @@
-from re import T
 from smart_ticket import db
-from datetime import datetime
+from datetime import datetime, timedelta
 from smart_ticket.models import  User, Ticket, TicketLogMessage
 
 '''
@@ -36,6 +35,7 @@ for user in users:
 db.session.commit()
 
 u = User.query.filter_by(username='User3').first()
+u1 =  User.query.filter_by(username='User1').first()
 u2 =  User.query.filter_by(username='User2').first()
 
 tickets.append(Ticket(subject='Something broke',issue_description = "something has broken, it's not my fault"))
@@ -43,9 +43,9 @@ tickets.append(Ticket(subject='Something else broke',issue_description = long_te
 tickets.append(Ticket(subject='Lorem ipsum',issue_description = longer_text))
 tickets.append(Ticket(subject='Owned ticket',issue_description = "I belong to user3",author_id =u.id ))
 tickets.append(Ticket(subject='Solved ticket',issue_description = "I was solved by user3", solved_on = datetime.now(),author_id =u.id, solver_id = u.id, is_solved=True ))
-tickets.append(Ticket(subject='Keyboard not working',issue_description = "I was solved by user2", solved_on = datetime.now(),author_id =u.id, solver_id = u2.id, is_solved=True ))
-tickets.append(Ticket(subject='Solved ticket',issue_description = "I was solved by user2", solved_on = datetime.now(), solver_id = u2.id, is_solved=True ))
-
+tickets.append(Ticket(subject='Keyboard not working',issue_description = "Keyboard is not working", solved_on = datetime.now() - timedelta(days=3),author_id =u.id, solver_id = u2.id, is_solved=True ))
+tickets.append(Ticket(subject='Solved ticket',issue_description = "I was solved by user2", solved_on = datetime.now() - timedelta(days=5), solver_id = u2.id, is_solved=True ))
+tickets.append(Ticket(subject='Browser not functioning properly',issue_description = "I was solved by user2", solved_on = datetime.now() - timedelta(days=5), solver_id = u1.id, is_solved=True ))
 for ticket in tickets:
     db.session.add(ticket)
 
@@ -61,6 +61,3 @@ db.session.commit()
 
 
 t = Ticket.query.filter_by(subject='Owned ticket').first()
-print(t)
-print(t.author)
-print(t.creation_time)
