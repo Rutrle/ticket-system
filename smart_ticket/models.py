@@ -67,10 +67,16 @@ class Ticket(db.Model):
     def __repr__(self) -> str:
         return f" Ticket No. {self.id} : {self.subject}"
     
-    def solve_ticket(self, solver):
+    def solve_ticket(self, solver, solution_text):
         self.solver_id = solver.id
         self.is_solved = True
         self.solved_on = datetime.now()
+        solution_text = "----- TICKET CLOSED ----- "+ solution_text
+        solution_message = TicketLogMessage( author_id = solver.id, ticket_id = self.id, message_text = solution_text)
+
+        db.session.add(solution_message)
+        db.session.add(self)
+        db.session.commit()
 
     
 

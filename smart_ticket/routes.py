@@ -2,7 +2,7 @@ from smart_ticket import app, db
 from flask import redirect, render_template, request, flash, session, url_for
 from smart_ticket.forms import RegisterForm, LoginForm, OpenTicketForm, NewTicketLogMessage, AssignTicket2Self, UnassignTicket2Self,AddToWatchlist,RemoveFromWatchlist,TicketFilter, ArchiveTicketFilter,ConfirmTicketSolution
 from smart_ticket.models import User, Ticket, TicketLogMessage
-from flask_login import current_user, login_user, logout_user, login_required
+from flask_login import confirm_login, current_user, login_user, logout_user, login_required
 from sqlalchemy.sql import text
 
 @app.route('/')
@@ -199,6 +199,27 @@ def ticket_detail_page(current_ticket_id:int):
                 flash(f'You are no longer assigned to ticket {ticket.subject}', category='warning')
 
     return render_template('ticket_detail.html', ticket=ticket, msg_log=msg_log, form =new_log_msg_form,assign_2_self_form=assign_2_self_form,unassign_from_self_form=unassign_from_self_form, currently_solving_users = currently_solving_users, add_to_watchlist_form=add_to_watchlist_form,remove_from_watchlist_form=remove_from_watchlist_form, confirm_solution_form=confirm_solution_form)
+
+
+@app.route('/ticket/<int:current_ticket_id>/solve', methods=['POST'])
+@login_required
+def solve_ticket(current_ticket_id:int):
+    confirm_solution_form = ConfirmTicketSolution()
+    print(confirm_solution_form.data)
+    if confirm_solution_form.validate():
+        ticket_to_solve = Ticket.query.get_or_404(current_ticket_id)
+
+        if ticket_to_solve.is_solved == False:
+            ticket_to_solve.solve_ticket(current_user, confirm_solution_form.solution_text.data)
+            flash(f"{ticket_to_solve} solved!", category= 'success')
+
+        else:
+            flash(f"{ticket_to_solve}  is already solved!", category= 'danger')
+
+
+    return redirect(url_for('ticket_detail_page', current_ticket_id=current_ticket_id))
+
+
 
 @app.route('/ticket/<int:current_ticket_id>/add_2_watchlist', methods=['POST'])
 @login_required
