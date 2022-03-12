@@ -63,7 +63,7 @@ class TicketFilter(FlaskForm):
     search = SubmitField(label = "Apply")
 
 class ArchiveTicketFilter(FlaskForm):
-    filter_by = SelectField(choices=[('all_solved','All solved issues'),
+    filter_by = SelectField(choices=[('all_solved','All resolved issues'),
                                     ('user_watchlist','On my watchlist'),
                                     ('user_has_solved','Solved by me')],
                                      label='Choose Filter')

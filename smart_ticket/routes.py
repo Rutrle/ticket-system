@@ -110,13 +110,13 @@ def ticket_list_page():
                 'subject_desc':'ticket.subject desc',
     }
     order_by_text = sort_dict['c_time_asc']
-    print(request.method)
 
-    shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False).outerjoin(Ticket.author).order_by(text(order_by_text))
+    if request.method == 'GET':
+        shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False).outerjoin(Ticket.author).order_by(text(order_by_text))
 
     if filter_form.validate_on_submit():
+        order_by_text = sort_dict[filter_form.sort_by.data]
         if filter_form.filter_by.data == 'all_active':
-            order_by_text = sort_dict[filter_form.sort_by.data]
             shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False)\
                             .outerjoin(Ticket.author).order_by(text(order_by_text))
 
@@ -125,7 +125,6 @@ def ticket_list_page():
                             .outerjoin(Ticket.author).order_by(text(order_by_text))
                             
         elif filter_form.filter_by.data == 'user_is_solving':
-            print('here')
             shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False,Ticket.current_solvers.contains(current_user))\
                             .outerjoin(Ticket.author).order_by(text(order_by_text))
  
@@ -235,33 +234,43 @@ def remove_from_watchlist(current_ticket_id:int):
 @app.route('/archive', methods = ['GET','POST'])
 @login_required
 def archive_page():
-    form = ArchiveTicketFilter()
-    tickets = Ticket.query.filter(Ticket.is_solved == True).all()
+    filter_form = ArchiveTicketFilter()
+    #tickets = Ticket.query.filter(Ticket.is_solved == True).all()
     
-    sort_dict = {'c_time_asc':'ticket_creation_time',
+    sort_dict = {'solve_time_asc':'ticket_solved_on', 
+                'solve_time_desc':'ticket_solved_on desc', 
+                'solver_asc':'user.username',
+                'solver_desc':'user.username desc',
+                'c_time_asc':'ticket_creation_time',
                 'c_time_desc':'ticket_creation_time desc',
                 'author_asc': 'user.username',
                 'author_desc': 'user.username desc',
                 'subject_asc':'ticket.subject',
                 'subject_desc':'ticket.subject desc',
     }
-    ''' 
-    order_by_text = sort_dict['c_time_asc']
+    
+    if  filter_form.sort_by.data == 'solver_asc' or filter_form.sort_by.data == 'solver_desc':
+        user_to_outerjoin = Ticket.solver
+    else:
+        user_to_outerjoin = Ticket.author
 
-    shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False).outerjoin(Ticket.author).order_by(text(order_by_text))
-
-    if form.validate_on_submit():
+    order_by_text = sort_dict['solve_time_asc']
+    tickets = db.session.query(Ticket).filter(Ticket.is_solved == True).outerjoin(user_to_outerjoin).order_by(text(order_by_text))
+    
+    if filter_form.validate_on_submit():
         order_by_text = sort_dict[filter_form.sort_by.data]
-        shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False)\
-                        .outerjoin(Ticket.author).order_by(text(order_by_text))
+        
+        if filter_form.filter_by.data == 'all_solved':
+            tickets = db.session.query(Ticket).filter(Ticket.is_solved == True)\
+                            .outerjoin(user_to_outerjoin).order_by(text(order_by_text))
 
-        if form.filter_by.data == 'useraw_watchlist':
-            shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False,Ticket.currently_on_watchlist.contains(current_user))\
-                            .outerjoin(Ticket.author).order_by(text(order_by_text))
+        elif filter_form.filter_by.data == 'user_watchlist':
+            tickets = db.session.query(Ticket).filter(Ticket.is_solved == True,Ticket.currently_on_watchlist.contains(current_user))\
+                            .outerjoin(user_to_outerjoin).order_by(text(order_by_text))
                             
-        elif form.filter_by.data == 'user_is_solving':
-            shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False,Ticket.current_solvers.contains(current_user))\
-                            .outerjoin(Ticket.author).order_by(text(order_by_text))    
-    '''
+        elif filter_form.filter_by.data == 'user_has_solved':
+            tickets = db.session.query(Ticket).filter(Ticket.is_solved == True,Ticket.solver == current_user)\
+                            .outerjoin(user_to_outerjoin).order_by(text(order_by_text))    
 
-    return render_template('archive.html', tickets=tickets, form=form)
+
+    return render_template('archive.html', tickets=tickets, form=filter_form)
