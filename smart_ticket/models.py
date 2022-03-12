@@ -78,8 +78,6 @@ class Ticket(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    
-
 
 class TicketLogMessage(db.Model):
     id = db.Column(db.Integer(),primary_key = True)

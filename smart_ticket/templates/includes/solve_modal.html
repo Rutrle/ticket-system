@@ -15,7 +15,7 @@
         <form method="POST" action = "{{ url_for('solve_ticket', current_ticket_id = ticket.id)}}"> 
         <div class="modal-body">
             {{confirm_solution_form.hidden_tag()}}
-            {{confirm_solution_form.solution_text(class="form-control w-10")}}
+            {{confirm_solution_form.solution_text(class="form-control w-10", placeholder = 'Describe ticket solution' )}}
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
