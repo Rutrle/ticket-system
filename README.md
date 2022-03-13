@@ -8,7 +8,6 @@
 
 <h3>TO DO:</h3>
 <ul>
-    <li>add different times to generated users and tickets in db_setup.py</li>
     <li>use blueprints</li>
     <li>add admin</li>
     <li>add more things to user</li>
