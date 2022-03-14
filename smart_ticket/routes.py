@@ -19,24 +19,6 @@ def home_page():
 def about_page():
     return render_template('about.html')
 
-@app.route('/register', methods=['GET','POST'])
-def registration_page():
-    form = RegisterForm()
-
-    if form.validate_on_submit():
-        new_user = User(
-            username = form.username.data,
-            email=form.email.data,
-            password = form.password1.data
-        )
-        db.session.add(new_user)
-        db.session.commit()
-
-    if form.errors !={}:
-        for err_msg in form.errors.values():
-            flash(f'There was an error in User creation: {err_msg[0]}', category='danger')
-
-    return render_template('registration.html', form=form)
 
 @app.route('/login', methods=['GET','POST'])
 def login_page():
