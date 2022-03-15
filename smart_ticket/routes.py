@@ -1,8 +1,8 @@
 from smart_ticket import app, db
 from flask import redirect, render_template, request, flash, session, url_for
-from smart_ticket.forms import RegisterForm, LoginForm, OpenTicketForm, NewTicketLogMessage, AssignTicket2Self, UnassignTicket2Self,AddToWatchlist,RemoveFromWatchlist,TicketFilter, ArchiveTicketFilter,ConfirmTicketSolution
+from smart_ticket.forms import OpenTicketForm, NewTicketLogMessage, AssignTicket2Self, UnassignTicket2Self,AddToWatchlist,RemoveFromWatchlist,TicketFilter, ArchiveTicketFilter,ConfirmTicketSolution
 from smart_ticket.models import User, Ticket, TicketLogMessage
-from flask_login import confirm_login, current_user, login_user, logout_user, login_required
+from flask_login import current_user, login_required
 from sqlalchemy.sql import text
 
 @app.route('/')
@@ -18,38 +18,6 @@ def home_page():
 @app.route('/about')
 def about_page():
     return render_template('about.html')
-
-
-@app.route('/login', methods=['GET','POST'])
-def login_page():
-    form = LoginForm()
-
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-        if user:
-            if user.check_attempted_password(form.password.data):
-                login_user(user)
-                flash("You have succesfully logged in!", category='success')
-                return redirect(url_for('home_page'))   ###### temporary, needs to change!
-        
-        flash('Wrong Username or password! Please try again.', category='danger')
-
-    return render_template('login.html', form=form)
-
-
-@app.route('/logout')
-@login_required
-def logout_page():
-    logout_user()
-    flash('You have logged out. Thanks for visiting!', category='info')
-    return redirect(url_for('home_page'))
-
-@app.route('/user_detail/<int:id>')
-@login_required
-def user_detail_page(id:int):
-    user = User.query.get_or_404(id)
-
-    return render_template('user_detail.html', user=user)
 
 
 @app.route('/submit_ticket', methods=['GET','POST'])

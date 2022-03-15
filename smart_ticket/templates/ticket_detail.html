@@ -90,7 +90,7 @@
                 <div class = "container m-2">
                     <h3>Current solvers:</h3>
                         {% for solver in currently_solving_users %}
-                            <a href="{{ url_for('user_detail_page', id = solver.id ) }}">{{solver.username}}</a>
+                            <a href="{{ url_for('user_blueprint.user_detail_page', id = solver.id ) }}">{{solver.username}}</a>
                         {% endfor %}
                     <hr>
                 </div>
