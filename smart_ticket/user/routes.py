@@ -4,7 +4,7 @@ from smart_ticket.user.forms import RegisterForm, LoginForm
 from smart_ticket.models import User
 from flask_login import login_user, logout_user, login_required
 
-user_blueprint = Blueprint('user_blueprint', __name__)
+user_blueprint = Blueprint('user_blueprint', __name__, template_folder='templates')
 
 
 @user_blueprint.route('/register', methods=['GET','POST'])
@@ -26,7 +26,7 @@ def registration_page():
         for err_msg in form.errors.values():
             flash(f'There was an error in User creation: {err_msg[0]}', category='danger')
 
-    return render_template('registration.html', form=form)
+    return render_template('user_blueprint/registration.html', form=form)
 
 @user_blueprint.route('/login', methods=['GET','POST'])
 def login_page():
