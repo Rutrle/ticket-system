@@ -41,18 +41,18 @@
           <ul class="navbar-nav ml-auto"> 
             {% if current_user.is_authenticated %}
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('user_blueprint.user_detail_page', id = current_user.id) }}">Welcome, {{ current_user.username }}</a>
+              <a class="nav-link" href="{{ url_for('user_bp.user_detail_page', id = current_user.id) }}">Welcome, {{ current_user.username }}</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('user_blueprint.logout_page') }}">Logout</a>
+              <a class="nav-link" href="{{ url_for('user_bp.logout_page') }}">Logout</a>
             </li>
 
             {% else %}
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('user_blueprint.login_page') }}">Login</a>
+              <a class="nav-link" href="{{ url_for('user_bp.login_page') }}">Login</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('user_blueprint.registration_page') }}">Register</a>
+              <a class="nav-link" href="{{ url_for('user_bp.registration_page') }}">Register</a>
             {% endif %}
             </li>
           </ul>
