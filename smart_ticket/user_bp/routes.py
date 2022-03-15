@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, render_template, request, flash, session, url_for
 from smart_ticket import app, db
-from smart_ticket.user.forms import RegisterForm, LoginForm
+from smart_ticket.user_bp.forms import RegisterForm, LoginForm
 from smart_ticket.models import User
 from flask_login import login_user, logout_user, login_required
 

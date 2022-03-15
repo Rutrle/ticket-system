@@ -14,7 +14,7 @@ bcrypt = Bcrypt(app)
 
 login_manager = LoginManager(app)
 
-from smart_ticket.user.routes import user_bp
+from smart_ticket.user_bp.routes import user_bp
 app.register_blueprint(user_bp, url_prefix = '/user')
 
 from smart_ticket import routes, filters
