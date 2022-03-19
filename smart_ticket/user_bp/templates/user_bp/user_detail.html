@@ -14,7 +14,7 @@ Smart Ticket - User detail
         <h2>Currently solving:</h2>
         
         {% for ticket in user.currently_solving %}
-        <a href="{{ url_for('ticket_detail_page', current_ticket_id=ticket.id) }}">
+        <a href="{{ url_for('ticket_bp.ticket_detail_page', current_ticket_id=ticket.id) }}">
         {{ticket}}
         </a>
         </p>

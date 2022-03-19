@@ -113,7 +113,7 @@
                 {% if current_user not in ticket.currently_on_watchlist %}
                     <h6>This ticket is not on your watchlist</h6>
                     <div class = "d-flex justify-content-center">
-                        <form method="POST" action="{{url_for('add_to_watchlist', current_ticket_id = ticket.id)}}">
+                        <form method="POST" action="{{url_for('ticket_bp.add_to_watchlist', current_ticket_id = ticket.id)}}">
                             {{add_to_watchlist_form.hidden_tag()}} 
                             {{add_to_watchlist_form.add_to_watchlist(class="btn btn-lg btn-block btn-warning")}}
                         </form>
@@ -121,7 +121,7 @@
                 {% else %}
                 <h6>This ticket is on your watchlist</h6>
                     <div class = "d-flex justify-content-center">
-                        <form method="POST" action="{{url_for('remove_from_watchlist', current_ticket_id = ticket.id)}}">
+                        <form method="POST" action="{{url_for('ticket_bp.remove_from_watchlist', current_ticket_id = ticket.id)}}">
                             {{remove_from_watchlist_form.hidden_tag()}} 
                             {{remove_from_watchlist_form.remove_from_watchlist(class="btn btn-lg btn-block btn-warning")}}
                         </form>

@@ -27,14 +27,14 @@
               <a class="nav-link active" href="{{ url_for('about_page') }}">About</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{{ url_for('create_ticket_page')}}">New ticket</a>
+              <a class="nav-link active" aria-current="page" href="{{ url_for('ticket_bp.create_ticket_page')}}">New ticket</a>
             </li>
             {% if current_user.is_authenticated %}
             <li class="nav-item">
-              <a class="nav-link active" href="{{ url_for('ticket_list_page') }}">Unresolved tickets</a>
+              <a class="nav-link active" href="{{ url_for('ticket_bp.ticket_list_page') }}">Unresolved tickets</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" href="{{ url_for('archive_page') }}">Archive</a>
+              <a class="nav-link active" href="{{ url_for('ticket_bp.archive_page') }}">Archive</a>
             </li>
             {% endif %}
           </ul>
