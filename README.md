@@ -8,7 +8,6 @@
 
 <h3>TO DO:</h3>
 <ul>
-    <li>use blueprints</li>
     <li>add admin</li>
     <li>add more things to user</li>
     <li>add rich text editor</li>
