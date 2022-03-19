@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, redirect, render_template, request, flash, session, url_for
-from smart_ticket import app, db
+from flask import Blueprint, render_template, redirect, render_template, request, flash, url_for
+from smart_ticket import db
 from smart_ticket.models import Ticket, TicketLogMessage, User
 from smart_ticket.ticket_bp.forms import OpenTicketForm, TicketFilter, NewTicketLogMessage, AssignTicket2Self, UnassignTicket2Self, AddToWatchlist, RemoveFromWatchlist, ConfirmTicketSolution, ArchiveTicketFilter
 from flask_login import current_user, login_required

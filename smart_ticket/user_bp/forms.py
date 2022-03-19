@@ -1,6 +1,6 @@
 from smart_ticket.models import User
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, PasswordField, EmailField, SubmitField, SelectField
+from wtforms import StringField, PasswordField, EmailField, SubmitField
 from wtforms.validators import Length, EqualTo, Email, DataRequired, ValidationError
 
 class RegisterForm(FlaskForm):

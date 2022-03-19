@@ -1,6 +1,5 @@
-from smart_ticket import app, db
-from flask import redirect, render_template, request, flash, session, url_for
-from flask_login import current_user, login_required
+from smart_ticket import app
+from flask import render_template
 
 
 @app.route('/')
