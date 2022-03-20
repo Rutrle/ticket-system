@@ -10,7 +10,6 @@
 <ul>
     <li>add admin</li>
     <li>add more things to user</li>
-    <li>add landing page after login</li>
     <li>add rich text editor</li>
     <li>put styles into separate CSS file</li>
     <li>refactoring, code is messy now; split functionaliti into more calls (ticket_bp issue) </li>

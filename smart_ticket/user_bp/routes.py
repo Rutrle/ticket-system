@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, render_template, flash, 
 from smart_ticket import db
 from smart_ticket.user_bp.forms import RegisterForm, LoginForm
 from smart_ticket.models import User
-from flask_login import login_user, logout_user, login_required
+from flask_login import current_user, login_user, logout_user, login_required
 
 user_bp = Blueprint('user_bp', __name__, template_folder='templates')
 
@@ -42,7 +42,7 @@ def login_page():
                 login_user(user)
                 flash("You have succesfully logged in!", category='success')
                 # temporary, needs to change!
-                return redirect(url_for('home_page'))
+                return redirect(url_for('user_bp.landing_page'))
 
         flash('Wrong Username or password! Please try again.', category='danger')
 
@@ -61,5 +61,10 @@ def logout_page():
 @login_required
 def user_detail_page(id: int):
     user = User.query.get_or_404(id)
-
     return render_template('user_bp/user_detail.html', user=user)
+
+@user_bp.route('/landing')
+@login_required
+def landing_page():
+    user = current_user
+    return render_template('user_bp/landing.html', user=user)

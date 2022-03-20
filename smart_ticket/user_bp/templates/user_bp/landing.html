@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Smart Ticket - Landing
+{% endblock title %}
+
+{% block content %}
+<div class = "container bg-dark m-5 p-5 mx-auto"> 
+        <h1>Welcome, {{user.username}}</h1>
+        <hr>
+        <h2>You are currently solving:</h2>
+        
+        
+        <table class="table table-hover table-dark">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Subject</th>
+                    <th scope="col">Author</th>
+                    <th scope="col">Creation time</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ticket in user.currently_solving %}
+                
+                <tr>
+                    <td>{{ticket.id}}</td>
+                    <td>{{ticket.subject}}</td>
+                    <td>{{ticket.author.username}}</td>
+                    <td>{{ticket.creation_time |format_time}}</td>
+                    <td style = "text-align:justify">
+                        <div class="text-truncate-container">
+                            <p class="text-truncate-container p-0 m-0"> 
+                            {{ticket.issue_description}}
+                            </p>
+                        </div>
+                    </td>
+                    <td>
+                        <a href = "{{url_for('ticket_bp.ticket_detail_page', current_ticket_id=ticket.id)}}" title="Detail">
+                            <button type="button" class="btn btn-secondary">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
+                                </svg>
+                            </button>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <hr>
+        <h2>On your watchlist:</h2>
+        
+        
+        <table class="table table-hover table-dark">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Subject</th>
+                    <th scope="col">Author</th>
+                    <th scope="col">Creation time</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Options</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ticket in user.current_watchlist %}
+                
+                <tr>
+                    <td>{{ticket.id}}</td>
+                    <td>{{ticket.subject}}</td>
+                    <td>{{ticket.author.username}}</td>
+                    <td>{{ticket.creation_time |format_time}}</td>
+                    <td style = "text-align:justify">
+                        <div class="text-truncate-container">
+                            <p class="text-truncate-container p-0 m-0"> 
+                            {{ticket.issue_description}}
+                            </p>
+                        </div>
+                    </td>
+                    <td>
+                        <a href = "{{url_for('ticket_bp.ticket_detail_page', current_ticket_id=ticket.id)}}" title="Detail">
+                            <button type="button" class="btn btn-secondary">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
+                                </svg>
+                            </button>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <hr>
+
+        <a class="btn btn-sm btn-secondary" href="{{ url_for('user_bp.user_detail_page', id = current_user.id ) }}">How others see my account?</a>
+
+</div>
+{% endblock content %}
