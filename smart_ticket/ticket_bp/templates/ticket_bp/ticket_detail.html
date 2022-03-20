@@ -31,8 +31,9 @@
                     <thead>
                         <tr>
                             <th scope="col" style="width: 15%">Posted</th>
-                            <th scope="col" style="width: 15%">Author</th>
-                            <th scope="col" style="width: 70%">Status update/Message</th>
+                            <th scope="col" style="width: 10%">Author</th>
+                            <th scope="col" style="width: 20%">Category</th>
+                            <th scope="col" style="width: 55%">Status update/Message</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -40,6 +41,7 @@
                             <tr>
                                 <td>{{msg.creation_time|format_time}}</td>
                                 <td>{{msg.author.username}}</td>
+                                <td>{{msg.message_category.value}}</td>
                                 <td>{{msg.message_text}}</td>
                             </tr>      
                         {% endfor %}

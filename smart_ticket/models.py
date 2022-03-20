@@ -90,9 +90,9 @@ class Ticket(db.Model):
         self.solver_id = solver.id
         self.is_solved = True
         self.solved_on = datetime.now()
-        solution_text = "----- TICKET CLOSED ----- " + solution_text
+        
         solution_message = TicketLogMessage(
-            author_id=solver.id, ticket_id=self.id, message_text=solution_text)
+            author_id=solver.id, ticket_id=self.id, message_text=solution_text, message_category="solved")
 
         db.session.add(solution_message)
         db.session.add(self)
