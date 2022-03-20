@@ -1,3 +1,4 @@
+import enum
 from sqlalchemy import ForeignKey, Column, Table
 from smart_ticket import db, bcrypt
 from smart_ticket import login_manager
@@ -98,15 +99,24 @@ class Ticket(db.Model):
         db.session.commit()
 
 
+class TicketogMessageCategory(enum.Enum):
+    update = 'Update'
+    solved = 'TICKET SOLVED'
+    sys_message = 'System message'
+
+
 class TicketLogMessage(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     author_id = db.Column(
         db.Integer(), db.ForeignKey('user.id'), nullable=True)
-    creation_time = db.Column(
-        db.DateTime(), nullable=False, default=datetime.now())
     ticket_id = db.Column(db.Integer(), db.ForeignKey(
         'ticket.id'), nullable=False)
+    creation_time = db.Column(
+        db.DateTime(), nullable=False, default=datetime.now())
+
     message_text = db.Column(db.Text(length=1500))
+    message_category = db.Column(db.Enum(TicketogMessageCategory),nullable=False)
 
     def __repr__(self) -> str:
         return f" Ticket log message {self.id}, for ticket {self.ticket.subject}"
+

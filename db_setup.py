@@ -53,7 +53,7 @@ for ticket in tickets:
 db.session.commit()
 
 for ticket in tickets:
-    ticket_creation_logs.append(TicketLogMessage(ticket_id=ticket.id, message_text = "Ticket opened"))
+    ticket_creation_logs.append(TicketLogMessage(ticket_id=ticket.id, message_text = "Ticket opened", message_category = "System message" ))
 
 for ticket_log in ticket_creation_logs:
     db.session.add(ticket_log)
