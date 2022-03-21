@@ -13,5 +13,5 @@
     <li>add rich text editor</li>
     <li>add proper documentation</li>
     <li>put styles into separate CSS file</li>
-    <li>refactoring, code is messy now; split functionaliti into more calls (ticket_bp issue) </li>
+    <li>refactoring, code is messy now; split functionality into more calls (ticket_bp issue) </li>
 </ul>

@@ -135,7 +135,6 @@ def ticket_detail_page(current_ticket_id: int):
                 flash(
                     f'You are not assigned to ticket {ticket.subject}', category='danger')
             else:
-                # maybe try/except - handling of user sending the request twice?
                 ticket.current_solvers.remove(current_user)
                 new_log_message = TicketLogMessage(
                     author_id=current_user.id,
