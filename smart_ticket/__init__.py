@@ -2,7 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
-
+from flask_ckeditor import CKEditor
 
 
 app = Flask(__name__)
@@ -10,7 +10,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///smart_ticket.db'
 app.config['SECRET_KEY'] = '1292023cdb7b8e39f924afab'
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
-
+ckeditor = CKEditor(app)
 
 login_manager = LoginManager(app)
 

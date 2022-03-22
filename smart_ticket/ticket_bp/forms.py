@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, SubmitField, SelectField
 from wtforms.validators import Length, DataRequired
-
+from flask_ckeditor import CKEditorField
 
 class OpenTicketForm(FlaskForm):
     subject = StringField(label='Subject', validators=[
@@ -29,8 +29,8 @@ class TicketFilter(FlaskForm):
 class OpenTicketForm(FlaskForm):
     subject = StringField(label='Subject', validators=[
                           DataRequired(), Length(min=5, max=45)])
-    issue_text = TextAreaField(label='Problem description', validators=[
-                               DataRequired(), Length(min=0, max=2500)])
+    #issue_text = TextAreaField(label='Problem description', validators=[DataRequired(), Length(min=0, max=2500)])
+    issue_text = CKEditorField(label ='Problem description', validators=[DataRequired(), Length(min=0, max=2500)] )
     submit = SubmitField(label='Submit ticket')
 
 
