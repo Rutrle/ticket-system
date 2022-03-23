@@ -23,7 +23,7 @@
             {% endif %}
             <p><strong>Problem description:</strong></p>
             <div class ="container">
-                <p>{{ticket.issue_description}}</p>
+                <p>{{ticket.issue_description|safe}}</p>
             </div>
 
             <div class ="container">

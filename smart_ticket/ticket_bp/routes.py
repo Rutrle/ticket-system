@@ -24,7 +24,7 @@ def create_ticket_page():
         db.session.add(new_ticket)
         db.session.commit()
         creation_log_msg = TicketLogMessage(
-            ticket_id=new_ticket.id, message_text="Ticket opened")
+            ticket_id=new_ticket.id, message_text="Ticket opened", message_category = "sys_message")
 
         db.session.add(creation_log_msg)
         db.session.commit()
@@ -211,7 +211,6 @@ def remove_from_watchlist(current_ticket_id: int):
 @login_required
 def archive_page():
     filter_form = ArchiveTicketFilter()
-    #tickets = Ticket.query.filter(Ticket.is_solved == True).all()
 
     sort_dict = {'solve_time_asc': 'ticket_solved_on',
                  'solve_time_desc': 'ticket_solved_on desc',
