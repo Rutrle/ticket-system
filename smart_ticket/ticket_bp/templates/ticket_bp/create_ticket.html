@@ -27,7 +27,11 @@ Smart Ticket Create Ticket
     </div>
 </div>
 
-{{ ckeditor.load() }}
-{{ ckeditor.config(name='issue_text') }}
+
+<script src="{{url_for('static', filename='js/ckeditor/ckeditor.js')}}"></script>
+
+<script>
+CKEDITOR.replace( 'issue_text' );
+</script>
 
 {% endblock %}
