@@ -24,7 +24,7 @@ def create_ticket_page():
         db.session.add(new_ticket)
         db.session.commit()
         creation_log_msg = TicketLogMessage(
-            ticket_id=new_ticket.id, message_text="Ticket opened", message_category = "sys_message")
+            ticket_id=new_ticket.id, message_text="Ticket opened", message_category="sys_message")
 
         db.session.add(creation_log_msg)
         db.session.commit()
@@ -97,7 +97,7 @@ def ticket_detail_page(current_ticket_id: int):
                 author_id=current_user.id,
                 ticket_id=current_ticket_id,
                 message_text=new_log_msg_form.message_text.data,
-                message_category = "update"
+                message_category="update"
             )
 
             db.session.add(new_log_message)
@@ -114,7 +114,7 @@ def ticket_detail_page(current_ticket_id: int):
                     author_id=current_user.id,
                     ticket_id=current_ticket_id,
                     message_text=f'User {current_user.username} started solving this issue',
-                    message_category = "sys_message"
+                    message_category="sys_message"
                 )
 
                 db.session.add(new_log_message)
@@ -140,7 +140,7 @@ def ticket_detail_page(current_ticket_id: int):
                     author_id=current_user.id,
                     ticket_id=current_ticket_id,
                     message_text=f'User {current_user.username} is no longer solving this issue',
-                    message_category = "sys_message"
+                    message_category="sys_message"
                 )
                 db.session.add(new_log_message)
                 db.session.add(ticket)
