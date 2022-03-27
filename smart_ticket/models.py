@@ -19,7 +19,12 @@ ticket_watchlist_association_table = Table('ticket_watchlist_association', db.Mo
                                            Column('ticket_id', ForeignKey(
                                                'ticket.id'), primary_key=True)
                                            )
-
+user_role_association_table = Table('user_role_association', db.Model.metadata,
+                                           Column('user_id', ForeignKey(
+                                               'user.id'), primary_key=True),
+                                           Column('user_role_id', ForeignKey(
+                                               'user_role.id'), primary_key=True)
+                                           )
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -41,6 +46,8 @@ class User(db.Model, UserMixin):
     current_watchlist = db.relationship(
         "Ticket", secondary=ticket_watchlist_association_table,  back_populates="currently_on_watchlist")
 
+    user_role = db.relationship("UserRole", secondary = user_role_association_table, back_populates="members")
+
     def __repr__(self) -> str:
         return f" User {self.username}"
 
@@ -55,6 +62,35 @@ class User(db.Model, UserMixin):
 
     def check_attempted_password(self, attempted_password):
         return bcrypt.check_password_hash(self.password_hash, attempted_password)
+
+
+class UserRole(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(length=40), nullable=False, unique=True)
+    members = db.relationship("User", secondary=user_role_association_table, back_populates="user_role")
+
+    def __repr__(self)-> str:
+        return self.name
+
+
+#https://stackoverflow.com/questions/52285012/does-flask-login-support-roles
+#temporary placement
+from functools import wraps
+from flask_login import current_user
+from flask import flash, redirect, url_for
+
+def admin_required(function):
+    @wraps(function)
+    def wrap(*args, **kwargs):
+        current_user_roles = [str(role) for role in current_user.user_role ]
+
+        if "Admin" in current_user_roles:
+            return function(*args, **kwargs)
+        else:
+            flash("You need to be an admin to view this page.", category = 'danger')
+            return redirect(url_for('home_page'))
+
+    return wrap
 
 
 class Ticket(db.Model):

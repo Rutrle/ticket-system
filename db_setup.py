@@ -1,6 +1,6 @@
 from smart_ticket import db
 from datetime import datetime, timedelta
-from smart_ticket.models import  User, Ticket, TicketLogMessage
+from smart_ticket.models import  User, Ticket, TicketLogMessage, UserRole
 
 '''
 script for deleting and recreating the database and filling it in with some data
@@ -11,6 +11,10 @@ also used for trying out database communication during development - these parts
 
 db.drop_all()
 db.create_all()
+
+admin_role = UserRole(name = "Admin")
+db.session.add(admin_role)
+db.session.commit()
 
 long_text = "Est eiusmod sunt in velit cillum enim consectetur pariatur ullamco. Quis pariatur anim deserunt irure voluptate aute reprehenderit enim minim aliquip laboris et. Nostrud consectetur ex non ullamco Lorem commodo. Cillum magna dolore occaecat duis laborum consequat. Duis Lorem reprehenderit ex dolore elit excepteur in qui cupidatat in reprehenderit. Id eu minim elit mollit. Occaecat ea ipsum do ullamco laborum nostrud ipsum Lorem ullamco elit."
 longer_text = """Ullamco deserunt deserunt officia ad nisi consequat adipisicing velit cupidatat nulla qui enim magna. Esse sint esse proident enim elit dolor amet. Velit culpa amet enim dolore est.
@@ -30,6 +34,7 @@ users.append(User(username='User1', email='user1@mail.com',password='password'))
 users.append(User(username='User2', email='user2@mail.com',password='password2'))
 users.append(User(username='User3', email='user3@mail.com',password='password3'))
 users.append(User(username='Josef Smith', email='smith3@mail.com',password='password'))
+users.append(User(username='admin', email='admin@mail.com',password='admin', user_role = [admin_role]))
 for user in users:
     db.session.add(user)
 db.session.commit()
