@@ -103,33 +103,6 @@ def ticket_detail_page(current_ticket_id: int):
             db.session.add(new_log_message)
             db.session.commit()
 
-        elif 'assign_2_self' in request.form and assign_2_self_form.validate():
-            if current_user in ticket.current_solvers:
-                flash(
-                    f'You are already assigned to ticket {ticket.subject}', category='warning')
-
-            else:
-                ticket.current_solvers.append(current_user)
-                new_log_message = TicketLogMessage(
-                    author_id=current_user.id,
-                    ticket_id=current_ticket_id,
-                    message_text=f'User {current_user.username} started solving this issue',
-                    message_category="sys_message"
-                )
-
-                db.session.add(new_log_message)
-                db.session.add(ticket)
-                db.session.commit()
-                currently_solving_users = User.query.filter(
-                    User.currently_solving.any(id=current_ticket_id)).all()
-
-                flash(
-                    f'You have been succesfully assigned to ticket {ticket.subject}', category='success')
-
-        if assign_2_self_form.errors != {}:
-            for err_msg in assign_2_self_form.errors.values():
-                flash(f'There was an error: {err_msg[0]}', category='danger')
-
         elif 'unassign_from_self' in request.form and unassign_from_self_form.validate():
             if current_user not in ticket.current_solvers:
                 flash(
@@ -152,6 +125,35 @@ def ticket_detail_page(current_ticket_id: int):
 
     return render_template('ticket_bp/ticket_detail.html', ticket=ticket, msg_log=msg_log, form=new_log_msg_form, assign_2_self_form=assign_2_self_form, unassign_from_self_form=unassign_from_self_form, currently_solving_users=currently_solving_users, add_to_watchlist_form=add_to_watchlist_form, remove_from_watchlist_form=remove_from_watchlist_form, confirm_solution_form=confirm_solution_form)
 
+@ticket_bp.route('/<int:current_ticket_id>/assign_2_self', methods=['POST'])
+@login_required
+def assign_2_self(current_ticket_id: int):
+    assign_2_self_form = AssignTicket2Self()
+    ticket = Ticket.query.get_or_404(current_ticket_id)
+    if assign_2_self_form.validate_on_submit():
+        if current_user in ticket.current_solvers:
+                flash(f'You are already assigned to ticket {ticket.subject}', category='warning')
+
+        else:
+                ticket.current_solvers.append(current_user)
+                new_log_message = TicketLogMessage(
+                    author_id=current_user.id,
+                    ticket_id=current_ticket_id,
+                    message_text=f'User {current_user.username} started solving this issue',
+                    message_category="sys_message"
+                )        
+
+                db.session.add(new_log_message)
+                db.session.add(ticket)
+                db.session.commit()
+
+                flash(f'You have been succesfully assigned to ticket {ticket.subject}', category='success')
+
+        if assign_2_self_form.errors != {}:
+            for err_msg in assign_2_self_form.errors.values():
+                flash(f'There was an error: {err_msg[0]}', category='danger')
+
+    return redirect(url_for('ticket_bp.ticket_detail_page', current_ticket_id=current_ticket_id))
 
 @ticket_bp.route('/<int:current_ticket_id>/solve', methods=['POST'])
 @login_required
