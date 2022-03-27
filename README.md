@@ -10,12 +10,13 @@
 <li><b>Flask-SQLAlchemy</b> for database setup and communication</li>
 <li><b>WTForms</b> for forms and forms validation</li>
 <li><b>CKEditor</b> rich text editor</li>
+<li><b>bcrypt</b> for hashing passwords</li>
 </ul>
 
 
 <h3>TO DO:</h3>
 <ul>
-    <li>add admin</li>
+    <li>add content admin</li>
     <li>add more things to user</li>
     <li>add proper documentation</li>
     <li>put styles into separate CSS file</li>
