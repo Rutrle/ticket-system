@@ -2,7 +2,7 @@
 
 <hr>
 
-<p>This project is a ticketing system, with flask backend. For frontend are used mainly Bootstrap templates.</p>
+<p>This project is a ticketing system, with flask backend. For frontend are used mainly Bootstrap5 templates.</p>
 <p>Main purpose of this project is for me to get better with flask - because of this many of things that could be probably done better on frontend are done in backend</p>
 <hr>
 <h3>Used libraries:<h3>
@@ -20,5 +20,5 @@
     <li>add more things to user</li>
     <li>add proper documentation</li>
     <li>put styles into separate CSS file</li>
-    <li>refactoring, code is messy now; split functionality into more calls (ticket_bp issue) </li>
+    <li>refactoring, code is messy now</li>
 </ul>
