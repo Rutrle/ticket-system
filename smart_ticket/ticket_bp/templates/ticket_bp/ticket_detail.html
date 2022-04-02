@@ -103,7 +103,7 @@
                             {{assign_2_self_form.assign_2_self(class="btn btn-lg btn-block btn-primary")}}
                         </form>
                     {% else %} 
-                        <form method="POST">
+                        <form method="POST" action="{{url_for('ticket_bp.unassign_from_self', current_ticket_id = ticket.id)}}">
                             {{unassign_from_self_form.hidden_tag()}} 
                             {{unassign_from_self_form.unassign_from_self(class="btn btn-lg btn-block btn-warning")}}
                         </form>
