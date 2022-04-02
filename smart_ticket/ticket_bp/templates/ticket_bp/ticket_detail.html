@@ -51,7 +51,7 @@
             {% if ticket.is_solved == False %}
             <row class="bg-dark container">
                 <div class=" bg-dark  w-50" >
-                    <form method="POST">
+                    <form method="POST" action="{{url_for('ticket_bp.submit_new_log_ticket', current_ticket_id = ticket.id)}}">
                         <h3>Write an update</h3>
 
                         {{form.hidden_tag()}}
@@ -73,7 +73,7 @@
             </div>
             {% else %}
             <div class=" bg-dark  w-50" >
-                <form method="POST">
+                <form method="POST" action="{{url_for('ticket_bp.submit_new_log_ticket', current_ticket_id = ticket.id)}}">
                     <h3>Reopen ticket - placeholder</h3>
 
                     {{form.hidden_tag()}}

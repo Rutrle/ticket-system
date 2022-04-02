@@ -73,7 +73,7 @@ def ticket_list_page():
     return render_template('ticket_bp/ticket_list.html', tickets=shown_tickets, filter_form=filter_form)
 
 
-@ticket_bp.route('/<int:current_ticket_id>', methods=['GET', 'POST'])
+@ticket_bp.route('/<int:current_ticket_id>')
 @login_required
 def ticket_detail_page(current_ticket_id: int):
 
@@ -90,20 +90,28 @@ def ticket_detail_page(current_ticket_id: int):
     remove_from_watchlist_form = RemoveFromWatchlist()
     confirm_solution_form = ConfirmTicketSolution()
 
-    if request.method == 'POST':
-        if 'submit_new_log_ticket' in request.form and new_log_msg_form.validate():
-
-            new_log_message = TicketLogMessage(
-                author_id=current_user.id,
-                ticket_id=current_ticket_id,
-                message_text=new_log_msg_form.message_text.data,
-                message_category="update"
-            )
-
-            db.session.add(new_log_message)
-            db.session.commit()
-
     return render_template('ticket_bp/ticket_detail.html', ticket=ticket, msg_log=msg_log, form=new_log_msg_form, assign_2_self_form=assign_2_self_form, unassign_from_self_form=unassign_from_self_form, currently_solving_users=currently_solving_users, add_to_watchlist_form=add_to_watchlist_form, remove_from_watchlist_form=remove_from_watchlist_form, confirm_solution_form=confirm_solution_form)
+
+
+@ticket_bp.route('/<int:current_ticket_id>/submit_new_log_ticket', methods=['POST'])
+@login_required
+def submit_new_log_ticket(current_ticket_id: int):
+    new_log_msg_form = NewTicketLogMessage()
+
+    if new_log_msg_form.validate_on_submit():
+
+        new_log_message = TicketLogMessage(
+            author_id=current_user.id,
+            ticket_id=current_ticket_id,
+            message_text=new_log_msg_form.message_text.data,
+            message_category="update"
+        )
+
+        db.session.add(new_log_message)
+        db.session.commit()
+
+    return redirect(url_for('ticket_bp.ticket_detail_page', current_ticket_id=current_ticket_id))
+
 
 @ticket_bp.route('/<int:current_ticket_id>/unassign_from_self', methods=['POST'])
 @login_required
