@@ -1,6 +1,6 @@
 from smart_ticket.models import User
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, EmailField, SubmitField
+from wtforms import StringField, PasswordField, EmailField, SubmitField, FileField
 from wtforms.validators import Length, EqualTo, Email, DataRequired, ValidationError
 
 
@@ -30,3 +30,8 @@ class LoginForm(FlaskForm):
     username = StringField(label="Username", validators=[DataRequired()])
     password = PasswordField(label="Password", validators=[DataRequired()])
     submit = SubmitField(label='Login')
+
+class UserUpdateForm(FlaskForm):
+    email = EmailField(label='Email', validators=[DataRequired(), Email()])
+    phone_number = StringField(label='Phone number', validators=[Length(min=3, max=15)])
+    profile_picture = FileField(label= "Profile picture")
