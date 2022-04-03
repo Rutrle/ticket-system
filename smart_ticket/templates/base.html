@@ -23,6 +23,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            {% if current_user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link active" href="{{ url_for('user_bp.landing_page') }}">Landing page</a>
+            </li>
+            {% endif %}            
             <li class="nav-item">
               <a class="nav-link active" href="{{ url_for('about_page') }}">About</a>
             </li>
@@ -41,7 +46,7 @@
           <ul class="navbar-nav ml-auto"> 
             {% if current_user.is_authenticated %}
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('user_bp.landing_page',) }}">Welcome, {{ current_user.username }}</a>
+              <a class="nav-link" href="{{ url_for('user_bp.user_detail_page', id = current_user.id) }}">Welcome, {{ current_user.username }}</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{{ url_for('user_bp.logout_page') }}">Logout</a>
