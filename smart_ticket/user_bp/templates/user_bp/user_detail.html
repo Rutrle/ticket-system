@@ -5,22 +5,30 @@ Smart Ticket - User detail
 {% endblock title %}
 
 {% block content %}
-<div class = "container bg-dark m-5 p-5 mx-auto"> 
+        <div class = "container bg-dark m-5 p-5 mx-auto">
         <h2>{{user.username}}</h2>
         <hr>
-        <h5>User details</h5>
-        <br>
-        <p><b>Email: </b>{{user.email}}</p>
-        <p><b>Phone number: </b>{{user.phone_number}}</p>
+        <h3>User details</h3>
+
+        <div class="row">  
+                <div class="col-8">
+                        <br>
+                        <p><b>Email: </b>{{user.email}}</p>
+                        <p><b>Phone number: </b>{{user.phone_number}}</p>
+                </div>
+                <div class="col-4">
+                        <img src="{{ url_for('static', filename='images/default_profile_picture.png')}}">
+                </div>
+        </div>
         <hr>
         <h2>Currently solving:</h2>
-        
-        {% for ticket in user.currently_solving %}
-        <a href="{{ url_for('ticket_bp.ticket_detail_page', current_ticket_id=ticket.id) }}">
-        {{ticket}}
-        </a>
-        </p>
-        {% endfor %}
 
+        {% for ticket in user.currently_solving %}
+                <a href="{{ url_for('ticket_bp.ticket_detail_page', current_ticket_id=ticket.id) }}">
+                {{ticket}}
+                </a>
+                </p>
+        {% endfor %}
 </div>
+
 {% endblock content %}

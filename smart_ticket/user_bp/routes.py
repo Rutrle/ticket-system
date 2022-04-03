@@ -68,3 +68,10 @@ def user_detail_page(id: int):
 def landing_page():
     user = current_user
     return render_template('user_bp/landing.html', user=user)
+
+
+@user_bp.route('/update')
+@login_required
+def update_account_settings():
+    user = current_user
+    return render_template('user_bp/landing.html', user=user)
