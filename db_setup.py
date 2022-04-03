@@ -30,9 +30,9 @@ users=[]
 tickets=[]
 ticket_creation_logs=[]
 
-users.append(User(username='User1', email='user1@mail.com',password='password'))
-users.append(User(username='User2', email='user2@mail.com',password='password2'))
-users.append(User(username='User3', email='user3@mail.com',password='password3'))
+users.append(User(username='User1', email='user1@mail.com',password='password', phone_number = '+420123456789' ))
+users.append(User(username='Greorge Sharp', email='user2@mail.com',password='password2' , phone_number = '+420993456789'))
+users.append(User(username='User3', email='user3@mail.com',password='password3' , phone_number = '+420123444789'))
 users.append(User(username='Josef Smith', email='smith3@mail.com',password='password'))
 users.append(User(username='admin', email='admin@mail.com',password='admin', user_role = [admin_role]))
 for user in users:
@@ -41,7 +41,7 @@ db.session.commit()
 
 u = User.query.filter_by(username='User3').first()
 u1 =  User.query.filter_by(username='User1').first()
-u2 =  User.query.filter_by(username='User2').first()
+u2 =  User.query.filter_by(username='Greorge Sharp').first()
 
 tickets.append(Ticket(subject='Something broke',issue_description = "something has broken, it's not my fault"))
 tickets.append(Ticket(subject='Something else broke',issue_description = long_text))
