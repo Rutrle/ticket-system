@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, render_template, flash, url_for
 from smart_ticket import db
-from smart_ticket.user_bp.forms import RegisterForm, LoginForm
+from smart_ticket.user_bp.forms import RegisterForm, LoginForm, UserContactsUpdateForm, UserProfilePictureForm, UserPasswordUpdateForm
 from smart_ticket.models import User
 from flask_login import current_user, login_user, logout_user, login_required
 
@@ -73,5 +73,31 @@ def landing_page():
 @user_bp.route('/update')
 @login_required
 def update_account_settings():
-    user = current_user
-    return render_template('user_bp/landing.html', user=user)
+    contacts_update_form = UserContactsUpdateForm()
+    profile_picture_form = UserProfilePictureForm()
+    password_form = UserPasswordUpdateForm()
+
+    return render_template('user_bp/update_user.html', contacts_update_form=contacts_update_form,profile_picture_form=profile_picture_form,password_form=password_form)
+
+@user_bp.route('/update/update_user_info', methods = ['POST'])
+@login_required
+def update_basic_account_settings():
+    contacts_update_form = UserContactsUpdateForm()
+
+    if contacts_update_form.validate_on_submit():
+        print(contacts_update_form.phone_number.data)
+        phone_number = contacts_update_form.phone_number.data
+        phone_number = "".join(phone_number.split())
+        current_user.email = contacts_update_form.email.data
+        current_user.phone_number = phone_number
+
+        db.session.add(current_user)
+        db.session.commit()
+        flash("Your contact details were succesfully updated", category="success")
+
+    elif contacts_update_form.errors != {}:
+        for err_msg in contacts_update_form.errors.values():
+            flash(
+                f'There was an error in updating your profile: {err_msg[0]}', category='danger')
+
+    return redirect(url_for('user_bp.update_account_settings'))

@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Smart Ticket - User update
+{% endblock title %}
+
+{% block content %}
+<div class = "container p-5">
+        <div class = "container bg-dark m-5 p-5 mx-auto">
+                <h2>{{current_user.username}}</h2>
+                <hr>
+                <div class="p-5 mx-auto">
+                        <div class="row">
+                                <h5>Your contact details:</h5>
+                                <div class = "form-group row col-6">
+                                        <form method="POST"  action = "{{url_for('user_bp.update_basic_account_settings')}}">
+                                        {{contacts_update_form.hidden_tag()}}
+
+                                        {{contacts_update_form.email.label()}}
+                                        {{contacts_update_form.email(class="form-control",value=current_user.email, title = "Your e-mail address")}}
+
+                                        {{contacts_update_form.phone_number.label()}}
+                                        {{contacts_update_form.phone_number(class="form-control",value=current_user.phone_number, title="Your phone number including country prefix")}}
+                                        <div class="col-auto my-3">
+                                                {{contacts_update_form.submit(class="btn btn-lg btn-block btn-primary")}}    
+                                        </div>
+                                        </form>
+                                </div>
+                        </div>
+                        <hr>
+                        <h5>Your current profile picture:</h5>
+                        <form method="POST" class="form-register", style="color:white"> 
+                                {{current_user.profile_picture }}
+                                
+                                {{profile_picture_form.hidden_tag()}}
+                                {{profile_picture_form.profile_picture.label()}}
+                                {{profile_picture_form.profile_picture(class="form-control")}}
+
+                                {{profile_picture_form.submit(class="btn btn-lg btn-block btn-primary")}}
+                        </form>
+                        <hr>
+                        <h5>Update password</h5>
+                        <form method="POST" class="form-register", style="color:white"> 
+                                {{password_form.hidden_tag()}}
+                                {{password_form.old_password.label()}}
+                                {{password_form.old_password(class="form-control")}}
+
+                                {{password_form.password1.label()}}
+                                {{password_form.password1(class="form-control")}}
+
+                                {{password_form.password2.label()}}
+                                {{password_form.password2(class="form-control")}}
+
+                                {{password_form.submit(class="btn btn-lg btn-block btn-primary")}}
+                        </form>
+                </div>
+        </div>
+</div>
+{% endblock content %}

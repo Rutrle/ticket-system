@@ -11,6 +11,7 @@
 <li><b>WTForms</b> for forms and forms validation</li>
 <li><b>CKEditor</b> rich text editor</li>
 <li><b>bcrypt</b> for hashing passwords</li>
+<li><b>phonenumbers</b> for validating phone numbers</li>
 </ul>
 
 
@@ -21,4 +22,5 @@
     <li>add proper documentation</li>
     <li>put styles into separate CSS file</li>
     <li>refactoring, code is messy now</li>
+    <li>landing page user => current user</li>
 </ul>
