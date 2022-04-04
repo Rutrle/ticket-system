@@ -39,20 +39,23 @@ Smart Ticket - User update
                                 {{profile_picture_form.submit(class="btn btn-lg btn-block btn-primary")}}
                         </form>
                         <hr>
-                        <h5>Update password</h5>
-                        <form method="POST" class="form-register", style="color:white"> 
-                                {{password_form.hidden_tag()}}
-                                {{password_form.old_password.label()}}
-                                {{password_form.old_password(class="form-control")}}
+                        <div class = "form-group row col-6">
+                                <h5>Update password</h5>
+                                <form method="POST" action = "{{url_for('user_bp.update_password')}}"> 
+                                        {{password_update_form.hidden_tag()}}
+                                        {{password_update_form.old_password.label()}}
+                                        {{password_update_form.old_password(class="form-control")}}
 
-                                {{password_form.password1.label()}}
-                                {{password_form.password1(class="form-control")}}
+                                        {{password_update_form.password1.label()}}
+                                        {{password_update_form.password1(class="form-control")}}
 
-                                {{password_form.password2.label()}}
-                                {{password_form.password2(class="form-control")}}
-
-                                {{password_form.submit(class="btn btn-lg btn-block btn-primary")}}
-                        </form>
+                                        {{password_update_form.password2.label()}}
+                                        {{password_update_form.password2(class="form-control")}}
+                                        <div class="col-auto my-3">
+                                                {{password_update_form.submit(class="btn btn-lg btn-block btn-primary")}}
+                                        </div>
+                                </form>
+                        </div>
                 </div>
         </div>
 </div>

@@ -38,7 +38,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(length=30), nullable=False, unique=True)
     email = db.Column(db.String(length=30), nullable=False, unique=True)
     phone_number = db.Column(db.String(length = 15), unique=True)
-    password_hash = db.Column(db.String(length=50),
+    password_hash = db.Column(db.String(length=255),
                               nullable=False, unique=True)
     created_ticket_log_messages = db.relationship(
         'TicketLogMessage', backref='author', lazy=True)

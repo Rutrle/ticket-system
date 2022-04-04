@@ -9,7 +9,7 @@ class RegisterForm(FlaskForm):
     username = StringField(label='Username', validators=[
                            DataRequired(), Length(min=2, max=30)])
     email = EmailField(label='Email', validators=[DataRequired(), Email()])
-    password1 = PasswordField(label='Password', validators=[DataRequired()])
+    password1 = PasswordField(label='Password', validators=[DataRequired(), Length(min=5, max=50)])
     password2 = PasswordField(label='Confirm password', validators=[
                               DataRequired(), EqualTo('password1', message="Passwords have to match")])
     submit = SubmitField(label='Submit')
@@ -57,6 +57,6 @@ class UserProfilePictureForm(FlaskForm):
 
 class UserPasswordUpdateForm(FlaskForm):
     old_password = PasswordField(label='Old password', validators=[DataRequired()])
-    password1 = PasswordField(label='Password', validators=[DataRequired()])
+    password1 = PasswordField(label='Password', validators=[DataRequired(), Length(min=5, max=50)])
     password2 = PasswordField(label='Confirm password', validators=[DataRequired(), EqualTo('password1', message="Passwords have to match")])
     submit = SubmitField(label='Change password')

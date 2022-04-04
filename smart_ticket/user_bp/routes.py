@@ -41,7 +41,7 @@ def login_page():
             if user.check_attempted_password(form.password.data):
                 login_user(user)
                 flash("You have succesfully logged in!", category='success')
-                # temporary, needs to change!
+
                 return redirect(url_for('user_bp.landing_page'))
 
         flash('Wrong Username or password! Please try again.', category='danger')
@@ -75,9 +75,9 @@ def landing_page():
 def update_account_settings():
     contacts_update_form = UserContactsUpdateForm()
     profile_picture_form = UserProfilePictureForm()
-    password_form = UserPasswordUpdateForm()
+    password_update_form = UserPasswordUpdateForm()
 
-    return render_template('user_bp/update_user.html', contacts_update_form=contacts_update_form,profile_picture_form=profile_picture_form,password_form=password_form)
+    return render_template('user_bp/update_user.html', contacts_update_form=contacts_update_form,profile_picture_form=profile_picture_form,password_update_form=password_update_form)
 
 @user_bp.route('/update/update_user_info', methods = ['POST'])
 @login_required
@@ -85,7 +85,6 @@ def update_basic_account_settings():
     contacts_update_form = UserContactsUpdateForm()
 
     if contacts_update_form.validate_on_submit():
-        print(contacts_update_form.phone_number.data)
         phone_number = contacts_update_form.phone_number.data
         phone_number = "".join(phone_number.split())
         current_user.email = contacts_update_form.email.data
@@ -99,5 +98,36 @@ def update_basic_account_settings():
         for err_msg in contacts_update_form.errors.values():
             flash(
                 f'There was an error in updating your profile: {err_msg[0]}', category='danger')
+
+    return redirect(url_for('user_bp.update_account_settings'))
+
+
+@user_bp.route('/update/update_password', methods = ['POST'])
+@login_required
+def update_password():
+    password_update_form = UserPasswordUpdateForm()
+
+    if password_update_form.validate_on_submit():
+
+        old_password = password_update_form.old_password.data
+        new_password = password_update_form.password1.data
+
+        if current_user.check_attempted_password(old_password):
+            current_user.password = new_password
+            db.session.add(current_user)
+            db.session.commit()
+            
+            logout_user()
+
+            flash("Your password was succesfully updated, please use it to log in", category="success")
+            return redirect(url_for('user_bp.login_page'))
+
+        else:
+            flash("You entered invalid old password", category='danger')
+
+    elif password_update_form.errors != {}:
+        for err_msg in password_update_form.errors.values():
+            flash(
+                f'There was an error in changing your password: {err_msg[0]}', category='danger')
 
     return redirect(url_for('user_bp.update_account_settings'))
