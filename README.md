@@ -22,5 +22,4 @@
     <li>add proper documentation</li>
     <li>put styles into separate CSS file</li>
     <li>refactoring, code is messy now</li>
-    <li>landing page user => current user</li>
 </ul>

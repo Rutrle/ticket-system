@@ -28,16 +28,24 @@ Smart Ticket - User update
                                 </div>
                         </div>
                         <hr>
+                        <div class = "form-group row col-6">
                         <h5>Your current profile picture:</h5>
-                        <form method="POST" class="form-register", style="color:white"> 
-                                {{current_user.profile_picture }}
-                                
-                                {{profile_picture_form.hidden_tag()}}
-                                {{profile_picture_form.profile_picture.label()}}
-                                {{profile_picture_form.profile_picture(class="form-control")}}
-
-                                {{profile_picture_form.submit(class="btn btn-lg btn-block btn-primary")}}
-                        </form>
+                                <form method="POST" action = "{{url_for('user_bp.update_profile_picture')}}"> 
+                                        
+                                        {% if current_user.picture %}
+                                        {{current_user.profile_picture}}
+                                        {% else %}
+                                        <img src="{{ url_for('static', filename='images/default_profile_picture.png')}}">
+                                        {% endif %}
+                                        
+                                        {{profile_picture_form.hidden_tag()}}
+                                        {{profile_picture_form.profile_picture.label()}}
+                                        {{profile_picture_form.profile_picture(class="form-control")}}
+                                        <div class="col-auto my-3">
+                                                {{profile_picture_form.submit(class="btn btn-lg btn-block btn-primary")}}
+                                        </div>
+                                </form>
+                        </div>
                         <hr>
                         <div class = "form-group row col-6">
                                 <h5>Update password</h5>

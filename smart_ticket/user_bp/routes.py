@@ -101,6 +101,13 @@ def update_basic_account_settings():
 
     return redirect(url_for('user_bp.update_account_settings'))
 
+@user_bp.route('/update/update_profile_picture', methods = ['POST'])
+@login_required
+def update_profile_picture():
+    profile_picture_form = UserProfilePictureForm()
+    print(profile_picture_form.profile_picture.data)
+
+    return redirect(url_for('user_bp.update_account_settings'))
 
 @user_bp.route('/update/update_password', methods = ['POST'])
 @login_required
@@ -116,7 +123,7 @@ def update_password():
             current_user.password = new_password
             db.session.add(current_user)
             db.session.commit()
-            
+
             logout_user()
 
             flash("Your password was succesfully updated, please use it to log in", category="success")

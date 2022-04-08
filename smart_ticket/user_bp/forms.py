@@ -52,7 +52,7 @@ class UserContactsUpdateForm(FlaskForm):
             raise ValidationError('Invalid phone number. Maybe you have forgotten country prefix code?')
 
 class UserProfilePictureForm(FlaskForm):
-    profile_picture = FileField(label= "Profile picture")
+    profile_picture = FileField(label= "New profile picture")
     submit = SubmitField(label='Upload new profile picture')
 
 class UserPasswordUpdateForm(FlaskForm):
