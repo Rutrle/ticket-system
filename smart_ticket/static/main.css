@@ -5,6 +5,25 @@
     margin-bottom: 16px;
   }
 
+.modal-content {
+    background-color: #212121
+  }
+
+.text-truncate-container {
+    width: 400px;
+}
+.text-truncate-container p {
+    -webkit-line-clamp: 3;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.text-justify {
+    text-align:justify;
+
+}
+
 body {
     background-color: #212121;
     color: white

@@ -54,7 +54,7 @@
                 <td>{{ticket.solved_on|format_time}}</td>
                 <td>{{ticket.author.username}}</td>
                 <td>{{ticket.creation_time|format_time}}</td>
-                <td style = "text-align:justify">
+                <td class = "text-justify">
                     <div class="text-truncate-container">
                         <p class="text-truncate-container p-0 m-0"> 
                         {{ticket.issue_description|safe}}
@@ -77,17 +77,6 @@
 
 </div>
 
-<style>
-    .text-truncate-container {
-    width: 400px;
-}
-.text-truncate-container p {
-    -webkit-line-clamp: 3;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-</style>
 
 
 {% endblock content %}
