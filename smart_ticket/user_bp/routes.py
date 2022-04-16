@@ -64,7 +64,8 @@ def logout_page():
 @login_required
 def user_detail_page(id: int):
     user = User.query.get_or_404(id)
-    return render_template('user_bp/user_detail.html', user=user)
+    profile_picture_path = url_for('static', filename = f"images/profile_pictures/{current_user.profile_picture_file}" )
+    return render_template('user_bp/user_detail.html', user=user, profile_picture_path=profile_picture_path)
 
 @user_bp.route('/landing')
 @login_required

@@ -38,7 +38,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(length=30), nullable=False, unique=True)
     email = db.Column(db.String(length=30), nullable=False, unique=True)
     phone_number = db.Column(db.String(length = 15), unique=True)
-    profile_picture_file = db.Column(db.String(length = 16), unique=True)
+    profile_picture_file = db.Column(db.String(length = 64), default = "default_profile_picture.png")
     password_hash = db.Column(db.String(length=255),
                               nullable=False, unique=True)
     created_ticket_log_messages = db.relationship(
