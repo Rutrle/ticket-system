@@ -132,7 +132,9 @@ def update_profile_picture():
 
         flash("Your profile pictore was succesfully changed", category="success")
 
-
+    elif profile_picture_form.errors != {}:
+        for err_msg in profile_picture_form.errors.values():
+            flash(f'There was an error in updating your profile picture: {err_msg[0]}', category='danger')
     return redirect(url_for('user_bp.update_account_settings'))
 
 @user_bp.route('/update/update_password', methods = ['POST'])

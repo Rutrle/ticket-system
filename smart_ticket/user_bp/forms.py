@@ -1,5 +1,6 @@
 from smart_ticket.models import User
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileAllowed
 from wtforms import StringField, PasswordField, EmailField, SubmitField, FileField, TelField
 from wtforms.validators import Length, EqualTo, Email, DataRequired, ValidationError
 import phonenumbers
@@ -52,7 +53,7 @@ class UserContactsUpdateForm(FlaskForm):
             raise ValidationError('Invalid phone number. Maybe you have forgotten country prefix code?')
 
 class UserProfilePictureForm(FlaskForm):
-    profile_picture = FileField(label= "New profile picture")
+    profile_picture = FileField(label= "New profile picture", validators=[DataRequired(), FileAllowed(['jpg', 'png'])])
     submit = SubmitField(label='Upload new profile picture')
 
 class UserPasswordUpdateForm(FlaskForm):
