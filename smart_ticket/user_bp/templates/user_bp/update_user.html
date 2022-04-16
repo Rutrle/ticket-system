@@ -30,7 +30,7 @@ Smart Ticket - User update
                         <hr>
                         <div class = "form-group row col-6">
                         <h5>Your current profile picture:</h5>
-                                <form method="POST" action = "{{url_for('user_bp.update_profile_picture')}}"> 
+                                <form method="POST" action = "{{url_for('user_bp.update_profile_picture')}}" enctype="multipart/form-data"> 
                                         
                                         {% if current_user.picture %}
                                         {{current_user.profile_picture}}

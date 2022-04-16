@@ -1,8 +1,11 @@
 from flask import Blueprint, render_template, redirect, render_template, flash, url_for
 from smart_ticket import db
+import smart_ticket
 from smart_ticket.user_bp.forms import RegisterForm, LoginForm, UserContactsUpdateForm, UserProfilePictureForm, UserPasswordUpdateForm
 from smart_ticket.models import User
 from flask_login import current_user, login_user, logout_user, login_required
+import secrets
+import os
 
 user_bp = Blueprint('user_bp', __name__, template_folder='templates')
 
@@ -101,11 +104,27 @@ def update_basic_account_settings():
 
     return redirect(url_for('user_bp.update_account_settings'))
 
+
+def save_picture(form_picture):
+    random_hex = secrets.token_hex(8)
+    _name, f_extension = os.path.splitext(form_picture.filename)
+
+    picture_filename = random_hex + f_extension
+    picture_path = os.path.join(smart_ticket.app.root_path, 'static\images\profile_pictures', picture_filename)
+
+    form_picture.save(picture_path)
+
+    return picture_filename
+
+
 @user_bp.route('/update/update_profile_picture', methods = ['POST'])
 @login_required
 def update_profile_picture():
     profile_picture_form = UserProfilePictureForm()
-    print(profile_picture_form.profile_picture.data)
+    if profile_picture_form.validate_on_submit():
+        picture_filename = save_picture(profile_picture_form.profile_picture.data)
+        current_user.profile_picture = picture_filename
+
 
     return redirect(url_for('user_bp.update_account_settings'))
 

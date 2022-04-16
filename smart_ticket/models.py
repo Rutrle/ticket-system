@@ -1,9 +1,9 @@
-import enum
 from sqlalchemy import ForeignKey, Column, Table
 from smart_ticket import db, bcrypt
 from smart_ticket import login_manager
 from flask_login import UserMixin
 from datetime import datetime
+import enum
 
 
 current_solvers_association_table = Table('current_solvers_association', db.Model.metadata,
@@ -38,6 +38,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(length=30), nullable=False, unique=True)
     email = db.Column(db.String(length=30), nullable=False, unique=True)
     phone_number = db.Column(db.String(length = 15), unique=True)
+    profile_picture_file = db.Column(db.String(length = 16), unique=True)
     password_hash = db.Column(db.String(length=255),
                               nullable=False, unique=True)
     created_ticket_log_messages = db.relationship(
