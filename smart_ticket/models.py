@@ -3,6 +3,7 @@ from smart_ticket import db, bcrypt
 from smart_ticket import login_manager
 from flask_login import UserMixin
 from datetime import datetime
+import secrets
 import enum
 
 
@@ -39,8 +40,8 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(length=30), nullable=False, unique=True)
     phone_number = db.Column(db.String(length = 15), unique=True)
     profile_picture_file = db.Column(db.String(length = 64), default = "default_profile_picture.png")
-    password_hash = db.Column(db.String(length=255),
-                              nullable=False, unique=True)
+    password_hash = db.Column(db.String(length=255),nullable=False, unique=True)
+    password_salt = db.Column(db.String(length = 12))
     created_ticket_log_messages = db.relationship(
         'TicketLogMessage', backref='author', lazy=True)
     currently_solving = db.relationship(
@@ -59,10 +60,14 @@ class User(db.Model, UserMixin):
 
     @password.setter
     def password(self, plain_text_password):
-        self.password_hash = bcrypt.generate_password_hash(
-            plain_text_password).decode('utf-8')
+        self.password_salt = secrets.token_hex(3)
+        plain_text_password = plain_text_password + self.password_salt
+        plain_hash = bcrypt.generate_password_hash(plain_text_password).decode('utf-8')
+
+        self.password_hash = plain_hash 
 
     def check_attempted_password(self, attempted_password):
+        attempted_password = attempted_password + self.password_salt
         return bcrypt.check_password_hash(self.password_hash, attempted_password)
 
 
