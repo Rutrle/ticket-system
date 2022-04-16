@@ -6,7 +6,7 @@ from smart_ticket.models import User
 from flask_login import current_user, login_user, logout_user, login_required
 import secrets
 import os
-
+from PIL import Image
 user_bp = Blueprint('user_bp', __name__, template_folder='templates')
 
 
@@ -115,7 +115,10 @@ def save_picture(form_picture):
     picture_filename = random_hex + str(current_user.id) + f_extension
     picture_path = os.path.join(smart_ticket.app.root_path, 'static\images\profile_pictures', picture_filename)
 
-    form_picture.save(picture_path)
+    output_size = (255,255)
+    image_to_save = Image.open(form_picture)
+    image_to_save.thumbnail(output_size)
+    image_to_save.save(picture_path)
 
     return picture_filename
 
