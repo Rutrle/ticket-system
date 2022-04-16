@@ -61,13 +61,13 @@ class User(db.Model, UserMixin):
     @password.setter
     def password(self, plain_text_password):
         self.password_salt = secrets.token_hex(3)
-        plain_text_password = plain_text_password + self.password_salt
+        plain_text_password = self.password_salt + plain_text_password
         plain_hash = bcrypt.generate_password_hash(plain_text_password).decode('utf-8')
 
         self.password_hash = plain_hash 
 
     def check_attempted_password(self, attempted_password):
-        attempted_password = attempted_password + self.password_salt
+        attempted_password = self.password_salt + attempted_password
         return bcrypt.check_password_hash(self.password_hash, attempted_password)
 
 
