@@ -20,8 +20,6 @@
 <h3>TO DO:</h3>
 <ul>
     <li>add content admin</li>
-    <li>add more things to user</li>
     <li>add proper documentation</li>
-    <li>put styles into separate CSS file</li>
     <li>refactoring, code is messy now; better passing multiple arguments into render_template</li>
 </ul>
