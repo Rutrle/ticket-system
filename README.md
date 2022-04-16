@@ -21,5 +21,5 @@
     <li>add more things to user</li>
     <li>add proper documentation</li>
     <li>put styles into separate CSS file</li>
-    <li>refactoring, code is messy now</li>
+    <li>refactoring, code is messy now; better passing multiple arguments into render_template</li>
 </ul>

@@ -112,7 +112,7 @@ def save_picture(form_picture):
     random_hex = secrets.token_hex(8)
     _name, f_extension = os.path.splitext(form_picture.filename)
 
-    picture_filename = random_hex + f_extension
+    picture_filename = random_hex + str(current_user.id) + f_extension
     picture_path = os.path.join(smart_ticket.app.root_path, 'static\images\profile_pictures', picture_filename)
 
     form_picture.save(picture_path)

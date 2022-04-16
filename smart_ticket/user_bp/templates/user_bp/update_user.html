@@ -32,10 +32,8 @@ Smart Ticket - User update
                         <h5>Your current profile picture:</h5>
                                 <form method="POST" action = "{{url_for('user_bp.update_profile_picture')}}" enctype="multipart/form-data"> 
                                         
-
                                         <img class = "rounded-circle account-img"  src="{{profile_picture_path}}">
 
-                                        
                                         {{profile_picture_form.hidden_tag()}}
                                         {{profile_picture_form.profile_picture.label()}}
                                         {{profile_picture_form.profile_picture(class="form-control")}}
