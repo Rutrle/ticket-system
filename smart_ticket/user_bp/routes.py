@@ -80,7 +80,9 @@ def update_account_settings():
     profile_picture_form = UserProfilePictureForm()
     password_update_form = UserPasswordUpdateForm()
 
-    return render_template('user_bp/update_user.html', contacts_update_form=contacts_update_form,profile_picture_form=profile_picture_form,password_update_form=password_update_form)
+    profile_picture_path = url_for('static', filename = f"images/profile_pictures/{current_user.profile_picture_file}" )
+
+    return render_template('user_bp/update_user.html', contacts_update_form=contacts_update_form,profile_picture_form=profile_picture_form,password_update_form=password_update_form, profile_picture_path=profile_picture_path)
 
 @user_bp.route('/update/update_user_info', methods = ['POST'])
 @login_required
@@ -123,7 +125,11 @@ def update_profile_picture():
     profile_picture_form = UserProfilePictureForm()
     if profile_picture_form.validate_on_submit():
         picture_filename = save_picture(profile_picture_form.profile_picture.data)
-        current_user.profile_picture = picture_filename
+        current_user.profile_picture_file = picture_filename
+        db.session.add(current_user)
+        db.session.commit()
+
+        flash("Your profile pictore was succesfully changed", category="success")
 
 
     return redirect(url_for('user_bp.update_account_settings'))
