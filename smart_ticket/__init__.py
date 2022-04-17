@@ -16,9 +16,11 @@ login_manager = LoginManager(app)
 
 from smart_ticket.user_bp.routes import user_bp
 from smart_ticket.ticket_bp.routes import ticket_bp
+from smart_ticket.admin_bp.routes import admin_bp
 
 app.register_blueprint(user_bp, url_prefix = '/user')
 app.register_blueprint(ticket_bp, url_prefix = '/ticket')
+app.register_blueprint(admin_bp, url_prefix = '/admin')
 
 from smart_ticket import routes, filters
 

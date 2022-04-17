@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, render_template, flash, url_for
+from flask import Blueprint, redirect, render_template, flash, url_for
 from smart_ticket import db
 import smart_ticket
 from smart_ticket.user_bp.forms import RegisterForm, LoginForm, UserContactsUpdateForm, UserProfilePictureForm, UserPasswordUpdateForm
