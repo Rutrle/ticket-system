@@ -42,6 +42,12 @@
             <li class="nav-item">
               <a class="nav-link active" href="{{ url_for('ticket_bp.archive_page') }}">Archive</a>
             </li>
+
+            {% if current_user.user_role.name == 'admin'  %} 
+            <li class="nav-item">
+              <a class="nav-link active" href="{{ url_for('admin_bp.admin_page') }}"><b>Administrator tools</b></a>
+            </li>
+            {% endif %}
             {% endif %}
           </ul>
           <ul class="navbar-nav ml-auto"> 

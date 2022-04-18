@@ -12,9 +12,6 @@ also used for trying out database communication during development - these parts
 db.drop_all()
 db.create_all()
 
-admin_role = UserRole(name = "Admin")
-db.session.add(admin_role)
-db.session.commit()
 
 long_text = "Est eiusmod sunt in velit cillum enim consectetur pariatur ullamco. Quis pariatur anim deserunt irure voluptate aute reprehenderit enim minim aliquip laboris et. Nostrud consectetur ex non ullamco Lorem commodo. Cillum magna dolore occaecat duis laborum consequat. Duis Lorem reprehenderit ex dolore elit excepteur in qui cupidatat in reprehenderit. Id eu minim elit mollit. Occaecat ea ipsum do ullamco laborum nostrud ipsum Lorem ullamco elit."
 longer_text = """Ullamco deserunt deserunt officia ad nisi consequat adipisicing velit cupidatat nulla qui enim magna. Esse sint esse proident enim elit dolor amet. Velit culpa amet enim dolore est.
@@ -25,16 +22,27 @@ longer_text = """Ullamco deserunt deserunt officia ad nisi consequat adipisicing
             Reprehenderit officia eiusmod voluptate reprehenderit dolore nulla incididunt. Lorem commodo exercitation tempor id officia ipsum velit aliquip ut exercitation. Enim mollit culpa mollit tempor. Dolor esse ea elit excepteur qui Lorem sit enim ullamco id.
             Officia proident do labore consequat aliqua reprehenderit amet aliqua. Do tempor consectetur dolore tempor consequat voluptate nostrud magna ad irure culpa sit laborum incididunt. Laborum dolore dolore ipsum mollit sit pariatur aute eiusmod cupidatat. Fugiat dolore laborum commodo et duis culpa eu in nostrud. Elit reprehenderit nulla aute sunt tempor commodo pariatur cupidatat duis et sunt exercitation. In dolore pariatur ad sint proident.
             Ipsum culpa Lorem cillum dolore et ea duis adipisicing mollit. Dolor laboris qui nostrud mollit excepteur occaecat ad dolor. Sint labore do deserunt esse ad non minim non exercitation magna veniam aute. Proident dolore exercitation id mollit anim eu exercitation aliqua. Fugiat laborum velit ipsum exercitation incididunt. Occaecat fugiat occaecat deserunt in minim cupidatat culpa cupidatat qui irure. Laboris ipsum consectetur aute quis proident dolor aliquip ea occaecat pariatur officia.
-            """
+             """
+user_roles = []
 users=[]
 tickets=[]
 ticket_creation_logs=[]
 
-users.append(User(username='User1', email='user1@mail.com',password='password', phone_number = '+420123456789' ))
+user_roles.append(UserRole(name = "user"))
+user_roles.append(UserRole(name = "admin"))
+
+
+
+for user_role in user_roles:
+    db.session.add(user_role)
+db.session.commit()
+
+users.append(User(username='User1', email='user1@mail.com',password='password', phone_number = '+420123456789'))
 users.append(User(username='Greorge Sharp', email='user2@mail.com',password='password2' , phone_number = '+420993456789'))
 users.append(User(username='User3', email='user3@mail.com',password='password3' , phone_number = '+420123444789'))
 users.append(User(username='Josef Smith', email='smith3@mail.com',password='password'))
-users.append(User(username='admin', email='admin@mail.com',password='admin', user_role = [admin_role]))
+users.append(User(username='admin', email='admin@mail.com',password='admin', user_role = db.session.query(UserRole).filter_by(name="admin").first()))
+
 for user in users:
     db.session.add(user)
 db.session.commit()
