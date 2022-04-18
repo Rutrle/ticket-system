@@ -42,10 +42,12 @@ def login_page():
         user = User.query.filter_by(username=form.username.data).first()
         if user:
             if user.check_attempted_password(form.password.data):
-                login_user(user)
-                flash("You have succesfully logged in!", category='success')
+                if user.is_active == True:
+                    
+                    login_user(user)
+                    flash("You have succesfully logged in!", category='success')
 
-                return redirect(url_for('user_bp.landing_page'))
+                    return redirect(url_for('user_bp.landing_page'))
 
         flash('Wrong Username or password! Please try again.', category='danger')
 

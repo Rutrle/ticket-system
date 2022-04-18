@@ -33,6 +33,8 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(length=30), nullable=False, unique=True)
     email = db.Column(db.String(length=30), nullable=False, unique=True)
     phone_number = db.Column(db.String(length = 15), unique=True)
+    is_active = db.Column(db.Boolean, default=True, nullable=False)
+
     profile_picture_file = db.Column(db.String(length = 64), default = "default_profile_picture.png")
     password_hash = db.Column(db.String(length=255),nullable=False, unique=True)
     password_salt = db.Column(db.String(length = 12))
@@ -103,7 +105,6 @@ class Ticket(db.Model):
     issue_description = db.Column(db.Text(length=2500))
     creation_time = db.Column(
         db.DateTime(), nullable=False, default=datetime.now())
-
     author_id = db.Column(
         db.Integer(), db.ForeignKey('user.id'), nullable=True)
     author = db.relationship("User", foreign_keys=[author_id], backref = "created_tickets")

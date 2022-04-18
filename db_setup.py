@@ -42,6 +42,7 @@ users.append(User(username='Greorge Sharp', email='user2@mail.com',password='pas
 users.append(User(username='User3', email='user3@mail.com',password='password3' , phone_number = '+420123444789'))
 users.append(User(username='Josef Smith', email='smith3@mail.com',password='password'))
 users.append(User(username='admin', email='admin@mail.com',password='admin', user_role = db.session.query(UserRole).filter_by(name="admin").first()))
+users.append(User(username='ExEmployee', email='exemployee@mail.com',password='123456',is_active = False))
 
 for user in users:
     db.session.add(user)
