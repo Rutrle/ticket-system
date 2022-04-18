@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Smart Ticket - User administration
+{% endblock title %}
+
+{% block content %}
+
+<div class="container">
+    <br>
+    <h2>Users administration</h2>
+    <hr>
+
+    <br>
+    <table class="table table-hover table-dark">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">User</th>
+                <th scope="col">Creation time</th>
+                <th scope="col">Email</th>
+                <th scope="col">phone_number</th>
+                <th scope="col">User role</th>
+                <th scope="col">No. tickets solved</th>
+                <th scope="col">No. tickets created</th>
+                <th scope="col">Currently solving</th>
+                <th scope="col">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            
+            <tr>
+                <td>{{user.id}}</td>
+                <td>{{user.username}}</td>
+                <td>{{user.creation_time |format_time}}</td>
+                <td>{{user.email}}</td>
+                {% if user.phone_number %}
+                    <td>{{user.phone_number}}</td>
+                {% else %} 
+                <td>-</td>
+                {% endif %}
+                <td>{{user.user_role}}</td>
+                <td>{{user.solved_tickets|length}}</td>
+                <td>{{user.created_tickets|length}}</td>
+                <td>
+                    {% for ticket in user.currently_solving %}
+                    <a href="{{ url_for('ticket_bp.ticket_detail_page', current_ticket_id=ticket.id) }}">
+                    {{ticket.id}}
+                    </a>
+                    {{ ", " if not loop.last else "" }}
+                    {% endfor %}
+                </td>
+                <td>
+                    <a href = "{{url_for('user_bp.user_detail_page', id=user.id)}}" title="Detail">
+                        <button type="button" class="btn btn-secondary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
+                            </svg>
+                        </button>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock content %}
+

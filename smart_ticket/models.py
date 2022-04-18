@@ -43,6 +43,7 @@ class User(db.Model, UserMixin):
     current_watchlist = db.relationship(
         "Ticket", secondary=ticket_watchlist_association_table,  back_populates="currently_on_watchlist")
 
+
     user_role_id = db.Column(db.Integer(),db.ForeignKey('userrole.id'))
 
     def __repr__(self) -> str:
@@ -105,7 +106,7 @@ class Ticket(db.Model):
 
     author_id = db.Column(
         db.Integer(), db.ForeignKey('user.id'), nullable=True)
-    author = db.relationship("User", foreign_keys=[author_id])
+    author = db.relationship("User", foreign_keys=[author_id], backref = "created_tickets")
 
     current_solvers = db.relationship(
         "User", secondary=current_solvers_association_table, back_populates="currently_solving")
@@ -117,7 +118,7 @@ class Ticket(db.Model):
 
     solver_id = db.Column(
         db.Integer(), db.ForeignKey('user.id'), nullable=True)
-    solver = db.relationship("User", foreign_keys=[solver_id])
+    solver = db.relationship("User", foreign_keys=[solver_id], backref = "solved_tickets")
 
     log_messages = db.relationship(
         'TicketLogMessage', backref='ticket', lazy=True)

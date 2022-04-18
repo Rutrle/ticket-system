@@ -11,7 +11,7 @@ admin_bp = Blueprint('admin_bp', __name__, template_folder='templates')
 @login_required
 @admin_required
 def admin_page():
-    print(current_user.user_role.name)
-    print("Admin" in current_user.user_role.name)
-    return "this is secret admin page"
+    users = db.session.query(User).order_by('creation_time')
+
+    return render_template("admin_bp/admin_tools.html", users=users)
    
