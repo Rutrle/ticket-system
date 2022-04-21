@@ -3,8 +3,9 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="DeactivateUserModalLabel">Confirm user <b>{{user.username}}</b> deactivation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form method="POST" action = "#"> 
+      <form method="POST"> 
       <div class="modal-body">
         <p class="blockquote-footer">This user will no longer be able to log in and use Smart ticket</p>
           {{user_deactivation_form.user_id(value = user.id, type="hidden" )}}
@@ -18,7 +19,7 @@
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         {{ user_deactivation_form.confirm_user_deactivation(class="btn btn-block btn-danger") }}
       </form>
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      
       </div>
     </div>
   </div>
