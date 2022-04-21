@@ -6,6 +6,13 @@ from smart_ticket.admin_bp.forms import ConfirmUserDeactivationForm
 
 admin_bp = Blueprint('admin_bp', __name__, template_folder='templates')
 
+def deactivate_user(user_id:int):
+    pass
+
+def reactivate_user(user_id:int):
+    pass
+
+
 
 @admin_bp.route('')
 @login_required
@@ -14,6 +21,9 @@ def admin_page():
     active_users = db.session.query(User).filter(User.is_active == True).order_by('creation_time')
     inactive_users = db.session.query(User).filter(User.is_active == False).order_by('creation_time')
     user_deactivation_form = ConfirmUserDeactivationForm()
+
+    if user_deactivation_form.validate_on_submit():
+        User.query.filter_by(username=user_deactivation_form.username.data).first()
 
     return render_template("admin_bp/admin_tools.html", active_users=active_users, inactive_users=inactive_users, user_deactivation_form = user_deactivation_form)
    
