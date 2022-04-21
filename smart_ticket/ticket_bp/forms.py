@@ -30,7 +30,6 @@ class TicketFilter(FlaskForm):
 class OpenTicketForm(FlaskForm):
     subject = StringField(label='Subject', validators=[
                           DataRequired(), Length(min=5, max=45)])
-    #issue_text = TextAreaField(label='Problem description', validators=[DataRequired(), Length(min=0, max=2500)])
     issue_text = CKEditorField(label='Problem description', validators=[
                                DataRequired(), Length(min=0, max=2500)])
     submit = SubmitField(label='Submit ticket')
