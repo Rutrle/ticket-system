@@ -78,7 +78,6 @@ class UserRole(db.Model):
         return self.name
 
 
-
 #https://stackoverflow.com/questions/52285012/does-flask-login-support-roles
 #temporary placement
 from functools import wraps
@@ -122,7 +121,7 @@ class Ticket(db.Model):
     solver = db.relationship("User", foreign_keys=[solver_id], backref = "solved_tickets")
 
     log_messages = db.relationship(
-        'TicketLogMessage', backref='ticket', lazy=True)
+        'TicketLogMessage', backref='ticket', lazy=True, cascade = 'all, delete')
 
     def __repr__(self) -> str:
         return f" Ticket No. {self.id} : {self.subject}"

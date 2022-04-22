@@ -18,3 +18,30 @@
       </div>
     </div>
 </div>
+
+
+<div class="modal fade" id="DeleteTicket-{{ ticket.id }}" tabindex="-1" aria-labelledby="DeleteTicketModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="DeleteTicketModalLabel">Confirm ticket <b>{{ticket.subject}}</b> deletion</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form method="POST" action="{{ url_for('admin_bp.delete_ticket_page', ticket_id = ticket.id) }}"> 
+        <div class="modal-body">
+          <p class="blockquote-footer">This ticket will be permanently removed</p>
+            {{ticket_deletion_form.hidden_tag()}}
+            {{ticket_deletion_form.ticket_subject.label()}}
+            {{ticket_deletion_form.ticket_subject(class="form-control w-10", placeholder = "Subject of ticket to be deleted" )}}
+            {{ticket_deletion_form.password.label()}}
+            {{ticket_deletion_form.password(class="form-control w-10", placeholder = "Your password" )}}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          {{ ticket_deletion_form.confirm_ticket_deletion(class="btn btn-block btn-danger") }}
+        </form>
+        
+        </div>
+      </div>
+    </div>
+  </div>

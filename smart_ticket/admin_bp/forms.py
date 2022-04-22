@@ -12,3 +12,8 @@ class ConfirmUserReactivationForm(FlaskForm):
     user_username = StringField(label="Please confirm the username of user you want to reactivate", validators=[DataRequired()])
     password = PasswordField(label="Please enter your password")
     confirm_user_reactivation = SubmitField(label="Confirm user reactivation")
+
+class ConfirmTicketDeletionForm(FlaskForm):
+    ticket_subject = StringField(label="Please confirm the subject of ticket you want to delete", validators=[DataRequired()])
+    password = PasswordField(label="Please enter your password")
+    confirm_ticket_deletion = SubmitField(label="Confirm ticket deletion")

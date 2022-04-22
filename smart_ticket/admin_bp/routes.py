@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, flash, url_for
 from smart_ticket import db
 from smart_ticket.models import User, Ticket, admin_required
 from flask_login import current_user, login_required
-from smart_ticket.admin_bp.forms import ConfirmUserDeactivationForm, ConfirmUserReactivationForm
+from smart_ticket.admin_bp.forms import ConfirmUserDeactivationForm, ConfirmUserReactivationForm, ConfirmTicketDeletionForm
 from smart_ticket.ticket_bp.routes import solve_ticket
 from smart_ticket.ticket_bp.forms import ConfirmTicketSolution
 
@@ -88,8 +88,9 @@ def ticket_administration():
     resolved_tickets = db.session.query(Ticket).filter(Ticket.is_solved == True).outerjoin(Ticket.author).all()
 
     confirm_solution_form = ConfirmTicketSolution()
+    ticket_deletion_form = ConfirmTicketDeletionForm()
 
-    return render_template("admin_bp/ticket_administration.html", unresolved_tickets=unresolved_tickets, resolved_tickets=resolved_tickets, confirm_solution_form=confirm_solution_form)
+    return render_template("admin_bp/ticket_administration.html", unresolved_tickets=unresolved_tickets, resolved_tickets=resolved_tickets, confirm_solution_form=confirm_solution_form, ticket_deletion_form = ticket_deletion_form)
 
 @admin_bp.route('/tickets/<int:ticket_id>/solve', methods=['POST'])
 @login_required
@@ -98,5 +99,19 @@ def solve_ticket_page(ticket_id):
 
     if confirm_solution_form.validate():
         solve_ticket(ticket_id, confirm_solution_form.solution_text.data)
+
+    return redirect(url_for('admin_bp.ticket_administration'))
+
+@admin_bp.route('/tickets/<int:ticket_id>/delete', methods=['POST'])
+@login_required
+@admin_required
+def delete_ticket_page(ticket_id):
+    ticket_deletion_form = ConfirmTicketDeletionForm()
+    if ticket_deletion_form.validate_on_submit():
+        ticket_to_delete = Ticket.query.get_or_404(ticket_id)
+
+        db.session.delete(ticket_to_delete)
+        db.session.commit()
+
 
     return redirect(url_for('admin_bp.ticket_administration'))
