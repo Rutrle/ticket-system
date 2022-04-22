@@ -5,7 +5,7 @@
           <h5 class="modal-title" id="ConfirmSolutionModalLabel">Confirm ticket solution</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form method="POST" action = "{{ url_for('ticket_bp.solve_ticket', current_ticket_id = ticket.id)}}"> 
+        <form method="POST" action = "{{ url_for('ticket_bp.solve_ticket_page', current_ticket_id = ticket.id)}}"> 
         <div class="modal-body">
             {{confirm_solution_form.hidden_tag()}}
             {{confirm_solution_form.solution_text(class="form-control w-10", placeholder = 'Describe ticket solution' )}}

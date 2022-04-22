@@ -170,22 +170,25 @@ def assign_2_self(current_ticket_id: int):
 
     return redirect(url_for('ticket_bp.ticket_detail_page', current_ticket_id=current_ticket_id))
 
+def solve_ticket(ticket_id:int, solution_text:str):
+    ticket_to_solve = Ticket.query.get_or_404(ticket_id)
+
+    if ticket_to_solve.is_solved == False:
+        ticket_to_solve.solve_ticket(current_user, solution_text)
+        flash(f"{ticket_to_solve} solved!", category='success')
+
+    else:
+        flash(f"{ticket_to_solve}  is already solved!", category='danger')
+
 
 @ticket_bp.route('/<int:current_ticket_id>/solve', methods=['POST'])
 @login_required
-def solve_ticket(current_ticket_id: int):
+def solve_ticket_page(current_ticket_id: int):
     confirm_solution_form = ConfirmTicketSolution()
-    print(confirm_solution_form.data)
+
     if confirm_solution_form.validate():
-        ticket_to_solve = Ticket.query.get_or_404(current_ticket_id)
+        solve_ticket(current_ticket_id, confirm_solution_form.solution_text.data)
 
-        if ticket_to_solve.is_solved == False:
-            ticket_to_solve.solve_ticket(
-                current_user, confirm_solution_form.solution_text.data)
-            flash(f"{ticket_to_solve} solved!", category='success')
-
-        else:
-            flash(f"{ticket_to_solve}  is already solved!", category='danger')
 
     return redirect(url_for('ticket_bp.ticket_detail_page', current_ticket_id=current_ticket_id))
 
