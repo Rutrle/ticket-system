@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Length
 
 
 class ConfirmUserDeactivationForm(FlaskForm):
@@ -20,5 +20,6 @@ class ConfirmTicketDeletionForm(FlaskForm):
 
 class ConfirmTicketReopeningForm(FlaskForm):
     ticket_subject = StringField(label="Please confirm the subject of ticket you want to reopen", validators=[DataRequired()])
+    reason_for_reopening = StringField(label="Please state reason for reopening the ticket", validators=[DataRequired(), Length(min=5, max=45)])
     password = PasswordField(label="Please enter your password")
     confirm_ticket_reopening = SubmitField(label="Confirm ticket reopening")

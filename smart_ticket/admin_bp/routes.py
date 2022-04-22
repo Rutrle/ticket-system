@@ -1,6 +1,8 @@
+from tarfile import NUL
 from flask import Blueprint, render_template, redirect, flash, url_for
+from sqlalchemy import null
 from smart_ticket import db
-from smart_ticket.models import User, Ticket, admin_required
+from smart_ticket.models import User, Ticket, TicketLogMessage, admin_required
 from flask_login import current_user, login_required
 from smart_ticket.admin_bp.forms import ConfirmUserDeactivationForm, ConfirmUserReactivationForm, ConfirmTicketDeletionForm, ConfirmTicketReopeningForm
 from smart_ticket.ticket_bp.routes import solve_ticket
@@ -124,10 +126,13 @@ def reopen_ticket_page(ticket_id):
     ticket_reopening_form = ConfirmTicketReopeningForm()
     if ticket_reopening_form.validate_on_submit():
         ticket_to_reopen = Ticket.query.get_or_404(ticket_id)
+        reason_for_reopening = ticket_reopening_form.reason_for_reopening.data
+        ticket_to_reopen.solver = None
+        ticket_to_reopen.solved_on = None
         ticket_to_reopen.is_solved = False
-        
-        ########################################add more stuff like remove solver
+        reopenning_message = TicketLogMessage(author_id=current_user.id, ticket_id=ticket_to_reopen.id, message_text=reason_for_reopening, message_category="reopened")
 
+        db.session.add(reopenning_message)
         db.session.add(ticket_to_reopen)
         db.session.commit()
 

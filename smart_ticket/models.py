@@ -143,6 +143,7 @@ class TicketogMessageCategory(enum.Enum):
     update = 'Update'
     solved = 'TICKET SOLVED'
     sys_message = 'System message'
+    reopened = 'TICKET REOPENED'
 
 
 class TicketLogMessage(db.Model):
