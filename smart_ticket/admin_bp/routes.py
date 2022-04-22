@@ -29,9 +29,7 @@ def user_administration():
     user_deactivation_form = ConfirmUserDeactivationForm()
     user_reactivation_form = ConfirmUserReactivationForm()
 
-
-
-    return render_template("admin_bp/admin_tools.html", active_users=active_users, inactive_users=inactive_users, user_deactivation_form = user_deactivation_form, user_reactivation_form=user_reactivation_form)
+    return render_template("admin_bp/user_administration.html", active_users=active_users, inactive_users=inactive_users, user_deactivation_form = user_deactivation_form, user_reactivation_form=user_reactivation_form)
 
 def deactivate_user(user):
     user.is_active = False
@@ -40,13 +38,13 @@ def deactivate_user(user):
     db.session.add(user)
     db.session.commit()   
 
-@admin_bp.route('/users/deactivate', methods=['POST'])
+@admin_bp.route('/users/<int:user_id>/deactivate', methods=['POST'])
 @login_required
 @admin_required
-def deactivate_user_page():
+def deactivate_user_page(user_id:int):
     user_deactivation_form = ConfirmUserDeactivationForm()
     if user_deactivation_form.validate_on_submit():
-        user_to_deactivate = User.query.filter_by(id=user_deactivation_form.user_id.data).first()
+        user_to_deactivate = User.query.filter_by(id=user_id).first()
         password_correct = current_user.check_attempted_password(user_deactivation_form.password.data)
         user_username_correct = user_to_deactivate.username == user_deactivation_form.user_username.data
         if password_correct and user_username_correct:
@@ -61,14 +59,14 @@ def deactivate_user_page():
             flash(f'There was an error with deactivating a user: {err_msg[0]}', category='danger')
     return redirect(url_for("admin_bp.user_administration"))
 
-@admin_bp.route('/users/reactivate', methods=['POST'])
+@admin_bp.route('/users/<int:user_id>/reactivate', methods=['POST'])
 @login_required
 @admin_required
-def reactivate_user_page():
+def reactivate_user_page(user_id:int):
     user_reactivation_form = ConfirmUserReactivationForm()
 
     if user_reactivation_form.validate_on_submit():
-        user_to_reactivate = User.query.filter_by(id=user_reactivation_form.user_id.data).first()
+        user_to_reactivate = User.query.filter_by(id=user_id).first()
         password_correct = current_user.check_attempted_password(user_reactivation_form.password.data)
         user_username_correct = user_to_reactivate.username == user_reactivation_form.user_username.data
         if password_correct and user_username_correct:
