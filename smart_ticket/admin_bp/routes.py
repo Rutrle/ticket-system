@@ -1,12 +1,12 @@
 from flask import Blueprint, render_template, redirect, flash, url_for
 from smart_ticket import db
-from smart_ticket.models import User, admin_required
+from smart_ticket.models import User, Ticket, admin_required
 from flask_login import current_user, login_required
 from smart_ticket.admin_bp.forms import ConfirmUserDeactivationForm, ConfirmUserReactivationForm
+from smart_ticket.ticket_bp.routes import solve_ticket
+from smart_ticket.ticket_bp.forms import ConfirmTicketSolution
 
 admin_bp = Blueprint('admin_bp', __name__, template_folder='templates')
-
-
 
 def reactivate_user(user):
     user.is_active = True
@@ -18,7 +18,7 @@ def reactivate_user(user):
 @login_required
 @admin_required
 def admin_page():
-    return "admin page"
+    return render_template("admin_bp/administrator_tools.html")
 
 @admin_bp.route('/users', methods=['GET'])
 @login_required
@@ -78,3 +78,25 @@ def reactivate_user_page(user_id:int):
             flash(f'There was an error with reactivating a user: {err_msg[0]}', category='danger')  
     
     return redirect(url_for("admin_bp.user_administration"))
+
+
+@admin_bp.route('/tickets', methods=['GET'])
+@login_required
+@admin_required
+def ticket_administration():
+    unresolved_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False).outerjoin(Ticket.author).all()
+    resolved_tickets = db.session.query(Ticket).filter(Ticket.is_solved == True).outerjoin(Ticket.author).all()
+
+    confirm_solution_form = ConfirmTicketSolution()
+
+    return render_template("admin_bp/ticket_administration.html", unresolved_tickets=unresolved_tickets, resolved_tickets=resolved_tickets, confirm_solution_form=confirm_solution_form)
+
+@admin_bp.route('/tickets/<int:ticket_id>/solve', methods=['POST'])
+@login_required
+def solve_ticket_page(ticket_id):
+    confirm_solution_form = ConfirmTicketSolution()
+
+    if confirm_solution_form.validate():
+        solve_ticket(ticket_id, confirm_solution_form.solution_text.data)
+
+    return redirect(url_for('admin_bp.ticket_administration'))

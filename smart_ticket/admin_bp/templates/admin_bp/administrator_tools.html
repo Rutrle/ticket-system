@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Smart Ticket - Administration tools
+{% endblock title %}
+
+{% block content %}
+<a href="{{ url_for('admin_bp.user_administration') }}">User administration</a>
+<a href="{{ url_for('admin_bp.ticket_administration') }}">Tickets  administration</a>
+{% endblock content %}
