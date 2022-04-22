@@ -2,7 +2,7 @@ from flask import Blueprint, redirect, render_template, flash, url_for
 from smart_ticket import db
 import smart_ticket
 from smart_ticket.user_bp.forms import RegisterForm, LoginForm, UserContactsUpdateForm, UserProfilePictureForm, UserPasswordUpdateForm
-from smart_ticket.models import User
+from smart_ticket.models import User, UserRole
 from flask_login import current_user, login_user, logout_user, login_required
 import secrets
 import os
@@ -18,7 +18,8 @@ def registration_page():
         new_user = User(
             username=form.username.data,
             email=form.email.data,
-            password=form.password1.data
+            password=form.password1.data,
+            user_role = db.session.query(UserRole).filter_by(name="user").first()
         )
         db.session.add(new_user)
         db.session.commit()

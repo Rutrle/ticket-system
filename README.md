@@ -19,8 +19,7 @@
 
 <h3>TO DO:</h3>
 <ul>
-    <li>add content admin</li>
-    <li>add user role to user creation process</li>
     <li>add proper documentation</li>
     <li>refactoring, code is messy now; better passing multiple arguments into render_template</li>
+    <li>add sending e-mails</li>
 </ul>

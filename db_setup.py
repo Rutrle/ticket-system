@@ -37,12 +37,12 @@ for user_role in user_roles:
     db.session.add(user_role)
 db.session.commit()
 
-users.append(User(username='User1', email='user1@mail.com',password='password', phone_number = '+420123456789'))
-users.append(User(username='Greorge Sharp', email='user2@mail.com',password='password2' , phone_number = '+420993456789'))
-users.append(User(username='User3', email='user3@mail.com',password='password3' , phone_number = '+420123444789'))
-users.append(User(username='Josef Smith', email='smith3@mail.com',password='password'))
+users.append(User(username='User1', email='user1@mail.com',password='password', phone_number = '+420123456789', user_role = db.session.query(UserRole).filter_by(name="user").first()))
+users.append(User(username='Greorge Sharp', email='user2@mail.com',password='password2' , phone_number = '+420993456789', user_role = db.session.query(UserRole).filter_by(name="user").first()))
+users.append(User(username='User3', email='user3@mail.com',password='password3' , phone_number = '+420123444789', user_role = db.session.query(UserRole).filter_by(name="user").first()))
+users.append(User(username='Josef Smith', email='smith3@mail.com',password='password', user_role = db.session.query(UserRole).filter_by(name="user").first()))
 users.append(User(username='admin', email='admin@mail.com',password='admin', user_role = db.session.query(UserRole).filter_by(name="admin").first()))
-users.append(User(username='ExEmployee', email='exemployee@mail.com',password='123456',is_active = False))
+users.append(User(username='ExEmployee', email='exemployee@mail.com',password='123456',is_active = False, user_role = db.session.query(UserRole).filter_by(name="user").first()))
 
 for user in users:
     db.session.add(user)
