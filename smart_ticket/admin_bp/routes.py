@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, flash, url_for
 from smart_ticket import db
 from smart_ticket.models import User, Ticket, admin_required
 from flask_login import current_user, login_required
-from smart_ticket.admin_bp.forms import ConfirmUserDeactivationForm, ConfirmUserReactivationForm, ConfirmTicketDeletionForm
+from smart_ticket.admin_bp.forms import ConfirmUserDeactivationForm, ConfirmUserReactivationForm, ConfirmTicketDeletionForm, ConfirmTicketReopeningForm
 from smart_ticket.ticket_bp.routes import solve_ticket
 from smart_ticket.ticket_bp.forms import ConfirmTicketSolution
 
@@ -89,8 +89,9 @@ def ticket_administration():
 
     confirm_solution_form = ConfirmTicketSolution()
     ticket_deletion_form = ConfirmTicketDeletionForm()
+    ticket_reopening_form = ConfirmTicketReopeningForm()
 
-    return render_template("admin_bp/ticket_administration.html", unresolved_tickets=unresolved_tickets, resolved_tickets=resolved_tickets, confirm_solution_form=confirm_solution_form, ticket_deletion_form = ticket_deletion_form)
+    return render_template("admin_bp/ticket_administration.html", unresolved_tickets=unresolved_tickets, resolved_tickets=resolved_tickets, confirm_solution_form=confirm_solution_form, ticket_deletion_form = ticket_deletion_form, ticket_reopening_form=ticket_reopening_form)
 
 @admin_bp.route('/tickets/<int:ticket_id>/solve', methods=['POST'])
 @login_required
@@ -113,5 +114,21 @@ def delete_ticket_page(ticket_id):
         db.session.delete(ticket_to_delete)
         db.session.commit()
 
+
+    return redirect(url_for('admin_bp.ticket_administration'))
+
+@admin_bp.route('/tickets/<int:ticket_id>/reopen', methods=['POST'])
+@login_required
+@admin_required
+def reopen_ticket_page(ticket_id):
+    ticket_reopening_form = ConfirmTicketReopeningForm()
+    if ticket_reopening_form.validate_on_submit():
+        ticket_to_reopen = Ticket.query.get_or_404(ticket_id)
+        ticket_to_reopen.is_solved = False
+        
+        ########################################add more stuff like remove solver
+
+        db.session.add(ticket_to_reopen)
+        db.session.commit()
 
     return redirect(url_for('admin_bp.ticket_administration'))

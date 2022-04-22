@@ -17,3 +17,8 @@ class ConfirmTicketDeletionForm(FlaskForm):
     ticket_subject = StringField(label="Please confirm the subject of ticket you want to delete", validators=[DataRequired()])
     password = PasswordField(label="Please enter your password")
     confirm_ticket_deletion = SubmitField(label="Confirm ticket deletion")
+
+class ConfirmTicketReopeningForm(FlaskForm):
+    ticket_subject = StringField(label="Please confirm the subject of ticket you want to reopen", validators=[DataRequired()])
+    password = PasswordField(label="Please enter your password")
+    confirm_ticket_reopening = SubmitField(label="Confirm ticket reopening")
