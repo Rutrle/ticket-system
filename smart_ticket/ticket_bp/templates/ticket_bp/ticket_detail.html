@@ -71,20 +71,6 @@
                     Solve ticket
                 </button>
             </div>
-            {% else %}
-            <div class="bg-dark  w-50" >
-                <form method="POST" action="{{url_for('ticket_bp.submit_new_log_ticket', current_ticket_id = ticket.id)}}">
-                    <h3>Reopen ticket - placeholder</h3>
-
-                    {{form.hidden_tag()}}
-
-                    {{form.message_text(class="form-control w-10",placeholder="Reason for reopening")}}
-                    <br>
-
-                    {{form.submit_new_log_ticket(class="btn btn-lg btn-block btn-primary")}}
-                    <br>
-                </form>
-            </div>
             {% endif %}
         </div>
         <div class = "col bg-dark m-4">
