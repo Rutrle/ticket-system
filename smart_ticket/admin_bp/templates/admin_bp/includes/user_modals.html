@@ -1,0 +1,54 @@
+<div class="modal fade" id="DeactivateUser-{{ user.id}}" tabindex="-1" aria-labelledby="DeactivateUserModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="DeactivateUserModalLabel">Confirm user <b>{{user.username}}</b> deactivation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="POST" action="{{ url_for('admin_bp.deactivate_user_page') }}"> 
+      <div class="modal-body">
+        <p class="blockquote-footer">This user will no longer be able to log in and use Smart ticket</p>
+          {{user_deactivation_form.user_id(value = user.id, type="hidden" )}}
+          {{user_deactivation_form.hidden_tag()}}
+          {{user_deactivation_form.user_username.label()}}
+          {{user_deactivation_form.user_username(class="form-control w-10", placeholder = "Deactivated user username" )}}
+          {{user_deactivation_form.password.label()}}
+          {{user_deactivation_form.password(class="form-control w-10", placeholder = "Your password" )}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        {{ user_deactivation_form.confirm_user_deactivation(class="btn btn-block btn-danger") }}
+      </form>
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="ReactivateUser-{{ user.id}}" tabindex="-1" aria-labelledby="ReactivateUserModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ReactivateUserModalLabel">Confirm user <b>{{user.username}}</b> Reactivation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="POST"  action="{{ url_for('admin_bp.reactivate_user_page') }}"> 
+      <div class="modal-body">
+        <p class="blockquote-footer">This user will be able to resume using all functionalities of Smart ticket</p>
+          {{user_reactivation_form.user_id(value = user.id, type="hidden" )}}
+          {{user_reactivation_form.hidden_tag()}}
+          {{user_reactivation_form.user_username.label()}}
+          {{user_reactivation_form.user_username(class="form-control w-10", placeholder = "Reactivated user username" )}}
+          {{user_reactivation_form.password.label()}}
+          {{user_reactivation_form.password(class="form-control w-10", placeholder = "Your password" )}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        {{ user_reactivation_form.confirm_user_reactivation(class="btn btn-block btn-success") }}
+      </form>
+      
+      </div>
+    </div>
+  </div>
+</div>
