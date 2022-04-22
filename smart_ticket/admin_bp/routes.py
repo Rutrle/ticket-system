@@ -99,9 +99,11 @@ def ticket_administration():
 @login_required
 def solve_ticket_page(ticket_id):
     confirm_solution_form = ConfirmTicketSolution()
+    ticket_to_solve = Ticket.query.get_or_404(ticket_id)
 
     if confirm_solution_form.validate():
         solve_ticket(ticket_id, confirm_solution_form.solution_text.data)
+        flash(f"ticket {ticket_to_solve} was succesfully solved!", category="success")
 
     return redirect(url_for('admin_bp.ticket_administration'))
 
@@ -115,6 +117,7 @@ def delete_ticket_page(ticket_id):
 
         db.session.delete(ticket_to_delete)
         db.session.commit()
+        flash(f"ticket {ticket_to_delete} was succesfully deleted!", category="success")
 
 
     return redirect(url_for('admin_bp.ticket_administration'))
@@ -135,5 +138,6 @@ def reopen_ticket_page(ticket_id):
         db.session.add(reopenning_message)
         db.session.add(ticket_to_reopen)
         db.session.commit()
+        flash(f"ticket {ticket_to_reopen} was succesfully reopened!", category="success")
 
     return redirect(url_for('admin_bp.ticket_administration'))
