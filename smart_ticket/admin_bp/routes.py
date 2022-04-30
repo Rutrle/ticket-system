@@ -7,6 +7,7 @@ from flask_login import current_user, login_required
 from smart_ticket.admin_bp.forms import ConfirmUserDeactivationForm, ConfirmUserReactivationForm, ConfirmTicketDeletionForm, ConfirmTicketReopeningForm
 from smart_ticket.ticket_bp.routes import solve_ticket
 from smart_ticket.ticket_bp.forms import ConfirmTicketSolution
+from smart_ticket.email.send_email import send_deactivation_email
 
 admin_bp = Blueprint('admin_bp', __name__, template_folder='templates')
 
@@ -51,6 +52,7 @@ def deactivate_user_page(user_id:int):
         user_username_correct = user_to_deactivate.username == user_deactivation_form.user_username.data
         if password_correct and user_username_correct:
             deactivate_user(user_to_deactivate)
+            send_deactivation_email(user_to_deactivate.email, user_to_deactivate.username)
             flash(f"Account of user {user_to_deactivate.username} was succesfully deactivated!", category="success")
 
         else:

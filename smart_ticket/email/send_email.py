@@ -57,3 +57,32 @@ def send_registration_email(receiver_email:str, username:str):
     
     
     send_email(receiver_email, subject, email_text, email_html)
+
+
+def send_deactivation_email(receiver_email:str, username:str):
+    subject = "Smart ticket account deactivation"
+
+    email_text = f"""
+                Your Smart Ticket account, {username}, was deactivated
+                You will no longer be able to log in to Smart Ticket and use most of its features
+
+                If you have any questions regarding the deactivation, please contact your administrator
+
+                Yours sincerely
+
+                Smart Ticket development team
+                """ 
+
+    email_html = f"""<h1>Your Smart Ticket account, {username}, was deactivated</h1>
+                <hr>
+                <p>You will no longer be able to log in to Smart Ticket and use most of its features</p>
+                <p>If you have any questions regarding the deactivation, please contact your administrator</p>
+                <br>
+                <br>
+                <p>Yours sincerely</p>
+                <br>
+                <p>Smart Ticket development team</p>
+                """
+    
+    
+    send_email(receiver_email, subject, email_text, email_html)
