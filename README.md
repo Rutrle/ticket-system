@@ -22,4 +22,5 @@
     <li>add proper documentation</li>
     <li>refactoring, code is messy now; better passing multiple arguments into render_template</li>
     <li>add sending e-mails</li>
+    <li>update index page for signed up people, add more things to about page</li>
 </ul>
