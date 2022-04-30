@@ -23,4 +23,5 @@
     <li>refactoring, code is messy now; better passing multiple arguments into render_template</li>
     <li>add sending e-mails</li>
     <li>update index page for signed up people, add more things to about page</li>
+    <li>bugfix showing info on solved ticket, removing sollvers on solve</li>
 </ul>

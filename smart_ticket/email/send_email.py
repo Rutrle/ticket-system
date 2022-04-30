@@ -113,3 +113,34 @@ def send_reactivation_email(receiver_email:str, username:str):
                 """
     
     send_email(receiver_email, subject, email_text, email_html)
+
+def send_ticket_solved_email(receiver_email:str, ticket_subject:str, solver_username:str, solver_id, solution_text):
+    subject = f"Ticket {ticket_subject} was solved"
+
+    email_text = f"""Ticket that you were solving, {ticket_subject}, was solved by user {solver_username}
+
+                Comment on the solution:
+                {solution_text}
+
+                Yours sincerely
+
+                Smart Ticket development team
+
+                This is an automatically generated message, please do not respond to it
+                """
+
+    email_html = f"""<h1>Ticket that you were solving, {ticket_subject}, was solved by user <a href="{url_for("user_bp.user_detail_page", id=solver_id, _external = True)}">{solver_username}</a></h1>
+                <hr>
+                <p>Comment on the solution:</p>
+                <p>{solution_text}</p>
+                <br>
+                <br>
+                <p>Yours sincerely</p>
+                <br>
+                <p>Smart Ticket development team</p>
+                <br>
+                <hr>
+                <p><small>This is an automatically generated message, please do not respond to it</small></p>
+                """
+    
+    send_email(receiver_email, subject, email_text, email_html)

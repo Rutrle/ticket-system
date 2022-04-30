@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, redirect, render_template, request, flash, url_for
 from smart_ticket import db
+from smart_ticket.email.send_email import send_ticket_solved_email
 from smart_ticket.models import Ticket, TicketLogMessage, User
 from smart_ticket.ticket_bp.forms import OpenTicketForm, TicketFilter, NewTicketLogMessage, AssignTicket2Self, UnassignTicket2Self, AddToWatchlist, RemoveFromWatchlist, ConfirmTicketSolution, ArchiveTicketFilter
 from flask_login import current_user, login_required
@@ -174,7 +175,12 @@ def solve_ticket(ticket_id:int, solution_text:str):
     ticket_to_solve = Ticket.query.get_or_404(ticket_id)
 
     if ticket_to_solve.is_solved == False:
+        currently_solving_users = User.query.filter(User.currently_solving.any(id=ticket_id)).all()
         ticket_to_solve.solve_ticket(current_user, solution_text)
+
+        for user in currently_solving_users:
+            send_ticket_solved_email(user.email, ticket_to_solve.subject, current_user.username, current_user.id, solution_text)
+        
         flash(f"{ticket_to_solve} solved!", category='success')
 
     else:
@@ -188,7 +194,6 @@ def solve_ticket_page(current_ticket_id: int):
 
     if confirm_solution_form.validate():
         solve_ticket(current_ticket_id, confirm_solution_form.solution_text.data)
-
 
     return redirect(url_for('ticket_bp.ticket_detail_page', current_ticket_id=current_ticket_id))
 
