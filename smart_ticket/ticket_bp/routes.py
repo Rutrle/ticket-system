@@ -175,11 +175,15 @@ def solve_ticket(ticket_id:int, solution_text:str):
     ticket_to_solve = Ticket.query.get_or_404(ticket_id)
 
     if ticket_to_solve.is_solved == False:
+        
         currently_solving_users = User.query.filter(User.currently_solving.any(id=ticket_id)).all()
+        currently_on_watchlist = User.query.filter(User.current_watchlist.any(id=ticket_id)).all()
+        interested_users = set(currently_solving_users + currently_on_watchlist)
+        
         ticket_to_solve.solve_ticket(current_user, solution_text)
 
-        for user in currently_solving_users:
-            send_ticket_solved_email(user.email, ticket_to_solve.subject, current_user.username, current_user.id, solution_text)
+        for user in interested_users:
+            send_ticket_solved_email(user.email, ticket_to_solve, current_user.username, current_user.id, solution_text)
         
         flash(f"{ticket_to_solve} solved!", category='success')
 
