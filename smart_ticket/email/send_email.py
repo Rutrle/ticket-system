@@ -84,5 +84,32 @@ def send_deactivation_email(receiver_email:str, username:str):
                 <p>Smart Ticket development team</p>
                 """
     
+    send_email(receiver_email, subject, email_text, email_html)
+
+
+def send_reactivation_email(receiver_email:str, username:str):
+    subject = "Smart ticket account reactivation"
+
+    email_text = f"""
+                Your Smart Ticket account, {username}, was reactivated!
+                You are again able to log in and use Smart Ticket application
+
+                If you have any questions regarding the reactivation, please contact your administrator
+
+                Yours sincerely
+
+                Smart Ticket development team
+                """ 
+
+    email_html = f"""<h1>Your Smart Ticket account, {username}, was reactivated!</h1>
+                <hr>
+                <p>You are again able to log in and use Smart Ticket application</p>
+                <p>If you have any questions regarding the reactivation, please contact your administrator</p>
+                <br>
+                <br>
+                <p>Yours sincerely</p>
+                <br>
+                <p>Smart Ticket development team</p>
+                """
     
     send_email(receiver_email, subject, email_text, email_html)
