@@ -24,3 +24,4 @@ app.register_blueprint(admin_bp, url_prefix = '/admin')
 
 from smart_ticket import routes, filters
 
+from smart_ticket.email import send_email

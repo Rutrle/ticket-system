@@ -3,6 +3,7 @@ from smart_ticket import db
 import smart_ticket
 from smart_ticket.user_bp.forms import RegisterForm, LoginForm, UserContactsUpdateForm, UserProfilePictureForm, UserPasswordUpdateForm
 from smart_ticket.models import User, UserRole
+from smart_ticket.email.send_email import send_registration_email
 from flask_login import current_user, login_user, logout_user, login_required
 import secrets
 import os
@@ -23,6 +24,7 @@ def registration_page():
         )
         db.session.add(new_user)
         db.session.commit()
+        send_registration_email(new_user.email, new_user.username)
         flash(f'Your account was succesfully created, you can login now.',
               category='success')
         return redirect(url_for('user_bp.login_page'))

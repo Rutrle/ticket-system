@@ -4,5 +4,7 @@
 __pycache__/
 smart_ticket/__pycache__/
 
+smart_ticket/settings.py
+
 smart_ticket/static/images/profile_pictures/*
 !smart_ticket/static/images/profile_pictures/default_profile_picture.png
