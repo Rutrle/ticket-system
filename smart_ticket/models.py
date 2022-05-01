@@ -78,8 +78,6 @@ class UserRole(db.Model):
         return self.name
 
 
-#https://stackoverflow.com/questions/52285012/does-flask-login-support-roles
-#temporary placement
 from functools import wraps
 from flask_login import current_user
 from flask import flash, redirect, url_for

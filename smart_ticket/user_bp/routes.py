@@ -1,9 +1,9 @@
 from flask import Blueprint, redirect, render_template, flash, url_for
 from smart_ticket import db
 import smart_ticket
-from smart_ticket.user_bp.forms import RegisterForm, LoginForm, UserContactsUpdateForm, UserProfilePictureForm, UserPasswordUpdateForm
+from smart_ticket.user_bp.forms import RegisterForm, LoginForm, UserContactsUpdateForm, UserProfilePictureForm, UserPasswordUpdateForm, PasswordResetForm
 from smart_ticket.models import User, UserRole
-from smart_ticket.email.send_email import send_registration_email
+from smart_ticket.email.send_email import send_registration_email, send_password_reset_email
 from flask_login import current_user, login_user, logout_user, login_required
 import secrets
 import os
@@ -174,3 +174,28 @@ def update_password():
                 f'There was an error in changing your password: {err_msg[0]}', category='danger')
 
     return redirect(url_for('user_bp.update_account_settings'))
+
+@user_bp.route('/password_reset', methods=['GET','POST'])
+def password_reset_page():
+    password_reset_form = PasswordResetForm()
+
+    if password_reset_form.validate_on_submit():
+        email = password_reset_form.email.data
+        user = db.session.query(User).filter_by(email=email).first()
+        
+        if user:
+            new_password = secrets.token_urlsafe(15)
+            user.password = new_password
+            send_password_reset_email(user.email, user,new_password)
+            db.session.add(user)
+            db.session.commit()
+        #flash is here to not disclose corretness of entered email
+        flash("Password reset succesfull, e-mail with new password should arrive shortly in your e-mail box", category="success")
+
+    elif password_reset_form.errors != {}:
+        for err_msg in password_reset_form.errors.values():
+            flash(
+                f'There was an error in resetting your password: {err_msg[0]}', category='danger')
+
+
+    return render_template("user_bp/reset_password.html", password_reset_form=password_reset_form)

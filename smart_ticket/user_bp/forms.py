@@ -61,3 +61,7 @@ class UserPasswordUpdateForm(FlaskForm):
     password1 = PasswordField(label='Password', validators=[DataRequired(), Length(min=5, max=50)])
     password2 = PasswordField(label='Confirm password', validators=[DataRequired(), EqualTo('password1', message="Passwords have to match")])
     submit = SubmitField(label='Change password')
+
+class PasswordResetForm(FlaskForm):
+    email = EmailField(label='Please enter e-mail connected to account from which you want to recover password', validators=[DataRequired(), Email()])
+    submit = SubmitField(label='Reset password')

@@ -207,4 +207,40 @@ def send_ticket_reopened_email(receiver_email:str, ticket, reopener_username:str
                 """
     
     send_email(receiver_email, subject, email_text, email_html)
-################# e-mail about ticket email about ticket reopening,
+
+def send_password_reset_email(receiver_email:str, user, new_password):
+    subject = f"Password reset"
+
+    email_text = f"""Password to your Smart ticket account {user} has been reset
+                
+                Your new password is:
+                {new_password}
+                Please change it as soon as possible
+                
+                If you haven't requested password reset, please contact your administrator immediately
+
+                Yours sincerely
+
+                Smart Ticket development team
+
+                This is an automatically generated message, please do not respond to it
+                """
+
+    email_html = f"""<h1>Password to your Smart ticket account {user} has been reset</h1>
+                <hr>
+                <p>Your new password is:</p>
+                <p><b>{new_password}</b></p>
+                <p>Please change it as soon as possible</p>
+                <br>
+                <p>If you haven't requested password reset, please contact your administrator immediately</p>
+                <br>
+                <br>
+                <p>Yours sincerely</p>
+                <br>
+                <p>Smart Ticket development team</p>
+                <br>
+                <hr>
+                <p><small>This is an automatically generated message, please do not respond to it</small></p>
+                """
+    
+    send_email(receiver_email, subject, email_text, email_html)
