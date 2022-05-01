@@ -21,6 +21,6 @@
 <ul>
     <li>add proper documentation</li>
     <li>refactoring, code is messy now; better passing multiple arguments into render_template</li>
-    <li>update index page for signed up people, add more things to about page</li>
-    <li>bugfix showing info on solved ticket</li>
+    <li>add more things to about page</li>
+    <li>add posibility to upgrade or downgrade user from admin status</li>
 </ul>
