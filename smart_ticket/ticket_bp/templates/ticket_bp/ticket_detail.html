@@ -5,9 +5,9 @@ Ticket {{ ticket.id }}
 {% endblock title %}
 
 {% block content %}
-<div class="container">
+<div class="container m-4">
     <div class="row">
-        <div class = "col-8 container bg-dark m-4">
+        <div class = "col-8 container bg-dark p-3">
             <h2>{{ticket.subject}}</h2>
             <hr>
             {% if ticket.is_solved %}
@@ -73,7 +73,7 @@ Ticket {{ ticket.id }}
             </div>
             {% endif %}
         </div>
-        <div class = "col bg-dark m-4">
+        <div class = "col-3 bg-dark p-3">
             {% if ticket.is_solved == False %}
                 <div class = "container m-2">
                     <h3>Current solvers:</h3>
