@@ -14,7 +14,11 @@ Index
             <p class="lead">Easy to use ticket system</p>
             <hr class="my-4">
             <p>Smart Ticket is brand new ticketing solution for Your buisness. Let's try it out!</p>
+            {% if not current_user.is_authenticated %}
             <a class="btn btn-primary btn-lg" href="{{ url_for('user_bp.login_page')}}" role="button">Sign in!</a>
+            {% else %}
+            <a class="btn btn-primary btn-lg" href="{{ url_for('about_page')}}" role="button">Learn more</a>
+            {% endif %}
         </div>
     </div>
 </div>
