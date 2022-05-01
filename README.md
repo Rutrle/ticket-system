@@ -25,5 +25,6 @@
     <li>update index page for signed up people, add more things to about page</li>
     <li>bugfix showing info on solved ticket, removing sollvers on solve</li>
     <li>reseting password</li>
-    <li>ticket id side panel slided down when user put on watchlist</li>
+    <li>ticket detail side panel slided down when user put on watchlist, doesn't matter if he is solver</li>
+    <li>check that solving users are removed on ticket closing</li>
 </ul>

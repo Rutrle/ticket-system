@@ -175,4 +175,36 @@ def send_ticket_updated_email(receiver_email:str, ticket, updater_username:str,u
                 """
     
     send_email(receiver_email, subject, email_text, email_html)
-################# e-mail about ticket update, email about ticket reopening,
+
+
+def send_ticket_reopened_email(receiver_email:str, ticket, reopener_username:str,reopener_id:int, reopen_text:str):
+    subject = f"{ticket} was reopened"
+
+    email_text = f"""{ticket}, was reopened by user {reopener_username}
+
+                Reason for reopening:
+                {reopen_text}
+
+                Yours sincerely
+
+                Smart Ticket development team
+
+                This is an automatically generated message, please do not respond to it
+                """
+
+    email_html = f"""<h1>{ticket}, was reopened by user <a href="{url_for("user_bp.user_detail_page", id=reopener_id, _external = True)}">{reopener_username}</a></h1>
+                <hr>
+                <p>Reason for reopening:</p>
+                <p>{reopen_text}</p>
+                <br>
+                <br>
+                <p>Yours sincerely</p>
+                <br>
+                <p>Smart Ticket development team</p>
+                <br>
+                <hr>
+                <p><small>This is an automatically generated message, please do not respond to it</small></p>
+                """
+    
+    send_email(receiver_email, subject, email_text, email_html)
+################# e-mail about ticket email about ticket reopening,

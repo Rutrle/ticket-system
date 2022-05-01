@@ -1,13 +1,11 @@
-from tarfile import NUL
 from flask import Blueprint, render_template, redirect, flash, url_for
-from sqlalchemy import null
 from smart_ticket import db
 from smart_ticket.models import User, Ticket, TicketLogMessage, admin_required
 from flask_login import current_user, login_required
 from smart_ticket.admin_bp.forms import ConfirmUserDeactivationForm, ConfirmUserReactivationForm, ConfirmTicketDeletionForm, ConfirmTicketReopeningForm
 from smart_ticket.ticket_bp.routes import solve_ticket
 from smart_ticket.ticket_bp.forms import ConfirmTicketSolution
-from smart_ticket.email.send_email import send_deactivation_email, send_reactivation_email
+from smart_ticket.email.send_email import send_deactivation_email, send_reactivation_email, send_ticket_reopened_email
 
 admin_bp = Blueprint('admin_bp', __name__, template_folder='templates')
 
@@ -141,6 +139,12 @@ def reopen_ticket_page(ticket_id):
         db.session.add(reopenning_message)
         db.session.add(ticket_to_reopen)
         db.session.commit()
+
+        interested_users = User.query.filter(User.current_watchlist.any(id=ticket_id)).all()
+
+        for user in interested_users:
+            send_ticket_reopened_email(user.email,ticket_to_reopen,current_user.username,current_user.id,reason_for_reopening)
+            
         flash(f"ticket {ticket_to_reopen} was succesfully reopened!", category="success")
 
     return redirect(url_for('admin_bp.ticket_administration'))
