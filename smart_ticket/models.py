@@ -128,6 +128,7 @@ class Ticket(db.Model):
         self.solver_id = solver.id
         self.is_solved = True
         self.solved_on = datetime.now()
+        self.current_solvers = []
         
         solution_message = TicketLogMessage(
             author_id=solver.id, ticket_id=self.id, message_text=solution_text, message_category="solved")

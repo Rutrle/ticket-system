@@ -21,10 +21,7 @@
 <ul>
     <li>add proper documentation</li>
     <li>refactoring, code is messy now; better passing multiple arguments into render_template</li>
-    <li>add sending e-mails</li>
     <li>update index page for signed up people, add more things to about page</li>
-    <li>bugfix showing info on solved ticket, removing sollvers on solve</li>
-    <li>reseting password</li>
+    <li>bugfix showing info on solved ticket</li>
     <li>ticket detail side panel slided down when user put on watchlist, doesn't matter if he is solver</li>
-    <li>check that solving users are removed on ticket closing</li>
 </ul>

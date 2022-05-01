@@ -8,10 +8,8 @@ script for deleting and recreating the database and filling it in with some data
 also used for trying out database communication during development - these parts will be deleted later
 '''
 
-
 db.drop_all()
 db.create_all()
-
 
 long_text = "Est eiusmod sunt in velit cillum enim consectetur pariatur ullamco. Quis pariatur anim deserunt irure voluptate aute reprehenderit enim minim aliquip laboris et. Nostrud consectetur ex non ullamco Lorem commodo. Cillum magna dolore occaecat duis laborum consequat. Duis Lorem reprehenderit ex dolore elit excepteur in qui cupidatat in reprehenderit. Id eu minim elit mollit. Occaecat ea ipsum do ullamco laborum nostrud ipsum Lorem ullamco elit."
 longer_text = """Ullamco deserunt deserunt officia ad nisi consequat adipisicing velit cupidatat nulla qui enim magna. Esse sint esse proident enim elit dolor amet. Velit culpa amet enim dolore est.
@@ -30,7 +28,6 @@ ticket_creation_logs=[]
 
 user_roles.append(UserRole(name = "user"))
 user_roles.append(UserRole(name = "admin"))
-
 
 
 for user_role in user_roles:
@@ -73,7 +70,4 @@ for ticket_log in ticket_creation_logs:
     db.session.add(ticket_log)
 
 db.session.commit()
-
-
-t = Ticket.query.filter_by(subject='Owned ticket').first()
 
