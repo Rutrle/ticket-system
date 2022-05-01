@@ -114,8 +114,8 @@ def send_reactivation_email(receiver_email:str, username:str):
     
     send_email(receiver_email, subject, email_text, email_html)
 
-def send_ticket_solved_email(receiver_email:str, ticket_subject:str, solver_username:str, solver_id, solution_text):
-    subject = f"Ticket {ticket_subject} was solved"
+def send_ticket_solved_email(receiver_email:str, ticket_subject, solver_username:str, solver_id, solution_text): ##ticket is passed as ticket_subject!
+    subject = f"{ticket_subject} was solved"
 
     email_text = f"""{ticket_subject}, was solved by user {solver_username}
 
@@ -144,3 +144,35 @@ def send_ticket_solved_email(receiver_email:str, ticket_subject:str, solver_user
                 """
     
     send_email(receiver_email, subject, email_text, email_html)
+
+def send_ticket_updated_email(receiver_email:str, ticket, updater_username:str,updater_id:int, update_text:str):
+    subject = f"{ticket} was updated"
+
+    email_text = f"""{ticket}, was updated by user {updater_username}
+
+                Update text:
+                {update_text}
+
+                Yours sincerely
+
+                Smart Ticket development team
+
+                This is an automatically generated message, please do not respond to it
+                """
+
+    email_html = f"""<h1>{ticket}, was updated by user <a href="{url_for("user_bp.user_detail_page", id=updater_id, _external = True)}">{updater_username}</a></h1>
+                <hr>
+                <p>Update text:</p>
+                <p>{update_text}</p>
+                <br>
+                <br>
+                <p>Yours sincerely</p>
+                <br>
+                <p>Smart Ticket development team</p>
+                <br>
+                <hr>
+                <p><small>This is an automatically generated message, please do not respond to it</small></p>
+                """
+    
+    send_email(receiver_email, subject, email_text, email_html)
+################# e-mail about ticket update, email about ticket reopening,

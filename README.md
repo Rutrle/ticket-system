@@ -24,4 +24,6 @@
     <li>add sending e-mails</li>
     <li>update index page for signed up people, add more things to about page</li>
     <li>bugfix showing info on solved ticket, removing sollvers on solve</li>
+    <li>reseting password</li>
+    <li>ticket id side panel slided down when user put on watchlist</li>
 </ul>

@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, render_template, request, flash, url_for
 from smart_ticket import db
-from smart_ticket.email.send_email import send_ticket_solved_email
+from smart_ticket.email.send_email import send_ticket_solved_email, send_ticket_updated_email
 from smart_ticket.models import Ticket, TicketLogMessage, User
 from smart_ticket.ticket_bp.forms import OpenTicketForm, TicketFilter, NewTicketLogMessage, AssignTicket2Self, UnassignTicket2Self, AddToWatchlist, RemoveFromWatchlist, ConfirmTicketSolution, ArchiveTicketFilter
 from flask_login import current_user, login_required
@@ -100,16 +100,26 @@ def submit_new_log_ticket(current_ticket_id: int):
     new_log_msg_form = NewTicketLogMessage()
 
     if new_log_msg_form.validate_on_submit():
+        update_text = new_log_msg_form.message_text.data
 
         new_log_message = TicketLogMessage(
             author_id=current_user.id,
-            ticket_id=current_ticket_id,
-            message_text=new_log_msg_form.message_text.data,
+            ticket_id=current_ticket_id, #test what will happen if non-existent ticket id will be passed here
+            message_text=update_text,
             message_category="update"
         )
 
         db.session.add(new_log_message)
         db.session.commit()
+
+        ticket = Ticket.query.get_or_404(current_ticket_id)
+        currently_solving_users = User.query.filter(User.currently_solving.any(id=current_ticket_id)).all()
+        currently_on_watchlist = User.query.filter(User.current_watchlist.any(id=current_ticket_id)).all()
+        interested_users = set(currently_solving_users + currently_on_watchlist)
+
+        for user in interested_users:
+            send_ticket_updated_email(user.email, ticket, current_user.username, current_user.id, update_text)
+
 
     return redirect(url_for('ticket_bp.ticket_detail_page', current_ticket_id=current_ticket_id))
 
