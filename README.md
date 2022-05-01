@@ -23,5 +23,4 @@
     <li>refactoring, code is messy now; better passing multiple arguments into render_template</li>
     <li>update index page for signed up people, add more things to about page</li>
     <li>bugfix showing info on solved ticket</li>
-    <li>ticket detail side panel slided down when user put on watchlist, doesn't matter if he is solver</li>
 </ul>
