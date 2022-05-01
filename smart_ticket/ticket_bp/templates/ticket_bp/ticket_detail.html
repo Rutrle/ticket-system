@@ -12,8 +12,8 @@ Ticket {{ ticket.id }}
             <hr>
             {% if ticket.is_solved %}
             <h4>Closed</h4>
-            <p><strong>Solved by:</strong></p>
-            <p><strong>Solved on</strong></p>
+            <p><strong>Solved by:</strong> <a href="{{ url_for('user_bp.user_detail_page', id = ticket.solver.id ) }}">{{ticket.solver.username}}</a></p>
+            <p><strong>Solved on:</strong> {{ticket.solved_on|format_time}}</p>
             {% endif %}
             <p><strong> Posted on: </strong>{{ticket.creation_time|format_time}}</p>
             {% if ticket.author.username|length  %}
@@ -77,8 +77,8 @@ Ticket {{ ticket.id }}
             {% if ticket.is_solved == False %}
                 <div class = "container m-2">
                     <h3>Current solvers:</h3>
-                        {% for solver in currently_solving_users %}
-                            <a href="{{ url_for('user_bp.user_detail_page', id = solver.id ) }}">{{solver.username}}</a>
+                        {% for current_solver in currently_solving_users %}
+                            <a href="{{url_for('user_bp.user_detail_page', id = current_solver.id ) }}">{{current_solver.username}}</a>
                         {% endfor %}
                     <hr>
                 </div>
