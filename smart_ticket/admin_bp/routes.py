@@ -1,18 +1,15 @@
 from flask import Blueprint, render_template, redirect, flash, url_for
 from smart_ticket import db
-from smart_ticket.models import User, Ticket, TicketLogMessage, admin_required
+from smart_ticket.models import User, Ticket, TicketLogMessage, UserRole, admin_required
 from flask_login import current_user, login_required
-from smart_ticket.admin_bp.forms import ConfirmUserDeactivationForm, ConfirmUserReactivationForm, ConfirmTicketDeletionForm, ConfirmTicketReopeningForm
+from smart_ticket.admin_bp.forms import ConfirmUserDeactivationForm, ConfirmUserReactivationForm, ConfirmTicketDeletionForm, ConfirmTicketReopeningForm, ConfirmUserUpgradeForm
 from smart_ticket.ticket_bp.routes import solve_ticket
 from smart_ticket.ticket_bp.forms import ConfirmTicketSolution
-from smart_ticket.email.send_email import send_deactivation_email, send_reactivation_email, send_ticket_reopened_email
+from smart_ticket.email.send_email import send_deactivation_email, send_reactivation_email, send_ticket_reopened_email, send_upgrade_to_administrator_email
 
 admin_bp = Blueprint('admin_bp', __name__, template_folder='templates')
 
-def reactivate_user(user):
-    user.is_active = True
-    db.session.add(user)
-    db.session.commit()
+
 
 
 @admin_bp.route('', methods=['GET'])
@@ -29,15 +26,20 @@ def user_administration():
     inactive_users = db.session.query(User).filter(User.is_active == False).order_by('creation_time')
     user_deactivation_form = ConfirmUserDeactivationForm()
     user_reactivation_form = ConfirmUserReactivationForm()
+    user_upgrade_form = ConfirmUserUpgradeForm()
 
-    return render_template("admin_bp/user_administration.html", active_users=active_users, inactive_users=inactive_users, user_deactivation_form = user_deactivation_form, user_reactivation_form=user_reactivation_form)
+    return render_template("admin_bp/user_administration.html", active_users=active_users, inactive_users=inactive_users, user_deactivation_form = user_deactivation_form, user_reactivation_form=user_reactivation_form, user_upgrade_form=user_upgrade_form)
 
 def deactivate_user(user):
     user.is_active = False
     user.currently_solving.clear()
-
     db.session.add(user)
     db.session.commit()   
+
+def reactivate_user(user):
+    user.is_active = True
+    db.session.add(user)
+    db.session.commit()
 
 @admin_bp.route('/users/<int:user_id>/deactivate', methods=['POST'])
 @login_required
@@ -79,6 +81,38 @@ def reactivate_user_page(user_id:int):
     elif user_reactivation_form.errors != {}:
         for err_msg in user_reactivation_form.errors.values():
             flash(f'There was an error with reactivating a user: {err_msg[0]}', category='danger')  
+    
+    return redirect(url_for("admin_bp.user_administration"))
+
+def upgrade_to_administrator(user):
+    administrator_role = UserRole.query.filter_by(name="admin").first()
+    user.user_role = administrator_role
+    db.session.add(user)
+    db.session.commit()
+
+
+@admin_bp.route('/users/<int:user_id>/upgrade', methods=['POST'])
+@login_required
+@admin_required
+def upgrade_to_administrator_page(user_id:int):
+    user_upgrade_form = ConfirmUserUpgradeForm()
+
+    if user_upgrade_form.validate_on_submit():
+        user_to_upgrade = User.query.filter_by(id=user_id).first()
+        password_correct = current_user.check_attempted_password(user_upgrade_form.password.data)
+        user_username_correct = user_to_upgrade.username == user_upgrade_form.user_username.data
+        if password_correct and user_username_correct:
+
+            upgrade_to_administrator(user_to_upgrade)
+            send_upgrade_to_administrator_email(user_to_upgrade.email, user_to_upgrade.username)
+            flash(f"Account of user {user_to_upgrade.username} was succesfully upgraded to administrator!", category="success") 
+        else:
+            flash(f'Either your password or upgraded user username was incorrect', category='danger')  
+
+
+    elif user_upgrade_form.errors != {}:
+        for err_msg in user_upgrade_form.errors.values():
+            flash(f'There was an error with upgrading user to administrator: {err_msg[0]}', category='danger')  
     
     return redirect(url_for("admin_bp.user_administration"))
 

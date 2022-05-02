@@ -244,3 +244,34 @@ def send_password_reset_email(receiver_email:str, user, new_password):
                 """
     
     send_email(receiver_email, subject, email_text, email_html)
+
+
+    
+
+def send_upgrade_to_administrator_email(receiver_email:str, username:str):
+    subject = f"Upgrade to administrator"
+
+    email_text = f"""Your Smart ticket account {username} has been granted administrator privileges!
+                
+                You will now be able to access administrator tools
+                
+                Yours sincerely
+
+                Smart Ticket development team
+
+                This is an automatically generated message, please do not respond to it
+                """
+
+    email_html = f"""<h1>Your Smart ticket account {username} has been granted administrator privileges!</h1>
+                <hr>
+                <p>You will now be able to access administrator tools</p>
+                <br>
+                <p>Yours sincerely</p>
+                <br>
+                <p>Smart Ticket development team</p>
+                <br>
+                <hr>
+                <p><small>This is an automatically generated message, please do not respond to it</small></p>
+                """
+    
+    send_email(receiver_email, subject, email_text, email_html)

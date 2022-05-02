@@ -50,3 +50,29 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="UpgradeUser-{{ user.id}}" tabindex="-1" aria-labelledby="UpgradeUserStatusModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="UpgradeUserStatusModalLabel">Confirm user <b>{{user.username}}</b> permissions upgrade to administrator status</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="POST"  action="{{ url_for('admin_bp.upgrade_to_administrator_page', user_id = user.id) }}"> 
+      <div class="modal-body">
+        <p class="blockquote-footer">This user will recieve all administrator permissions</p>
+          {{user_upgrade_form.hidden_tag()}}
+          {{user_upgrade_form.user_username.label()}}
+          {{user_upgrade_form.user_username(class="form-control w-10", placeholder = "Username of user to become administrator " )}}
+          {{user_upgrade_form.password.label()}}
+          {{user_upgrade_form.password(class="form-control w-10", placeholder = "Your password" )}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        {{ user_upgrade_form.confirm_user_upgrade(class="btn btn-block btn-success") }}
+      </form>
+      
+      </div>
+    </div>
+  </div>
+</div>
