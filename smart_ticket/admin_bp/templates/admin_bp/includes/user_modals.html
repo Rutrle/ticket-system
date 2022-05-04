@@ -76,3 +76,30 @@
     </div>
   </div>
 </div>
+
+
+<div class="modal fade" id="DowngradeUser-{{ user.id}}" tabindex="-1" aria-labelledby="DowngradeUserStatusModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id=DowngradeUserStatusModalLabel">Confirm user <b>{{user.username}}</b> permissions downgrade to standard user</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="POST"  action="{{ url_for('admin_bp.downgrade_to_user_page', user_id = user.id) }}"> 
+      <div class="modal-body">
+        <p class="blockquote-footer">This user will loose all administrator permissions</p>
+          {{user_downgrade_form.hidden_tag()}}
+          {{user_downgrade_form.user_username.label()}}
+          {{user_downgrade_form.user_username(class="form-control w-10", placeholder = "Username of user to cease being administrator " )}}
+          {{user_downgrade_form.password.label()}}
+          {{user_downgrade_form.password(class="form-control w-10", placeholder = "Your password" )}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        {{ user_downgrade_form.confirm_user_downgrade(class="btn btn-block btn-success") }}
+      </form>
+      
+      </div>
+    </div>
+  </div>
+</div>

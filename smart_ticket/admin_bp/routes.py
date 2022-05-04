@@ -2,10 +2,10 @@ from flask import Blueprint, render_template, redirect, flash, url_for
 from smart_ticket import db
 from smart_ticket.models import User, Ticket, TicketLogMessage, UserRole, admin_required
 from flask_login import current_user, login_required
-from smart_ticket.admin_bp.forms import ConfirmUserDeactivationForm, ConfirmUserReactivationForm, ConfirmTicketDeletionForm, ConfirmTicketReopeningForm, ConfirmUserUpgradeForm
+from smart_ticket.admin_bp.forms import ConfirmUserDeactivationForm, ConfirmUserReactivationForm, ConfirmTicketDeletionForm, ConfirmTicketReopeningForm, ConfirmUserUpgradeForm, ConfirmUserDowngradeForm
 from smart_ticket.ticket_bp.routes import solve_ticket
 from smart_ticket.ticket_bp.forms import ConfirmTicketSolution
-from smart_ticket.email.send_email import send_deactivation_email, send_reactivation_email, send_ticket_reopened_email, send_upgrade_to_administrator_email
+from smart_ticket.email.send_email import send_deactivation_email, send_reactivation_email, send_ticket_reopened_email, send_upgrade_to_administrator_email, send_downgrade_to_user_email
 
 admin_bp = Blueprint('admin_bp', __name__, template_folder='templates')
 
@@ -27,8 +27,9 @@ def user_administration():
     user_deactivation_form = ConfirmUserDeactivationForm()
     user_reactivation_form = ConfirmUserReactivationForm()
     user_upgrade_form = ConfirmUserUpgradeForm()
+    user_downgrade_form = ConfirmUserDowngradeForm()
 
-    return render_template("admin_bp/user_administration.html", active_users=active_users, inactive_users=inactive_users, user_deactivation_form = user_deactivation_form, user_reactivation_form=user_reactivation_form, user_upgrade_form=user_upgrade_form)
+    return render_template("admin_bp/user_administration.html", active_users=active_users, inactive_users=inactive_users, user_deactivation_form = user_deactivation_form, user_reactivation_form=user_reactivation_form, user_upgrade_form=user_upgrade_form, user_downgrade_form=user_downgrade_form)
 
 def deactivate_user(user):
     user.is_active = False
@@ -109,13 +110,43 @@ def upgrade_to_administrator_page(user_id:int):
         else:
             flash(f'Either your password or upgraded user username was incorrect', category='danger')  
 
-
     elif user_upgrade_form.errors != {}:
         for err_msg in user_upgrade_form.errors.values():
             flash(f'There was an error with upgrading user to administrator: {err_msg[0]}', category='danger')  
     
     return redirect(url_for("admin_bp.user_administration"))
 
+
+def downgrade_to_user(user):
+    user_role = UserRole.query.filter_by(name="user").first()
+    user.user_role = user_role
+    db.session.add(user)
+    db.session.commit()
+
+
+@admin_bp.route('/users/<int:user_id>/downgrade', methods=['POST'])
+@login_required
+@admin_required
+def downgrade_to_user_page(user_id:int):
+    user_downgrade_form = ConfirmUserDowngradeForm()
+
+    if user_downgrade_form.validate_on_submit():
+        user_to_downgrade = User.query.filter_by(id=user_id).first()
+        password_correct = current_user.check_attempted_password(user_downgrade_form.password.data)
+        user_username_correct = user_to_downgrade.username == user_downgrade_form.user_username.data
+        if password_correct and user_username_correct:
+
+            downgrade_to_user(user_to_downgrade)
+            send_downgrade_to_user_email(user_to_downgrade.email, user_to_downgrade.username)
+            flash(f"Account of user {user_to_downgrade.username} was succesfully downgraded to standard user!", category="success") 
+        else:
+            flash(f'Either your password or downgraded user username was incorrect', category='danger')  
+
+    elif user_downgrade_form.errors != {}:
+        for err_msg in user_downgrade_form.errors.values():
+            flash(f'There was an error with downgrading user to standard user: {err_msg[0]}', category='danger')  
+    
+    return redirect(url_for("admin_bp.user_administration"))
 
 @admin_bp.route('/tickets', methods=['GET'])
 @login_required

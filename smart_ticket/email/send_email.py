@@ -275,3 +275,34 @@ def send_upgrade_to_administrator_email(receiver_email:str, username:str):
                 """
     
     send_email(receiver_email, subject, email_text, email_html)
+
+
+def send_downgrade_to_user_email(receiver_email:str, username:str):
+    subject = f"Downgrade to standard user"
+
+    email_text =f"""Your Smart ticket account {username} has been revoked administrator privileges
+                
+                You will no longer be able to access administrator tools
+                Your account will still allow you perform all activities as normal user
+                
+                Yours sincerely
+
+                Smart Ticket development team
+
+                This is an automatically generated message, please do not respond to it
+                """
+
+    email_html = f"""<h1>Your Smart ticket account {username} has been revoked administrator privileges</h1>
+                <hr>
+                <p>You will no longer be able to access administrator tools</p>
+                <p>Your account will still allow you perform all activities as normal user</p>
+                <br>
+                <p>Yours sincerely</p>
+                <br>
+                <p>Smart Ticket development team</p>
+                <br>
+                <hr>
+                <p><small>This is an automatically generated message, please do not respond to it</small></p>
+                """
+    #finish modal + this e-mail, rest should be ready
+    send_email(receiver_email, subject, email_text, email_html)
