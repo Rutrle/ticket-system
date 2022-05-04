@@ -5,34 +5,35 @@ User detail
 {% endblock title %}
 
 {% block content %}
-        <div class = "container bg-dark m-5 p-5 mx-auto">
-                <h2>{{user.username}}</h2>
-                <hr>
-                        <div class="row">  
-                        <div class="col-8">
-                                <h3>User details</h3> 
-                                <br>
-                                <p><b>Email: </b>{{user.email}}</p>
-                                <p><b>Phone number: </b>{{user.phone_number}}</p>
+<div class="container bg-dark m-5 p-5 mx-auto">
+        <h2>{{user.username}}</h2>
+        <hr>
+        <div class="row">
+                <div class="col-8">
+                        <h3>User details</h3>
+                        <br>
+                        <p><b>Email: </b>{{user.email}}</p>
+                        <p><b>Phone number: </b>{{user.phone_number}}</p>
 
-                                {% if user.id == current_user.id %}
-                                        <a class="btn btn-sm btn-secondary" href="{{ url_for('user_bp.update_account_settings') }}">Update your details</a>
-                                {% endif %}
-                        </div>
-                        <div class="col-4">
-                                <img class = "rounded-circle account-img"  src="{{profile_picture_path}}">
-                        </div>
+                        {% if user.id == current_user.id %}
+                        <a class="btn btn-sm btn-secondary"
+                                href="{{ url_for('user_bp.update_account_settings') }}">Update your details</a>
+                        {% endif %}
+                </div>
+                <div class="col-4">
+                        <img class="rounded-circle account-img" src="{{profile_picture_path}}">
+                </div>
 
-                        </div>
-                <hr>
-                <h2>Currently solving:</h2>
-
-                {% for ticket in user.currently_solving %}
-                        <a href="{{ url_for('ticket_bp.ticket_detail_page', current_ticket_id=ticket.id) }}">
-                        {{ticket}}
-                        </a>
-                        </p>
-                {% endfor %}
         </div>
+        <hr>
+        <h2>Currently solving:</h2>
+
+        {% for ticket in user.currently_solving %}
+        <a href="{{ url_for('ticket_bp.ticket_detail_page', current_ticket_id=ticket.id) }}">
+                {{ticket}}
+        </a>
+        </p>
+        {% endfor %}
+</div>
 
 {% endblock content %}
