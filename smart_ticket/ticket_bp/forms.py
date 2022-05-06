@@ -5,10 +5,8 @@ from flask_ckeditor import CKEditorField
 
 
 class OpenTicketForm(FlaskForm):
-    subject = StringField(label='Subject', validators=[
-                          DataRequired(), Length(min=5, max=45)])
-    issue_text = TextAreaField(label='Problem description', validators=[
-                               DataRequired(), Length(min=0, max=2500)])
+    subject = StringField(label='Subject', validators=[DataRequired(), Length(min=5, max=45)])
+    issue_text = TextAreaField(label='Problem description', validators=[DataRequired(), Length(min=0, max=2500)])
     submit = SubmitField(label='Submit ticket')
 
 
@@ -28,16 +26,13 @@ class TicketFilter(FlaskForm):
 
 
 class OpenTicketForm(FlaskForm):
-    subject = StringField(label='Subject', validators=[
-                          DataRequired(), Length(min=5, max=45)])
-    issue_text = CKEditorField(label='Problem description', validators=[
-                               DataRequired(), Length(min=0, max=2500)])
+    subject = StringField(label='Subject', validators=[DataRequired(), Length(min=5, max=45)])
+    issue_text = CKEditorField(label='Problem description', validators=[DataRequired(), Length(min=0, max=2500)])
     submit = SubmitField(label='Submit ticket')
 
 
 class NewTicketLogMessage(FlaskForm):
-    message_text = TextAreaField(label="Update", validators=[
-                                 DataRequired(), Length(min=5, max=1500)])
+    message_text = TextAreaField(label="Update", validators=[DataRequired(), Length(min=5, max=1500)])
     submit_new_log_ticket = SubmitField(label='Submit update')
 
 
@@ -78,6 +73,5 @@ class ArchiveTicketFilter(FlaskForm):
 
 
 class ConfirmTicketSolution(FlaskForm):
-    solution_text = TextAreaField(label="Describe ticket solution", validators=[
-                                  DataRequired(), Length(min=5, max=1500)])
+    solution_text = TextAreaField(label="Describe ticket solution", validators=[DataRequired(), Length(min=5, max=1500)])
     solve_ticket = SubmitField(label="Confirm Solution")
