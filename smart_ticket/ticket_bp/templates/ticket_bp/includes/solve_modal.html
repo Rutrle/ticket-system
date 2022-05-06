@@ -1,20 +1,20 @@
 <div class="modal fade" id="ConfirmSolution" tabindex="-1" aria-labelledby="ConfirmSolutionModal" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="ConfirmSolutionModalLabel">Confirm ticket solution</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <form method="POST" action = "{{ url_for('ticket_bp.solve_ticket_page', current_ticket_id = ticket.id)}}"> 
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ConfirmSolutionModalLabel">Confirm ticket solution</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="POST" action="{{ url_for('ticket_bp.solve_ticket_page', current_ticket_id = ticket.id)}}">
         <div class="modal-body">
-            {{confirm_solution_form.hidden_tag()}}
-            {{confirm_solution_form.solution_text(class="form-control w-10", placeholder = 'Describe ticket solution' )}}
+          {{confirm_solution_form.hidden_tag()}}
+          {{confirm_solution_form.solution_text(class="form-control w-10", placeholder = 'Describe ticket solution' )}}
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           {{ confirm_solution_form.solve_ticket(class="btn btn-block btn-primary") }}
-        </form>
         </div>
-      </div>
+      </form>
     </div>
   </div>
+</div>

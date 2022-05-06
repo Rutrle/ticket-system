@@ -7,26 +7,28 @@ Ticket {{ ticket.id }}
 {% block content %}
 <div class="container m-4">
     <div class="row">
-        <div class = "col-8 container bg-dark p-3">
+        <div class="col-8 container bg-dark p-3">
             <h2>{{ticket.subject}}</h2>
             <hr>
             {% if ticket.is_solved %}
             <h4>Closed</h4>
-            <p><strong>Solved by:</strong> <a href="{{ url_for('user_bp.user_detail_page', id = ticket.solver.id ) }}">{{ticket.solver.username}}</a></p>
+            <p><strong>Solved by:</strong>
+                <a href="{{ url_for('user_bp.user_detail_page', id = ticket.solver.id ) }}">{{ticket.solver.username}}</a>
+            </p>
             <p><strong>Solved on:</strong> {{ticket.solved_on|format_time}}</p>
             {% endif %}
             <p><strong> Posted on: </strong>{{ticket.creation_time|format_time}}</p>
-            {% if ticket.author.username|length  %}
+            {% if ticket.author.username|length %}
             <p><strong>Posted by: </strong>{{ticket.author.username}}</p>
-            {%  else %}
+            {% else %}
             <p><strong>Posted by: Anonymous user</strong></p>
             {% endif %}
             <p><strong>Problem description:</strong></p>
-            <div class ="container">
+            <div class="container">
                 <p>{{ticket.issue_description|safe}}</p>
             </div>
 
-            <div class ="container">
+            <div class="container">
                 <table class="table table-dark">
                     <thead>
                         <tr>
@@ -38,22 +40,22 @@ Ticket {{ ticket.id }}
                     </thead>
                     <tbody>
                         {% for msg in msg_log %}
-                            <tr>
-                                <td>{{msg.creation_time|format_time}}</td>
-                                <td>{{msg.author.username}}</td>
-                                <td>{{msg.message_category.value}}</td>
-                                <td>{{msg.message_text}}</td>
-                            </tr>      
+                        <tr>
+                            <td>{{msg.creation_time|format_time}}</td>
+                            <td>{{msg.author.username}}</td>
+                            <td>{{msg.message_category.value}}</td>
+                            <td>{{msg.message_text}}</td>
+                        </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
             {% if ticket.is_solved == False %}
             <row class="bg-dark container">
-                <div class=" bg-dark  w-50" >
+                <div class=" bg-dark  w-50">
                     <form method="POST" action="{{url_for('ticket_bp.submit_new_log_ticket', current_ticket_id = ticket.id)}}">
                         <h3>Write an update</h3>
-
+            
                         {{form.hidden_tag()}}
 
                         {{form.message_text(class="form-control w-10",placeholder="Issue update")}}
@@ -65,7 +67,7 @@ Ticket {{ ticket.id }}
                 </div>
             </row>
             <hr>
-            <div class="">
+            <div>
                 {% include 'ticket_bp/includes/solve_modal.html' %}
                 <button type="button" class="btn btn-lg btn-block btn-primary" data-bs-toggle="modal" data-bs-target="#ConfirmSolution">
                     Solve ticket
@@ -73,52 +75,51 @@ Ticket {{ ticket.id }}
             </div>
             {% endif %}
         </div>
-        <div class = "col-3 bg-dark p-3">
+        <div class="col-3 bg-dark p-3">
             {% if ticket.is_solved == False %}
-                <div class = "container m-2">
-                    <h3>Current solvers:</h3>
-                        {% for current_solver in currently_solving_users %}
-                            <a href="{{url_for('user_bp.user_detail_page', id = current_solver.id ) }}">{{current_solver.username}}</a>
-                        {% endfor %}
-                    <hr>
-                </div>
-                <div class = "d-flex justify-content-center">   
-                    {% if current_user not in ticket.current_solvers %}
-                        <form method="POST"  action="{{url_for('ticket_bp.assign_2_self', current_ticket_id = ticket.id)}}">
-                            {{assign_2_self_form.hidden_tag()}} 
-                            {{assign_2_self_form.assign_2_self(class="btn btn-lg btn-block btn-primary")}}
-                        </form>
-                    {% else %} 
-                        <form method="POST" action="{{url_for('ticket_bp.unassign_from_self', current_ticket_id = ticket.id)}}">
-                            {{unassign_from_self_form.hidden_tag()}} 
-                            {{unassign_from_self_form.unassign_from_self(class="btn btn-lg btn-block btn-warning")}}
-                        </form>
-                    {% endif %}
-                </div>
+            <div class="container m-2">
+                <h3>Current solvers:</h3>
+                {% for current_solver in currently_solving_users %}
+                <a href="{{url_for('user_bp.user_detail_page', id = current_solver.id ) }}">{{current_solver.username}}</a>
+                {% endfor %}
+                <hr>
+            </div>
+            <div class="d-flex justify-content-center">
+                {% if current_user not in ticket.current_solvers %}
+                <form method="POST" action="{{url_for('ticket_bp.assign_2_self', current_ticket_id = ticket.id)}}">
+                    {{assign_2_self_form.hidden_tag()}}
+                    {{assign_2_self_form.assign_2_self(class="btn btn-lg btn-block btn-primary")}}
+                </form>
+                {% else %}
+                <form method="POST" action="{{url_for('ticket_bp.unassign_from_self', current_ticket_id = ticket.id)}}">
+                    {{unassign_from_self_form.hidden_tag()}}
+                    {{unassign_from_self_form.unassign_from_self(class="btn btn-lg btn-block btn-warning")}}
+                </form>
+                {% endif %}
+            </div>
             {% endif %}
             <hr>
-            <div class = "container">   
+            <div class="container">
                 {% if current_user not in ticket.currently_on_watchlist %}
-                    <h6>This ticket is not on your watchlist</h6>
-                    <div class = "d-flex justify-content-center">
-                        <form method="POST" action="{{url_for('ticket_bp.add_to_watchlist', current_ticket_id = ticket.id)}}">
-                            {{add_to_watchlist_form.hidden_tag()}} 
-                            {{add_to_watchlist_form.add_to_watchlist(class="btn btn-lg btn-block btn-warning")}}
-                        </form>
-                    </div>
+                <h6>This ticket is not on your watchlist</h6>
+                <div class="d-flex justify-content-center">
+                    <form method="POST" action="{{url_for('ticket_bp.add_to_watchlist', current_ticket_id = ticket.id)}}">
+                        {{add_to_watchlist_form.hidden_tag()}}
+                        {{add_to_watchlist_form.add_to_watchlist(class="btn btn-lg btn-block btn-warning")}}
+                    </form>
+                </div>
                 {% else %}
                 <h6>This ticket is on your watchlist</h6>
-                    <div class = "d-flex justify-content-center">
-                        <form method="POST" action="{{url_for('ticket_bp.remove_from_watchlist', current_ticket_id = ticket.id)}}">
-                            {{remove_from_watchlist_form.hidden_tag()}} 
-                            {{remove_from_watchlist_form.remove_from_watchlist(class="btn btn-lg btn-block btn-warning")}}
-                        </form>
-                    </div>
+                <div class="d-flex justify-content-center">
+                    <form method="POST"
+                        action="{{url_for('ticket_bp.remove_from_watchlist', current_ticket_id = ticket.id)}}">
+                        {{remove_from_watchlist_form.hidden_tag()}}
+                        {{remove_from_watchlist_form.remove_from_watchlist(class="btn btn-lg btn-block btn-warning")}}
+                    </form>
+                </div>
                 {% endif %}
-                
             </div>
         </div>
     </div>
 </div>
 {% endblock content %}
-

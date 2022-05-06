@@ -6,12 +6,12 @@ Create ticket
 
 {% block content %}
 
-<div class = "container p-5">
-    <div class = "container bg-dark p-5">
+<div class="container p-5">
+    <div class="container bg-dark p-5">
         <h1 class="h1 mb-3">Let's create a new ticket!</h1>
         <hr>
-        <div class = "text-center"> 
-            <form method="POST" class="form-register">
+        <div class="text-center">
+            <form method="POST" class="form-create-ticket">
                 {{form.hidden_tag()}}
 
                 {{form.subject.label(class="col-form-label-lg")}}
@@ -23,7 +23,7 @@ Create ticket
 
                 {{form.submit(class="btn btn-lg btn-block btn-primary")}}
             </form>
-        </div>  
+        </div>
     </div>
 </div>
 
@@ -31,7 +31,7 @@ Create ticket
 <script src="{{url_for('static', filename='js/ckeditor/ckeditor.js')}}"></script>
 
 <script>
-CKEDITOR.replace( 'issue_text' );
+    CKEDITOR.replace('issue_text');
 </script>
 
 {% endblock %}
