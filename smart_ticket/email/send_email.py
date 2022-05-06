@@ -304,5 +304,4 @@ def send_downgrade_to_user_email(receiver_email:str, username:str):
                 <hr>
                 <p><small>This is an automatically generated message, please do not respond to it</small></p>
                 """
-    #finish modal + this e-mail, rest should be ready
     send_email(receiver_email, subject, email_text, email_html)

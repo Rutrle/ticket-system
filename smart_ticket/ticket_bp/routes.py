@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, render_template, request
 from smart_ticket import db
 from smart_ticket.email.send_email import send_ticket_solved_email, send_ticket_updated_email
 from smart_ticket.models import Ticket, TicketLogMessage, User
-from smart_ticket.ticket_bp.forms import OpenTicketForm, TicketFilter, NewTicketLogMessage, AssignTicket2Self, UnassignTicket2Self, AddToWatchlist, RemoveFromWatchlist, ConfirmTicketSolution, ArchiveTicketFilter
+from smart_ticket.ticket_bp.forms import OpenTicketForm, TicketFilterForm, NewTicketLogMessageForm, AssignTicket2SelfForm, UnassignTicket2SelfForm, AddToWatchlistForm, RemoveFromWatchlistForm, ConfirmTicketSolutionForm, ArchiveTicketFilterForm
 from flask_login import current_user, login_required
 from sqlalchemy.sql import text
 
@@ -31,10 +31,10 @@ def create_ticket_page():
         db.session.commit()
 
         flash(f"ticket submitted succesfully", category="success")
+
     if form.errors != {}:
         for err_msg in form.errors.values():
-            flash(
-                f'There was an error in submiting a ticket: {err_msg[0]}', category='danger')
+            flash(f'There was an error in submiting a ticket: {err_msg[0]}', category='danger')
 
     return render_template('ticket_bp/create_ticket.html', form=form)
 
@@ -42,7 +42,7 @@ def create_ticket_page():
 @ticket_bp.route('/list', methods=['GET', 'POST'])
 @login_required
 def ticket_list_page():
-    filter_form = TicketFilter()
+    filter_form = TicketFilterForm()
 
     sort_dict = {'c_time_asc': 'ticket_creation_time',
                  'c_time_desc': 'ticket_creation_time desc',
@@ -84,12 +84,12 @@ def ticket_detail_page(current_ticket_id: int):
     currently_solving_users = User.query.filter(
         User.currently_solving.any(id=current_ticket_id)).all()
 
-    new_log_msg_form = NewTicketLogMessage()
-    assign_2_self_form = AssignTicket2Self()
-    unassign_from_self_form = UnassignTicket2Self()
-    add_to_watchlist_form = AddToWatchlist()
-    remove_from_watchlist_form = RemoveFromWatchlist()
-    confirm_solution_form = ConfirmTicketSolution()
+    new_log_msg_form = NewTicketLogMessageForm()
+    assign_2_self_form = AssignTicket2SelfForm()
+    unassign_from_self_form = UnassignTicket2SelfForm()
+    add_to_watchlist_form = AddToWatchlistForm()
+    remove_from_watchlist_form = RemoveFromWatchlistForm()
+    confirm_solution_form = ConfirmTicketSolutionForm()
 
     return render_template('ticket_bp/ticket_detail.html', ticket=ticket, msg_log=msg_log, form=new_log_msg_form, assign_2_self_form=assign_2_self_form, unassign_from_self_form=unassign_from_self_form, currently_solving_users=currently_solving_users, add_to_watchlist_form=add_to_watchlist_form, remove_from_watchlist_form=remove_from_watchlist_form, confirm_solution_form=confirm_solution_form)
 
@@ -97,14 +97,15 @@ def ticket_detail_page(current_ticket_id: int):
 @ticket_bp.route('/<int:current_ticket_id>/submit_new_log_ticket', methods=['POST'])
 @login_required
 def submit_new_log_ticket(current_ticket_id: int):
-    new_log_msg_form = NewTicketLogMessage()
+    new_log_msg_form = NewTicketLogMessageForm()
 
     if new_log_msg_form.validate_on_submit():
         update_text = new_log_msg_form.message_text.data
 
         new_log_message = TicketLogMessage(
             author_id=current_user.id,
-            ticket_id=current_ticket_id, #test what will happen if non-existent ticket id will be passed here
+            # test what will happen if non-existent ticket id will be passed here
+            ticket_id=current_ticket_id,
             message_text=update_text,
             message_category="update"
         )
@@ -113,13 +114,16 @@ def submit_new_log_ticket(current_ticket_id: int):
         db.session.commit()
 
         ticket = Ticket.query.get_or_404(current_ticket_id)
-        currently_solving_users = User.query.filter(User.currently_solving.any(id=current_ticket_id)).all()
-        currently_on_watchlist = User.query.filter(User.current_watchlist.any(id=current_ticket_id)).all()
-        interested_users = set(currently_solving_users + currently_on_watchlist)
+        currently_solving_users = User.query.filter(
+            User.currently_solving.any(id=current_ticket_id)).all()
+        currently_on_watchlist = User.query.filter(
+            User.current_watchlist.any(id=current_ticket_id)).all()
+        interested_users = set(
+            currently_solving_users + currently_on_watchlist)
 
         for user in interested_users:
-            send_ticket_updated_email(user.email, ticket, current_user.username, current_user.id, update_text)
-
+            send_ticket_updated_email(
+                user.email, ticket, current_user.username, current_user.id, update_text)
 
     return redirect(url_for('ticket_bp.ticket_detail_page', current_ticket_id=current_ticket_id))
 
@@ -127,7 +131,7 @@ def submit_new_log_ticket(current_ticket_id: int):
 @ticket_bp.route('/<int:current_ticket_id>/unassign_from_self', methods=['POST'])
 @login_required
 def unassign_from_self(current_ticket_id: int):
-    unassign_from_self_form = UnassignTicket2Self()
+    unassign_from_self_form = UnassignTicket2SelfForm()
     ticket = Ticket.query.get_or_404(current_ticket_id)
 
     if unassign_from_self_form.validate_on_submit():
@@ -146,7 +150,8 @@ def unassign_from_self(current_ticket_id: int):
             db.session.add(ticket)
             db.session.commit()
 
-            flash(f'You are no longer assigned to ticket {ticket.subject}', category='warning')
+            flash(
+                f'You are no longer assigned to ticket {ticket.subject}', category='warning')
 
     return redirect(url_for('ticket_bp.ticket_detail_page', current_ticket_id=current_ticket_id))
 
@@ -154,26 +159,28 @@ def unassign_from_self(current_ticket_id: int):
 @ticket_bp.route('/<int:current_ticket_id>/assign_2_self', methods=['POST'])
 @login_required
 def assign_2_self(current_ticket_id: int):
-    assign_2_self_form = AssignTicket2Self()
+    assign_2_self_form = AssignTicket2SelfForm()
     ticket = Ticket.query.get_or_404(current_ticket_id)
     if assign_2_self_form.validate_on_submit():
         if current_user in ticket.current_solvers:
-                flash(f'You are already assigned to ticket {ticket.subject}', category='warning')
+            flash(
+                f'You are already assigned to ticket {ticket.subject}', category='warning')
 
         else:
-                ticket.current_solvers.append(current_user)
-                new_log_message = TicketLogMessage(
-                    author_id=current_user.id,
-                    ticket_id=current_ticket_id,
-                    message_text=f'User {current_user.username} started solving this issue',
-                    message_category="sys_message"
-                )        
+            ticket.current_solvers.append(current_user)
+            new_log_message = TicketLogMessage(
+                author_id=current_user.id,
+                ticket_id=current_ticket_id,
+                message_text=f'User {current_user.username} started solving this issue',
+                message_category="sys_message"
+            )
 
-                db.session.add(new_log_message)
-                db.session.add(ticket)
-                db.session.commit()
+            db.session.add(new_log_message)
+            db.session.add(ticket)
+            db.session.commit()
 
-                flash(f'You have been succesfully assigned to ticket {ticket.subject}', category='success')
+            flash(
+                f'You have been succesfully assigned to ticket {ticket.subject}', category='success')
 
         if assign_2_self_form.errors != {}:
             for err_msg in assign_2_self_form.errors.values():
@@ -181,20 +188,25 @@ def assign_2_self(current_ticket_id: int):
 
     return redirect(url_for('ticket_bp.ticket_detail_page', current_ticket_id=current_ticket_id))
 
-def solve_ticket(ticket_id:int, solution_text:str):
+
+def solve_ticket(ticket_id: int, solution_text: str):
     ticket_to_solve = Ticket.query.get_or_404(ticket_id)
 
     if ticket_to_solve.is_solved == False:
-        
-        currently_solving_users = User.query.filter(User.currently_solving.any(id=ticket_id)).all()
-        currently_on_watchlist = User.query.filter(User.current_watchlist.any(id=ticket_id)).all()
-        interested_users = set(currently_solving_users + currently_on_watchlist)
-        
+
+        currently_solving_users = User.query.filter(
+            User.currently_solving.any(id=ticket_id)).all()
+        currently_on_watchlist = User.query.filter(
+            User.current_watchlist.any(id=ticket_id)).all()
+        interested_users = set(
+            currently_solving_users + currently_on_watchlist)
+
         ticket_to_solve.solve_ticket(current_user, solution_text)
 
         for user in interested_users:
-            send_ticket_solved_email(user.email, ticket_to_solve, current_user.username, current_user.id, solution_text)
-        
+            send_ticket_solved_email(
+                user.email, ticket_to_solve, current_user.username, current_user.id, solution_text)
+
         flash(f"{ticket_to_solve} solved!", category='success')
 
     else:
@@ -204,10 +216,11 @@ def solve_ticket(ticket_id:int, solution_text:str):
 @ticket_bp.route('/<int:current_ticket_id>/solve', methods=['POST'])
 @login_required
 def solve_ticket_page(current_ticket_id: int):
-    confirm_solution_form = ConfirmTicketSolution()
+    confirm_solution_form = ConfirmTicketSolutionForm()
 
     if confirm_solution_form.validate():
-        solve_ticket(current_ticket_id, confirm_solution_form.solution_text.data)
+        solve_ticket(current_ticket_id,
+                     confirm_solution_form.solution_text.data)
 
     return redirect(url_for('ticket_bp.ticket_detail_page', current_ticket_id=current_ticket_id))
 
@@ -250,7 +263,7 @@ def remove_from_watchlist(current_ticket_id: int):
 @ticket_bp.route('/archive', methods=['GET', 'POST'])
 @login_required
 def archive_page():
-    filter_form = ArchiveTicketFilter()
+    filter_form = ArchiveTicketFilterForm()
 
     sort_dict = {'solve_time_asc': 'ticket_solved_on',
                  'solve_time_desc': 'ticket_solved_on desc',
