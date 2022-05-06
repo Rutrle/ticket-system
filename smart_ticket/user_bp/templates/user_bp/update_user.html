@@ -13,8 +13,7 @@ User update
                         <div class="row">
                                 <h5>Your contact details:</h5>
                                 <div class="form-group row col-6">
-                                        <form method="POST"
-                                                action="{{url_for('user_bp.update_basic_account_settings')}}">
+                                        <form method="POST" action="{{url_for('user_bp.update_basic_account_settings')}}">
                                                 {{contacts_update_form.hidden_tag()}}
 
                                                 {{contacts_update_form.email.label()}}
@@ -22,8 +21,7 @@ User update
                                                 title = "Your e-mail address")}}
 
                                                 {{contacts_update_form.phone_number.label()}}
-                                                {{contacts_update_form.phone_number(class="form-control",value=current_user.phone_number,
-                                                title="Your phone number including country prefix")}}
+                                                {{contacts_update_form.phone_number(class="form-control",value=current_user.phone_number, title="Your phone number including country prefix")}}
                                                 <div class="col-auto my-3">
                                                         {{contacts_update_form.submit(class="btn btn-lg btn-block
                                                         btn-primary")}}
@@ -34,16 +32,14 @@ User update
                         <hr>
                         <div class="form-group row col-6">
                                 <h5>Your current profile picture:</h5>
-                                <form method="POST" action="{{url_for('user_bp.update_profile_picture')}}"
-                                        enctype="multipart/form-data">
+                                <form method="POST" action="{{url_for('user_bp.update_profile_picture')}}" enctype="multipart/form-data">
 
                                         <img class="rounded-circle account-img" src="{{profile_picture_path}}">
                                         {{profile_picture_form.hidden_tag()}}
                                         {{profile_picture_form.profile_picture.label()}}
                                         {{profile_picture_form.profile_picture(class="form-control")}}
                                         <div class="col-auto my-3">
-                                                {{profile_picture_form.submit(class="btn btn-lg btn-block
-                                                btn-primary")}}
+                                                {{profile_picture_form.submit(class="btn btn-lg btn-block btn-primary")}}
                                         </div>
                                 </form>
                         </div>
@@ -61,8 +57,7 @@ User update
                                         {{password_update_form.password2.label()}}
                                         {{password_update_form.password2(class="form-control")}}
                                         <div class="col-auto my-3">
-                                                {{password_update_form.submit(class="btn btn-lg btn-block
-                                                btn-primary")}}
+                                                {{password_update_form.submit(class="btn btn-lg btn-block btn-primary")}}
                                         </div>
                                 </form>
                         </div>
