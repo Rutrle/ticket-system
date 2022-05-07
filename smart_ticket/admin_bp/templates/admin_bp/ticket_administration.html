@@ -24,7 +24,7 @@ Ticket administration
                 </tr>
             </thead>
             <tbody>
-                {% for ticket in unresolved_tickets %}
+                {% for ticket in unresolved_tickets.items %}
                 <tr>
                     <td>{{ticket.id}}</td>
                     <td>{{ticket.subject}}</td>
@@ -40,7 +40,7 @@ Ticket administration
                     <td>
                         {% include 'admin_bp/includes/ticket_modals.html' %}
                         <div class="btn-group" role="group" aria-label="ticket options">
-                            <a href="{{url_for('ticket_bp.ticket_detail_page', current_ticket_id=ticket.id)}}"
+                            <a href="{{url_for('ticket_bp.ticket_detail_page', ticket_id=ticket.id)}}"
                                 title="Ticket detail" class="btn btn-secondary">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                                     <path
@@ -72,6 +72,30 @@ Ticket administration
                 {% endfor %}
             </tbody>
         </table>
+        <div class = "pagination">
+            <div class="text-right">
+                <a href="{{ url_for('admin_bp.ticket_administration_page', page=unresolved_tickets.prev_num) }}" class="btn  btn-dark
+                {% if unresolved_tickets.page == 1 %}disabled{% endif %}">
+                    &laquo;
+                </a>
+                {% for page_num in unresolved_tickets.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                {% if page_num %}
+                        {% if unresolved_tickets.page == page_num %}
+                        <a href="{{ url_for('admin_bp.ticket_administration_page', page=page_num) }}" class="btn btn-outline-warning">{{ page_num }}</a>
+                        {% else %}
+                        <a href="{{ url_for('admin_bp.ticket_administration_page', page=page_num) }}" class="btn btn-dark">{{ page_num }}</a>
+                        {% endif %}
+                    {% else %}
+                        ...
+                    {% endif %}
+                {% endfor %}
+                <a href="{{ url_for('admin_bp.ticket_administration_page', page=unresolved_tickets.next_num) }}" class="btn btn-dark 
+                {% if unresolved_tickets.page == unresolved_tickets.pages %}disabled{% endif %}">
+                    &raquo;
+                </a>
+            </div>
+            <p class="text-right mt-3">Showing page {{ unresolved_tickets.page }} of {{ unresolved_tickets.pages }}</p>
+        </div>
     </div>
     <hr>
     <br>
@@ -109,7 +133,7 @@ Ticket administration
                     <td>
                         {% include 'admin_bp/includes/ticket_modals.html' %}
                         <div class="btn-group" role="group" aria-label="ticket options">
-                            <a href="{{url_for('ticket_bp.ticket_detail_page', current_ticket_id=ticket.id)}}" title="Ticket detail" class="btn btn-secondary">
+                            <a href="{{url_for('ticket_bp.ticket_detail_page', ticket_id=ticket.id)}}" title="Ticket detail" class="btn btn-secondary">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                                     <path
                                         d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z">

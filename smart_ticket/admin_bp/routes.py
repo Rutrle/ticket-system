@@ -1,4 +1,4 @@
-from flask import Blueprint, Response, render_template, redirect, flash, url_for
+from flask import Blueprint, Response, render_template, redirect, flash, url_for, request
 from smart_ticket import db
 from smart_ticket.models import User, Ticket, TicketLogMessage, UserRole, admin_required
 from flask_login import current_user, login_required
@@ -216,7 +216,9 @@ def ticket_administration_page() -> Response:
     """
     Page for displaying all tickets and allowing to solve, reopen or completely delete them.    
     """
-    unresolved_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False).outerjoin(Ticket.author).all()
+    page = request.args.get('page', 1, type=int)
+
+    unresolved_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False).outerjoin(Ticket.author).paginate(page=page, per_page=5)
     resolved_tickets = db.session.query(Ticket).filter(Ticket.is_solved == True).outerjoin(Ticket.author).all()
 
     forms = {
