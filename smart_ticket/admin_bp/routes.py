@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, flash, url_for, Response
+from flask import Blueprint, Response, render_template, redirect, flash, url_for
 from smart_ticket import db
 from smart_ticket.models import User, Ticket, TicketLogMessage, UserRole, admin_required
 from flask_login import current_user, login_required

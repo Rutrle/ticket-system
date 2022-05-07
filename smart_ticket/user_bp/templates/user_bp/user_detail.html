@@ -16,8 +16,7 @@ User detail
                         <p><b>Phone number: </b>{{user.phone_number}}</p>
 
                         {% if user.id == current_user.id %}
-                        <a class="btn btn-sm btn-secondary"
-                                href="{{ url_for('user_bp.update_account_settings') }}">Update your details</a>
+                        <a class="btn btn-sm btn-secondary" href="{{ url_for('user_bp.update_account_settings_page') }}">Update your details</a>
                         {% endif %}
                 </div>
                 <div class="col-4">

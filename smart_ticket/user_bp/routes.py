@@ -1,5 +1,6 @@
-from flask import Blueprint, redirect, render_template, flash, url_for
+from flask import Blueprint, Response, redirect, render_template, flash, url_for
 from smart_ticket import db
+from werkzeug.datastructures import FileStorage
 import smart_ticket
 from smart_ticket.user_bp.forms import RegisterForm, LoginForm, UserContactsUpdateForm, UserProfilePictureForm, UserPasswordUpdateForm, PasswordResetForm
 from smart_ticket.models import User, UserRole
@@ -14,7 +15,7 @@ user_bp = Blueprint('user_bp', __name__, template_folder='templates')
 
 
 @user_bp.route('/register', methods=['GET', 'POST'])
-def registration_page():
+def registration_page() -> Response:
     """
     page for user registration
     """
@@ -41,7 +42,7 @@ def registration_page():
 
 
 @user_bp.route('/login', methods=['GET', 'POST'])
-def login_page():
+def login_page() -> Response:
     """
     page for logging in users 
     """
@@ -65,7 +66,7 @@ def login_page():
 
 @user_bp.route('/logout')
 @login_required
-def logout_page():
+def logout_page() -> Response:
     """
     route for logging out user and redirecting them to home page
     """
@@ -76,7 +77,7 @@ def logout_page():
 
 @user_bp.route('/detail/<int:id>')
 @login_required
-def user_detail_page(id: int):
+def user_detail_page(id: int) -> Response:
     """
     page for showing info about user with given 'id'
     """
@@ -88,7 +89,7 @@ def user_detail_page(id: int):
 
 @user_bp.route('/landing')
 @login_required
-def landing_page():
+def landing_page() -> Response:
     """
     Landing page to which are users redirected after login containing tickets that the user i currently solving or are on his watchlist
     """
@@ -98,7 +99,7 @@ def landing_page():
 
 @user_bp.route('/update')
 @login_required
-def update_account_settings():
+def update_account_settings_page() -> Response:
     """
     page for displaying forms for updating user account
     POST requests from those forms is handled in different routes
@@ -116,9 +117,10 @@ def update_account_settings():
 
 @user_bp.route('/update/update_user_info', methods=['POST'])
 @login_required
-def update_basic_account_settings():
+def update_basic_account_settings() -> Response:
     '''
-    route for handling post requests for changing user settings
+    route for handling post requests for changing user settings and
+    then redirecting them back to update_account_settings_page
     '''
     contacts_update_form = UserContactsUpdateForm()
 
@@ -137,10 +139,10 @@ def update_basic_account_settings():
             flash(
                 f'There was an error in updating your profile: {err_msg[0]}', category='danger')
 
-    return redirect(url_for('user_bp.update_account_settings'))
+    return redirect(url_for('user_bp.update_account_settings_page'))
 
 
-def save_picture(form_picture) -> str:
+def save_picture(form_picture: FileStorage) -> str:
     '''
     saves picture passed by WTForms form under random filename and returns the filename
     '''
@@ -161,10 +163,11 @@ def save_picture(form_picture) -> str:
 
 @user_bp.route('/update/update_profile_picture', methods=['POST'])
 @login_required
-def update_profile_picture():
-    '''
+def update_profile_picture() -> Response:
+    """
     route for handling POST request for updating profile picture 
-    '''
+    and then redirecting user back to update_account_settings_page
+    """
     profile_picture_form = UserProfilePictureForm()
     if profile_picture_form.validate_on_submit():
         picture_filename = save_picture(
@@ -179,14 +182,15 @@ def update_profile_picture():
         for err_msg in profile_picture_form.errors.values():
             flash(
                 f'There was an error in updating your profile picture: {err_msg[0]}', category='danger')
-    return redirect(url_for('user_bp.update_account_settings'))
+    return redirect(url_for('user_bp.update_account_settings_page'))
 
 
 @user_bp.route('/update/update_password', methods=['POST'])
 @login_required
-def update_password():
+def update_password() -> Response:
     '''
     route for handling POST request for updating password
+    and then redirecting user back to update_account_settings_page
     '''
     password_update_form = UserPasswordUpdateForm()
 
@@ -214,11 +218,11 @@ def update_password():
             flash(
                 f'There was an error in changing your password: {err_msg[0]}', category='danger')
 
-    return redirect(url_for('user_bp.update_account_settings'))
+    return redirect(url_for('user_bp.update_account_settings_page'))
 
 
 @user_bp.route('/password_reset', methods=['GET', 'POST'])
-def password_reset_page():
+def password_reset_page() -> Response:
     '''
     page for reseting password and sending it to users e-mail
     '''

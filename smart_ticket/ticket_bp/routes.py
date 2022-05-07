@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, render_template, request, flash, url_for
+from flask import Blueprint, Response, render_template, redirect, render_template, request, flash, url_for
 from smart_ticket import db
 from smart_ticket.email.send_email import send_ticket_solved_email, send_ticket_updated_email
 from smart_ticket.models import Ticket, TicketLogMessage, User
@@ -10,7 +10,7 @@ ticket_bp = Blueprint('ticket_bp', __name__, template_folder='templates')
 
 
 @ticket_bp.route('/submit', methods=['GET', 'POST'])
-def create_ticket_page():
+def create_ticket_page() -> Response:
     """
     Page for creating new Tickets
     """
@@ -44,7 +44,7 @@ def create_ticket_page():
 
 @ticket_bp.route('/list', methods=['GET', 'POST'])
 @login_required
-def ticket_list_page():
+def ticket_list_page() -> Response:
     """
     Page for displaying unresolved tickets with different possiblities for filtering and ordering them
     """
@@ -82,7 +82,7 @@ def ticket_list_page():
 
 @ticket_bp.route('/<int:current_ticket_id>')
 @login_required
-def ticket_detail_page(current_ticket_id: int):
+def ticket_detail_page(current_ticket_id: int) -> Response:
     """
     Page for displaying details about given ticket
     """
@@ -107,9 +107,10 @@ def ticket_detail_page(current_ticket_id: int):
 
 @ticket_bp.route('/<int:current_ticket_id>/submit_new_log_ticket', methods=['POST'])
 @login_required
-def submit_new_log_ticket(ticket_id: int):
+def submit_new_log_ticket(ticket_id: int) -> Response:
     """
-    route for handling POST request for creating a new message in log of given ticket and informing interested users about it by e-mail
+    route for handling POST request for creating a new message in log of given ticket, informing 
+    interested users about it by e-mail and then redirecting user back to ticket_detail_page
     """
     new_log_msg_form = NewTicketLogMessageForm()
 
@@ -139,9 +140,10 @@ def submit_new_log_ticket(ticket_id: int):
 
 @ticket_bp.route('/<int:current_ticket_id>/unassign_from_self', methods=['POST'])
 @login_required
-def unassign_from_self(current_ticket_id: int):
+def unassign_from_self(current_ticket_id: int) -> Response:
     """
-    route for handling POST request for removing current user from current solvers of given ticket
+    route for handling POST request for removing current user from current solvers
+    of given ticket and then redirecting him back to ticket_detail_page
     """
     unassign_from_self_form = UnassignTicket2SelfForm()
     ticket = Ticket.query.get_or_404(current_ticket_id)
@@ -168,9 +170,10 @@ def unassign_from_self(current_ticket_id: int):
 
 @ticket_bp.route('/<int:current_ticket_id>/assign_2_self', methods=['POST'])
 @login_required
-def assign_2_self(current_ticket_id: int):
+def assign_2_self(current_ticket_id: int) -> Response:
     """
-    route for handling POST request for assigning current user as one of the current solvers of given ticket
+    route for handling POST request for assigning current user as one of the current solvers
+    of given ticket and then redirecting him back to ticket_detail_page
     """
     assign_2_self_form = AssignTicket2SelfForm()
     ticket = Ticket.query.get_or_404(current_ticket_id)
@@ -201,7 +204,7 @@ def assign_2_self(current_ticket_id: int):
     return redirect(url_for('ticket_bp.ticket_detail_page', current_ticket_id=current_ticket_id))
 
 
-def solve_ticket(ticket_id: int, solution_text: str):
+def solve_ticket(ticket_id: int, solution_text: str) -> None:
     """
     Sets ticket of 'ticket_id' status to solved, current user as its solver and informs interested users about it by e-mail
     """
@@ -226,9 +229,10 @@ def solve_ticket(ticket_id: int, solution_text: str):
 
 @ticket_bp.route('/<int:ticket_id>/solve', methods=['POST'])
 @login_required
-def solve_ticket_page(ticket_id: int):
+def solve_ticket_page(ticket_id: int) -> Response:
     """
-    route for setting status of ticket of given 'ticket_id' to solved
+    route for setting status of ticket of given 'ticket_id' to solved and
+    then redirecting user back to ticket_detail_page
     """
     confirm_solution_form = ConfirmTicketSolutionForm()
 
@@ -240,9 +244,10 @@ def solve_ticket_page(ticket_id: int):
 
 @ticket_bp.route('/<int:ticket_id>/add_2_watchlist', methods=['POST'])
 @login_required
-def add_to_watchlist(ticket_id: int):
+def add_to_watchlist(ticket_id: int) -> Response:
     """
     route for handling POST requests for adding ticket of 'ticket_id' to current user watchlist
+    and then redirecting him back to ticket_detail_page
     """
     user = current_user
     ticket = Ticket.query.get_or_404(ticket_id)
@@ -261,9 +266,10 @@ def add_to_watchlist(ticket_id: int):
 
 @ticket_bp.route('/<int:ticket_id>/remove_from_watchlist', methods=['POST'])
 @login_required
-def remove_from_watchlist(ticket_id: int):
+def remove_from_watchlist(ticket_id: int) -> Response:
     """
     route for handling POST requests for removing ticket of 'ticket_id' from current user watchlist
+    and then redirecting him back to ticket_detail_page
     """
     user = current_user
     ticket = Ticket.query.get_or_404(ticket_id)
@@ -281,7 +287,7 @@ def remove_from_watchlist(ticket_id: int):
 
 @ticket_bp.route('/archive', methods=['GET', 'POST'])
 @login_required
-def archive_page():
+def archive_page() -> Response:
     """
     Page for displaying resolved tickets with different possiblities for filtering and ordering them
     """
