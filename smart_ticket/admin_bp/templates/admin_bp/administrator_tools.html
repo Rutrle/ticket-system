@@ -5,29 +5,26 @@ Administration tools
 {% endblock title %}
 
 {% block content %}
-<div class="container py-5"> 
+<div class="container py-5">
     <div class="p-5 bg-dark rounded-3 mb-4">
         <div class="container-fluid py-5">
             <h3 class="display-6">Welcome to administration central</h3>
             <hr class="my-4">
             <br>
             <ul>
-                <li><a href="{{ url_for('admin_bp.user_administration_page') }}" class ="btn btn-secondary">User administration</a>
+                <li><a href="{{ url_for('admin_bp.user_administration_page') }}" class="btn btn-secondary">User administration</a>
                     <ul>
                         <li>See all users, deactivate or activate their accounts</li>
                     </ul>
-                <br>
+                    <br>
                 </li>
-                <li><a href="{{ url_for('admin_bp.ticket_administration') }}" class ="btn btn-secondary">Tickets  administration</a>
+                <li><a href="{{ url_for('admin_bp.ticket_administration') }}" class="btn btn-secondary">Tickets administration</a>
                     <ul>
                         <li>See all tickets, solve, reopen or delete them</li>
                     </ul>
                 </li>
-            
-            
             </ul>
         </div>
     </div>
 </div>
-
 {% endblock content %}

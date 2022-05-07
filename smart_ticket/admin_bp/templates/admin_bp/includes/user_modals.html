@@ -5,24 +5,24 @@
         <h5 class="modal-title" id="DeactivateUserModalLabel">Confirm user <b>{{user.username}}</b> deactivation</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form method="POST" action="{{ url_for('admin_bp.deactivate_user_page', user_id = user.id) }}"> 
-      <div class="modal-body">
-        <p class="blockquote-footer">This user will no longer be able to log in and use Smart ticket</p>
+      <form method="POST" action="{{ url_for('admin_bp.deactivate_user_page', user_id = user.id) }}">
+        <div class="modal-body">
+          <p class="blockquote-footer">This user will no longer be able to log in and use Smart ticket</p>
           {{user_deactivation_form.hidden_tag()}}
           {{user_deactivation_form.user_username.label()}}
-          {{user_deactivation_form.user_username(class="form-control w-10", placeholder = "Deactivated user username" )}}
+          {{user_deactivation_form.user_username(class="form-control w-10", placeholder = "Deactivated user username")}}
           {{user_deactivation_form.password.label()}}
           {{user_deactivation_form.password(class="form-control w-10", placeholder = "Your password" )}}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        {{ user_deactivation_form.confirm_user_deactivation(class="btn btn-block btn-danger") }}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          {{ user_deactivation_form.confirm_user_deactivation(class="btn btn-block btn-danger") }}
+        </div>
       </form>
-      
-      </div>
     </div>
   </div>
 </div>
+
 
 
 <div class="modal fade" id="ReactivateUser-{{ user.id}}" tabindex="-1" aria-labelledby="ReactivateUserModal" aria-hidden="true">
@@ -32,24 +32,24 @@
         <h5 class="modal-title" id="ReactivateUserModalLabel">Confirm user <b>{{user.username}}</b> Reactivation</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form method="POST"  action="{{ url_for('admin_bp.reactivate_user_page', user_id = user.id) }}"> 
-      <div class="modal-body">
-        <p class="blockquote-footer">This user will be able to resume using all functionalities of Smart ticket</p>
+      <form method="POST" action="{{ url_for('admin_bp.reactivate_user_page', user_id = user.id) }}">
+        <div class="modal-body">
+          <p class="blockquote-footer">This user will be able to resume using all functionalities of Smart ticket</p>
           {{user_reactivation_form.hidden_tag()}}
           {{user_reactivation_form.user_username.label()}}
-          {{user_reactivation_form.user_username(class="form-control w-10", placeholder = "Reactivated user username" )}}
+          {{user_reactivation_form.user_username(class="form-control w-10", placeholder = "Reactivated user username")}}
           {{user_reactivation_form.password.label()}}
           {{user_reactivation_form.password(class="form-control w-10", placeholder = "Your password" )}}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        {{ user_reactivation_form.confirm_user_reactivation(class="btn btn-block btn-success") }}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          {{ user_reactivation_form.confirm_user_reactivation(class="btn btn-block btn-success")}}
+        </div>
       </form>
-      
-      </div>
     </div>
   </div>
 </div>
+
 
 <div class="modal fade" id="UpgradeUser-{{ user.id}}" tabindex="-1" aria-labelledby="UpgradeUserStatusModal" aria-hidden="true">
   <div class="modal-dialog">
@@ -58,24 +58,24 @@
         <h5 class="modal-title" id="UpgradeUserStatusModalLabel">Confirm user <b>{{user.username}}</b> permissions upgrade to administrator status</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form method="POST"  action="{{ url_for('admin_bp.upgrade_to_administrator_page', user_id = user.id) }}"> 
-      <div class="modal-body">
-        <p class="blockquote-footer">This user will recieve all administrator permissions</p>
+      <form method="POST" action="{{ url_for('admin_bp.upgrade_to_administrator_page', user_id = user.id) }}">
+        <div class="modal-body">
+          <p class="blockquote-footer">This user will recieve all administrator permissions</p>
           {{user_upgrade_form.hidden_tag()}}
           {{user_upgrade_form.user_username.label()}}
-          {{user_upgrade_form.user_username(class="form-control w-10", placeholder = "Username of user to become administrator " )}}
+          {{user_upgrade_form.user_username(class="form-control w-10", placeholder = "Username of user to become administrator")}}
           {{user_upgrade_form.password.label()}}
           {{user_upgrade_form.password(class="form-control w-10", placeholder = "Your password" )}}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        {{ user_upgrade_form.confirm_user_upgrade(class="btn btn-block btn-success") }}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          {{user_upgrade_form.confirm_user_upgrade(class="btn btn-block btn-success")}}
+        </div>
       </form>
-      
-      </div>
     </div>
   </div>
 </div>
+
 
 
 <div class="modal fade" id="DowngradeUser-{{ user.id}}" tabindex="-1" aria-labelledby="DowngradeUserStatusModal" aria-hidden="true">
@@ -85,21 +85,20 @@
         <h5 class="modal-title" id=DowngradeUserStatusModalLabel">Confirm user <b>{{user.username}}</b> permissions downgrade to standard user</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form method="POST"  action="{{ url_for('admin_bp.downgrade_to_user_page', user_id = user.id) }}"> 
-      <div class="modal-body">
-        <p class="blockquote-footer">This user will loose all administrator permissions</p>
+      <form method="POST" action="{{ url_for('admin_bp.downgrade_to_user_page', user_id = user.id) }}">
+        <div class="modal-body">
+          <p class="blockquote-footer">This user will loose all administrator permissions</p>
           {{user_downgrade_form.hidden_tag()}}
           {{user_downgrade_form.user_username.label()}}
-          {{user_downgrade_form.user_username(class="form-control w-10", placeholder = "Username of user to cease being administrator " )}}
+          {{user_downgrade_form.user_username(class="form-control w-10", placeholder = "Username of user to cease beingadministrator " )}}
           {{user_downgrade_form.password.label()}}
           {{user_downgrade_form.password(class="form-control w-10", placeholder = "Your password" )}}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        {{ user_downgrade_form.confirm_user_downgrade(class="btn btn-block btn-success") }}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          {{ user_downgrade_form.confirm_user_downgrade(class="btn btn-block btn-success") }}
+        </div>
       </form>
-      
-      </div>
     </div>
   </div>
 </div>
