@@ -1,6 +1,8 @@
-import smtplib, ssl
+import smtplib
+import ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from smart_ticket.models import Ticket, User
 from smart_ticket.settings import EMAIL_PASSWORD
 from flask import url_for
 
@@ -9,7 +11,12 @@ SMTP_SERVER = "smtp.gmail.com"
 SENDER_EMAIL = "smartticketbot@gmail.com"  # Enter your address
 
 
-def send_email(receiver_email:str, subject:str, email_text:str, email_html:str):
+def send_email(receiver_email: str, subject: str, email_text: str, email_html: str) -> None:
+    """
+    uses gmail SMTP server to send e-mail to 'reciever_email' with 'subject' subject, containing 'email_html' text;
+    in case 'reciever_email' doesn't support html, 'email_text' content is visible
+    used by all individual e-mail sending functions
+    """
 
     message = MIMEMultipart("alternative")
     message["Subject"] = subject
@@ -28,10 +35,13 @@ def send_email(receiver_email:str, subject:str, email_text:str, email_html:str):
         server.sendmail(SENDER_EMAIL, receiver_email, message.as_string())
 
 
-def send_registration_email(receiver_email:str, username:str):
+def send_registration_email(receiver_email: str, username: str) -> None:
+    """
+    sends welcome e-mail to newly registeres user of 'username' to his e-mail 'reciever_email' 
+    """
     subject = "Welcome to Smart ticket"
 
-    email_text =  f"""Welcome to Smart Ticket, {username}!
+    email_text = f"""Welcome to Smart Ticket, {username}!
                 To Log in please use the following link: {url_for('user_bp.login_page', _external = True)}'
                 We hope You will have great time using our app
     
@@ -54,12 +64,14 @@ def send_registration_email(receiver_email:str, username:str):
                 <br>
                 <p>Smart Ticket development team</p>
                 """
-    
-    
+
     send_email(receiver_email, subject, email_text, email_html)
 
 
-def send_deactivation_email(receiver_email:str, username:str):
+def send_deactivation_email(receiver_email: str, username: str) -> None:
+    """
+    sends e-mail with information about account deactivation to user of 'username' to his e-mail 'reciever_email' 
+    """
     subject = "Smart ticket account deactivation"
 
     email_text = f"""
@@ -71,7 +83,7 @@ def send_deactivation_email(receiver_email:str, username:str):
                 Yours sincerely
 
                 Smart Ticket development team
-                """ 
+                """
 
     email_html = f"""<h1>Your Smart Ticket account, {username}, was deactivated</h1>
                 <hr>
@@ -83,11 +95,14 @@ def send_deactivation_email(receiver_email:str, username:str):
                 <br>
                 <p>Smart Ticket development team</p>
                 """
-    
+
     send_email(receiver_email, subject, email_text, email_html)
 
 
-def send_reactivation_email(receiver_email:str, username:str):
+def send_reactivation_email(receiver_email: str, username: str) -> None:
+    """
+    sends e-mail with information about account reactivation to user of 'username' to his e-mail 'reciever_email' 
+    """
     subject = "Smart ticket account reactivation"
 
     email_text = f"""
@@ -99,7 +114,7 @@ def send_reactivation_email(receiver_email:str, username:str):
                 Yours sincerely
 
                 Smart Ticket development team
-                """ 
+                """
 
     email_html = f"""<h1>Your Smart Ticket account, {username}, was reactivated!</h1>
                 <hr>
@@ -111,13 +126,17 @@ def send_reactivation_email(receiver_email:str, username:str):
                 <br>
                 <p>Smart Ticket development team</p>
                 """
-    
+
     send_email(receiver_email, subject, email_text, email_html)
 
-def send_ticket_solved_email(receiver_email:str, ticket_subject, solver_username:str, solver_id, solution_text): ##ticket is passed as ticket_subject!
-    subject = f"{ticket_subject} was solved"
 
-    email_text = f"""{ticket_subject}, was solved by user {solver_username}
+def send_ticket_solved_email(receiver_email: str, ticket: Ticket, solver_username: str, solver_id: int, solution_text: str) -> None:
+    """
+    sends e-mail with informations 'solution_text' that the 'ticket' was resolved by user with 'solver_username' 
+    """
+    subject = f"{ticket} was solved"
+
+    email_text = f"""{ticket}, was solved by user {solver_username}
 
                 Comment on the solution:
                 {solution_text}
@@ -129,7 +148,7 @@ def send_ticket_solved_email(receiver_email:str, ticket_subject, solver_username
                 This is an automatically generated message, please do not respond to it
                 """
 
-    email_html = f"""<h1> {ticket_subject}, was solved by user <a href="{url_for("user_bp.user_detail_page", id=solver_id, _external = True)}">{solver_username}</a></h1>
+    email_html = f"""<h1> {ticket}, was solved by user <a href="{url_for("user_bp.user_detail_page", id=solver_id, _external = True)}">{solver_username}</a></h1>
                 <hr>
                 <p>Comment on the solution:</p>
                 <p>{solution_text}</p>
@@ -142,10 +161,14 @@ def send_ticket_solved_email(receiver_email:str, ticket_subject, solver_username
                 <hr>
                 <p><small>This is an automatically generated message, please do not respond to it</small></p>
                 """
-    
+
     send_email(receiver_email, subject, email_text, email_html)
 
-def send_ticket_updated_email(receiver_email:str, ticket, updater_username:str,updater_id:int, update_text:str):
+
+def send_ticket_updated_email(receiver_email: str, ticket: Ticket, updater_username: str, updater_id: int, update_text: str) -> None:
+    """
+    sends e-mail with informations 'update_text' that the 'ticket' solution progress was updated by user with 'updater_username' 
+    """
     subject = f"{ticket} was updated"
 
     email_text = f"""{ticket}, was updated by user {updater_username}
@@ -173,11 +196,14 @@ def send_ticket_updated_email(receiver_email:str, ticket, updater_username:str,u
                 <hr>
                 <p><small>This is an automatically generated message, please do not respond to it</small></p>
                 """
-    
+
     send_email(receiver_email, subject, email_text, email_html)
 
 
-def send_ticket_reopened_email(receiver_email:str, ticket, reopener_username:str,reopener_id:int, reopen_text:str):
+def send_ticket_reopened_email(receiver_email: str, ticket, reopener_username: str, reopener_id: int, reopen_text: str) -> None:
+    """
+    sends e-mail with informations 'reopen_text' that the already solved and closed 'ticket' was reopened by user with 'reopener_username' 
+    """
     subject = f"{ticket} was reopened"
 
     email_text = f"""{ticket}, was reopened by user {reopener_username}
@@ -205,10 +231,14 @@ def send_ticket_reopened_email(receiver_email:str, ticket, reopener_username:str
                 <hr>
                 <p><small>This is an automatically generated message, please do not respond to it</small></p>
                 """
-    
+
     send_email(receiver_email, subject, email_text, email_html)
 
-def send_password_reset_email(receiver_email:str, user, new_password):
+
+def send_password_reset_email(receiver_email: str, user: User, new_password: str) -> None:
+    """
+    sends email to user 'user' on his email 'reciever_email' with new password 'new_password'
+    """
     subject = f"Password reset"
 
     email_text = f"""Password to your Smart ticket account {user} has been reset
@@ -242,13 +272,14 @@ def send_password_reset_email(receiver_email:str, user, new_password):
                 <hr>
                 <p><small>This is an automatically generated message, please do not respond to it</small></p>
                 """
-    
+
     send_email(receiver_email, subject, email_text, email_html)
 
 
-    
-
-def send_upgrade_to_administrator_email(receiver_email:str, username:str):
+def send_upgrade_to_administrator_email(receiver_email: str, username: str) -> None:
+    """
+    sends information to user of 'username' to his email 'reciever_email' that his account was granted administrator privileges
+    """
     subject = f"Upgrade to administrator"
 
     email_text = f"""Your Smart ticket account {username} has been granted administrator privileges!
@@ -273,14 +304,17 @@ def send_upgrade_to_administrator_email(receiver_email:str, username:str):
                 <hr>
                 <p><small>This is an automatically generated message, please do not respond to it</small></p>
                 """
-    
+
     send_email(receiver_email, subject, email_text, email_html)
 
 
-def send_downgrade_to_user_email(receiver_email:str, username:str):
+def send_downgrade_to_user_email(receiver_email: str, username: str) -> None:
+    """
+    sends information to user of 'username' to his email 'reciever_email' that administrator privileges were revoked from his account
+    """
     subject = f"Downgrade to standard user"
 
-    email_text =f"""Your Smart ticket account {username} has been revoked administrator privileges
+    email_text = f"""Your Smart ticket account {username} has been revoked administrator privileges
                 
                 You will no longer be able to access administrator tools
                 Your account will still allow you perform all activities as normal user
