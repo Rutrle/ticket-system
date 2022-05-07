@@ -21,5 +21,4 @@
 <ul>
     <li>add proper documentation to about page</li>
     <li>adding pagination would be nice on some pages</li>
-    <li>add protection from admin deleting/downgrading himself</li>
 </ul>
