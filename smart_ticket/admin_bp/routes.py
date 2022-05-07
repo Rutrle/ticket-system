@@ -75,7 +75,9 @@ def deactivate_user_page(user_id: int) -> Response:
         password_correct = current_user.check_attempted_password(user_deactivation_form.password.data)
         user_username_correct = user_to_deactivate.username == user_deactivation_form.user_username.data
 
-        if password_correct and user_username_correct:
+        if user_to_deactivate == current_user:
+            flash(f"You can't deactivate your own account! Ask different administrator if you want to really do it", category="danger")
+        elif password_correct and user_username_correct:
             deactivate_user(user_to_deactivate)
             send_deactivation_email(user_to_deactivate.email, user_to_deactivate.username)
             flash(f"Account of user {user_to_deactivate.username} was succesfully deactivated!", category="success")
@@ -185,7 +187,10 @@ def downgrade_to_user_page(user_id: int) -> Response:
         password_correct = current_user.check_attempted_password(
             user_downgrade_form.password.data)
         user_username_correct = user_to_downgrade.username == user_downgrade_form.user_username.data
-        if password_correct and user_username_correct:
+
+        if user_to_downgrade == current_user:
+            flash(f"You can't revoke your own admin rights! Ask different administrator if you want to really do it", category="danger")
+        elif password_correct and user_username_correct:
 
             set_role_to_user(user_to_downgrade)
             send_downgrade_to_user_email(
@@ -225,6 +230,7 @@ def ticket_administration_page() -> Response:
 
 @admin_bp.route('/tickets/<int:ticket_id>/solve', methods=['POST'])
 @login_required
+@admin_required
 def solve_ticket_page(ticket_id: int) -> Response:
     """
     route for handling POST request to set status of ticket of 'ticket_id' to solved
