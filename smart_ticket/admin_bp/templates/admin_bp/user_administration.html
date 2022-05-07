@@ -28,7 +28,7 @@ User administration
                 </tr>
             </thead>
             <tbody>
-                {% for user in active_users %}
+                {% for user in active_users.items %}
                 <tr>
                     <td>{{user.id}}</td>
                     <td>{{user.username}}</td>
@@ -84,6 +84,32 @@ User administration
                 {% endfor %}
             </tbody>
         </table>
+        <div class="pagination-container">
+            <div class="text-right">
+                <a href="{{ url_for('admin_bp.user_administration_page', active_users_page=active_users.prev_num) }}" class="btn  btn-dark
+                {% if active_users.page == 1 %}disabled{% endif %}">
+                    &laquo;
+                </a>
+                {% for page_num in active_users.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                {% if page_num %}
+                        {% if active_users.page == page_num %}
+                        <a href="{{ url_for('admin_bp.user_administration_page', active_users_page=page_num) }}" class="btn btn-outline-info">{{ page_num }}</a>
+                        {% else %}
+                        <a href="{{ url_for('admin_bp.user_administration_page', active_users_page=page_num) }}" class="btn btn-dark">{{ page_num }}</a>
+                        {% endif %}
+                    {% else %}
+                        ...
+                    {% endif %}
+                {% endfor %}
+                <a href="{{ url_for('admin_bp.user_administration_page', page=active_users.next_num) }}" class="btn btn-dark 
+                {% if active_users.page == active_users.pages %}disabled{% endif %}">
+                    &raquo;
+                </a>
+            </div>
+            <p class="text-right mt-3">
+            Showing page {{ active_users.page }} of {{ active_users.pages }}
+            </p>
+        </div>
     </div>
     <hr>
     <br>
@@ -104,7 +130,7 @@ User administration
                 </tr>
             </thead>
             <tbody>
-                {% for user in inactive_users %}
+                {% for user in inactive_users.items %}
                 <tr>
                     <td>{{user.id}}</td>
                     <td>{{user.username}}</td>
@@ -139,6 +165,32 @@ User administration
                 {% endfor %}
             </tbody>
         </table>
+        <div class="pagination-container">
+            <div class="text-right">
+                <a href="{{ url_for('admin_bp.user_administration_page', inactive_users_page=inactive_users.prev_num) }}" class="btn  btn-dark
+                {% if inactive_users.page == 1 %}disabled{% endif %}">
+                    &laquo;
+                </a>
+                {% for page_num in inactive_users.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                {% if page_num %}
+                        {% if inactive_users.page == page_num %}
+                        <a href="{{ url_for('admin_bp.user_administration_page', inactive_users_page=page_num) }}" class="btn btn-outline-info">{{ page_num }}</a>
+                        {% else %}
+                        <a href="{{ url_for('admin_bp.user_administration_page', inactive_users_page=page_num) }}" class="btn btn-dark">{{ page_num }}</a>
+                        {% endif %}
+                    {% else %}
+                        ...
+                    {% endif %}
+                {% endfor %}
+                <a href="{{ url_for('admin_bp.user_administration_page', page=inactive_users.next_num) }}" class="btn btn-dark 
+                {% if inactive_users.page == inactive_users.pages %}disabled{% endif %}">
+                    &raquo;
+                </a>
+            </div>
+            <p class="text-right mt-3">
+            Showing page {{ inactive_users.page }} of {{ inactive_users.pages }}
+            </p>
+        </div>
     </div>
 </div>
 

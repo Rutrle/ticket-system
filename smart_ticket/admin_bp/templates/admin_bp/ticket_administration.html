@@ -74,16 +74,16 @@ Ticket administration
         </table>
         <div class="pagination-container">
             <div class="text-right">
-                <a href="{{ url_for('admin_bp.ticket_administration_page', page=unresolved_tickets.prev_num) }}" class="btn  btn-dark
+                <a href="{{ url_for('admin_bp.ticket_administration_page', unresolved_page=unresolved_tickets.prev_num) }}" class="btn  btn-dark
                 {% if unresolved_tickets.page == 1 %}disabled{% endif %}">
                     &laquo;
                 </a>
                 {% for page_num in unresolved_tickets.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
                 {% if page_num %}
                         {% if unresolved_tickets.page == page_num %}
-                        <a href="{{ url_for('admin_bp.ticket_administration_page', page=page_num) }}" class="btn btn-outline-info">{{ page_num }}</a>
+                        <a href="{{ url_for('admin_bp.ticket_administration_page', unresolved_page=page_num) }}" class="btn btn-outline-info">{{ page_num }}</a>
                         {% else %}
-                        <a href="{{ url_for('admin_bp.ticket_administration_page', page=page_num) }}" class="btn btn-dark">{{ page_num }}</a>
+                        <a href="{{ url_for('admin_bp.ticket_administration_page', unresolved_page=page_num) }}" class="btn btn-dark">{{ page_num }}</a>
                         {% endif %}
                     {% else %}
                         ...

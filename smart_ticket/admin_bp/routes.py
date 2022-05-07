@@ -28,9 +28,14 @@ def user_administration_page() -> Response:
     Page for displaying all users and allowing to activate/deactivate them and allowing
     changing their user role between administrator and standard user
     '''
-    active_users = db.session.query(User).filter(User.is_active == True).order_by('creation_time')
-    inactive_users = db.session.query(User).filter(User.is_active == False).order_by('creation_time')
-    
+    active_users_page = request.args.get('active_users_page', 1, type=int)
+    inactive_users_page = request.args.get('inactive_users_page', 1, type=int)
+
+    active_users = db.session.query(User).filter(User.is_active == True).order_by(
+        'creation_time').paginate(page=active_users_page, per_page=5)
+    inactive_users = db.session.query(User).filter(User.is_active == False).order_by(
+        'creation_time').paginate(page=inactive_users_page, per_page=5)
+
     forms = {'user_deactivation_form': ConfirmUserDeactivationForm(),
              'user_reactivation_form': ConfirmUserReactivationForm(),
              'user_upgrade_form': ConfirmUserUpgradeForm(),
@@ -216,11 +221,13 @@ def ticket_administration_page() -> Response:
     """
     Page for displaying all tickets and allowing to solve, reopen or completely delete them.    
     """
-    unresolved_tickets_page = request.args.get('page', 1, type=int)
+    unresolved_tickets_page = request.args.get('unresolved_page', 1, type=int)
     resolved_tickets_page = request.args.get('resolved_page', 1, type=int)
 
-    unresolved_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False).outerjoin(Ticket.author).paginate(page=unresolved_tickets_page, per_page=5)
-    resolved_tickets = db.session.query(Ticket).filter(Ticket.is_solved == True).outerjoin(Ticket.author).paginate(page=resolved_tickets_page, per_page=5)
+    unresolved_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False).outerjoin(
+        Ticket.author).paginate(page=unresolved_tickets_page, per_page=5)
+    resolved_tickets = db.session.query(Ticket).filter(Ticket.is_solved == True).outerjoin(
+        Ticket.author).paginate(page=resolved_tickets_page, per_page=5)
 
     forms = {
         'confirm_solution_form': ConfirmTicketSolutionForm(),
