@@ -57,7 +57,14 @@ def fill_in_database() -> None:
                  user_role=db.session.query(UserRole).filter_by(name="admin").first()))
     users.append(User(username='ExEmployee', email='exemployee@mail.com', password='123456',
                  is_active=False, user_role=db.session.query(UserRole).filter_by(name="user").first()))
-
+    users.append(User(username='ExEmployee2', email='exemployee2@mail.com', password='123456',
+                 is_active=False, user_role=db.session.query(UserRole).filter_by(name="user").first()))
+    users.append(User(username='ExEmployee3', email='exemployee3@mail.com', password='123456',
+                 is_active=False, user_role=db.session.query(UserRole).filter_by(name="user").first()))
+    users.append(User(username='ExEmployee4', email='exemployee4@mail.com', password='123456',
+                 is_active=False, user_role=db.session.query(UserRole).filter_by(name="user").first()))
+    users.append(User(username='ExEmployee5', email='exemployee5@mail.com', password='123456',
+                 is_active=False, user_role=db.session.query(UserRole).filter_by(name="user").first()))
     for user in users:
         db.session.add(user)
     db.session.commit()

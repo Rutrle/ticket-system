@@ -21,4 +21,5 @@
 <ul>
     <li>add proper documentation to about page</li>
     <li>adding pagination would be nice on some pages</li>
+    <li>maybe generate dummy data through faker?</li>
 </ul>
