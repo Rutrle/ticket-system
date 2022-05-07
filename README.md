@@ -19,7 +19,7 @@
 
 <h3>TO DO:</h3>
 <ul>
-    <li>add proper documentation</li>
-    <li>refactoring, code is messy now; better passing multiple arguments into render_template</li>
-    <li>add more things to about page</li>
+    <li>add proper documentation to about page</li>
+    <li>adding pagination would be nice on some pages</li>
+    <li>add protection from admin deleting/downgrading himself</li>
 </ul>
