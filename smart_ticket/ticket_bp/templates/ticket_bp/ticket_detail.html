@@ -53,7 +53,7 @@ Ticket {{ ticket.id }}
             {% if ticket.is_solved == False %}
             <row class="bg-dark container">
                 <div class=" bg-dark  w-50">
-                    <form method="POST" action="{{url_for('ticket_bp.submit_new_log_ticket', current_ticket_id = ticket.id)}}">
+                    <form method="POST" action="{{url_for('ticket_bp.submit_new_log_ticket', ticket_id = ticket.id)}}">
                         <h3>Write an update</h3>
             
                         {{form.hidden_tag()}}
@@ -86,12 +86,12 @@ Ticket {{ ticket.id }}
             </div>
             <div class="d-flex justify-content-center">
                 {% if current_user not in ticket.current_solvers %}
-                <form method="POST" action="{{url_for('ticket_bp.assign_2_self', current_ticket_id = ticket.id)}}">
+                <form method="POST" action="{{url_for('ticket_bp.assign_2_self', ticket_id = ticket.id)}}">
                     {{assign_2_self_form.hidden_tag()}}
                     {{assign_2_self_form.assign_2_self(class="btn btn-lg btn-block btn-primary")}}
                 </form>
                 {% else %}
-                <form method="POST" action="{{url_for('ticket_bp.unassign_from_self', current_ticket_id = ticket.id)}}">
+                <form method="POST" action="{{url_for('ticket_bp.unassign_from_self', ticket_id = ticket.id)}}">
                     {{unassign_from_self_form.hidden_tag()}}
                     {{unassign_from_self_form.unassign_from_self(class="btn btn-lg btn-block btn-warning")}}
                 </form>
@@ -103,7 +103,7 @@ Ticket {{ ticket.id }}
                 {% if current_user not in ticket.currently_on_watchlist %}
                 <h6>This ticket is not on your watchlist</h6>
                 <div class="d-flex justify-content-center">
-                    <form method="POST" action="{{url_for('ticket_bp.add_to_watchlist', current_ticket_id = ticket.id)}}">
+                    <form method="POST" action="{{url_for('ticket_bp.add_to_watchlist', ticket_id = ticket.id)}}">
                         {{add_to_watchlist_form.hidden_tag()}}
                         {{add_to_watchlist_form.add_to_watchlist(class="btn btn-lg btn-block btn-warning")}}
                     </form>
@@ -112,7 +112,7 @@ Ticket {{ ticket.id }}
                 <h6>This ticket is on your watchlist</h6>
                 <div class="d-flex justify-content-center">
                     <form method="POST"
-                        action="{{url_for('ticket_bp.remove_from_watchlist', current_ticket_id = ticket.id)}}">
+                        action="{{url_for('ticket_bp.remove_from_watchlist', ticket_id = ticket.id)}}">
                         {{remove_from_watchlist_form.hidden_tag()}}
                         {{remove_from_watchlist_form.remove_from_watchlist(class="btn btn-lg btn-block btn-warning")}}
                     </form>
