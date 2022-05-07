@@ -72,7 +72,7 @@ Ticket administration
                 {% endfor %}
             </tbody>
         </table>
-        <div class = "pagination">
+        <div class="pagination-container">
             <div class="text-right">
                 <a href="{{ url_for('admin_bp.ticket_administration_page', page=unresolved_tickets.prev_num) }}" class="btn  btn-dark
                 {% if unresolved_tickets.page == 1 %}disabled{% endif %}">
@@ -81,7 +81,7 @@ Ticket administration
                 {% for page_num in unresolved_tickets.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
                 {% if page_num %}
                         {% if unresolved_tickets.page == page_num %}
-                        <a href="{{ url_for('admin_bp.ticket_administration_page', page=page_num) }}" class="btn btn-outline-warning">{{ page_num }}</a>
+                        <a href="{{ url_for('admin_bp.ticket_administration_page', page=page_num) }}" class="btn btn-outline-info">{{ page_num }}</a>
                         {% else %}
                         <a href="{{ url_for('admin_bp.ticket_administration_page', page=page_num) }}" class="btn btn-dark">{{ page_num }}</a>
                         {% endif %}
@@ -94,7 +94,9 @@ Ticket administration
                     &raquo;
                 </a>
             </div>
-            <p class="text-right mt-3">Showing page {{ unresolved_tickets.page }} of {{ unresolved_tickets.pages }}</p>
+            <p class="text-right mt-3">
+            Showing page {{ unresolved_tickets.page }} of {{ unresolved_tickets.pages }}
+            </p>
         </div>
     </div>
     <hr>
@@ -115,7 +117,7 @@ Ticket administration
                 </tr>
             </thead>
             <tbody>
-                {% for ticket in resolved_tickets %}
+                {% for ticket in resolved_tickets.items %}
                 <tr>
                     <td>{{ticket.id}}</td>
                     <td>{{ticket.subject}}</td>
@@ -162,6 +164,32 @@ Ticket administration
                 {% endfor %}
             </tbody>
         </table>
+        <div class="pagination-container">
+            <div class="text-right">
+                <a href="{{ url_for('admin_bp.ticket_administration_page', resolved_page=resolved_tickets.prev_num) }}" class="btn  btn-dark
+                {% if resolved_tickets.page == 1 %}disabled{% endif %}">
+                    &laquo;
+                </a>
+                {% for page_num in resolved_tickets.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                {% if page_num %}
+                        {% if resolved_tickets.page == page_num %}
+                        <a href="{{ url_for('admin_bp.ticket_administration_page', resolved_page=page_num) }}" class="btn btn-outline-info">{{ page_num }}</a>
+                        {% else %}
+                        <a href="{{ url_for('admin_bp.ticket_administration_page', resolved_page=page_num) }}" class="btn btn-dark">{{ page_num }}</a>
+                        {% endif %}
+                    {% else %}
+                        ...
+                    {% endif %}
+                {% endfor %}
+                <a href="{{ url_for('admin_bp.ticket_administration_page', resolved_page=resolved_tickets.next_num) }}" class="btn btn-dark 
+                {% if resolved_tickets.page == resolved_tickets.resolved_page %}disabled{% endif %}">
+                    &raquo;
+                </a>
+            </div>
+            <p class="text-right mt-3">
+            Showing page {{ resolved_tickets.page }} of {{ resolved_tickets.pages }}
+            </p>
+        </div>
     </div>
 </div>
 {% endblock content %}

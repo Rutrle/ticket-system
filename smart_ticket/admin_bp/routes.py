@@ -216,10 +216,11 @@ def ticket_administration_page() -> Response:
     """
     Page for displaying all tickets and allowing to solve, reopen or completely delete them.    
     """
-    page = request.args.get('page', 1, type=int)
+    unresolved_tickets_page = request.args.get('page', 1, type=int)
+    resolved_tickets_page = request.args.get('resolved_page', 1, type=int)
 
-    unresolved_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False).outerjoin(Ticket.author).paginate(page=page, per_page=5)
-    resolved_tickets = db.session.query(Ticket).filter(Ticket.is_solved == True).outerjoin(Ticket.author).all()
+    unresolved_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False).outerjoin(Ticket.author).paginate(page=unresolved_tickets_page, per_page=5)
+    resolved_tickets = db.session.query(Ticket).filter(Ticket.is_solved == True).outerjoin(Ticket.author).paginate(page=resolved_tickets_page, per_page=5)
 
     forms = {
         'confirm_solution_form': ConfirmTicketSolutionForm(),
@@ -242,7 +243,6 @@ def solve_ticket_page(ticket_id: int) -> Response:
 
     if confirm_solution_form.validate():
         solve_ticket(ticket_id, confirm_solution_form.solution_text.data)
-        flash(f"ticket {ticket_to_solve} was succesfully solved!", category="success")
 
     return redirect(url_for('admin_bp.ticket_administration_page'))
 
