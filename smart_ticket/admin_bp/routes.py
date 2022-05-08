@@ -247,35 +247,41 @@ def ticket_administration_page() -> Response:
                  'subject_desc': 'ticket.subject desc',
                  }
 
-
-    if request.method == 'GET':
-        order_by_text = sort_dict['solve_time_asc']
-        resolved_tickets = db.session.query(Ticket).filter(Ticket.is_solved == True).outerjoin(Ticket.author)\
-            .order_by(text(order_by_text)).paginate(page=resolved_tickets_page, per_page=tickets_per_page)
-        unresolved_tickets = db.session.query(Ticket).filter(
-            Ticket.is_solved == False).outerjoin(Ticket.author).order_by(text(order_by_text)).paginate(page=unresolved_tickets_page, per_page=tickets_per_page)
+    if order_unresolved_ticket_form.validate_on_submit():
+        unresolved_tickets_page = 1 #to prevent 404 when not enough data is present
+        order_unresolved = order_unresolved_ticket_form.sort_by.data
+        order_resolved = request.args.get('order_resolved', default=None, type=str)
 
     elif order_resolved_ticket_form.validate_on_submit():
-        if order_resolved_ticket_form.sort_by.data == 'solver_asc' or order_resolved_ticket_form.sort_by.data == 'solver_desc':
-            user_to_outerjoin = Ticket.solver
-        else:
-            user_to_outerjoin = Ticket.author
+        resolved_tickets_page = 1 #to prevent 404 when not enough data is present
+        order_unresolved = request.args.get('order_unresolved', default=None, type=str)
+        order_resolved = order_resolved_ticket_form.sort_by.data
 
-        order_by_text = sort_dict[order_resolved_ticket_form.sort_by.data]
+    else:
+        order_resolved = request.args.get('order_resolved', default=None, type=str)
+        order_unresolved = request.args.get('order_unresolved', default=None, type=str)
 
-        unresolved_tickets = db.session.query(Ticket).filter(
-            Ticket.is_solved == False).outerjoin(Ticket.author).order_by(text(order_by_text)).paginate(page=unresolved_tickets_page, per_page=tickets_per_page)
-        resolved_tickets = db.session.query(Ticket).filter(Ticket.is_solved == True)\
-                .outerjoin(user_to_outerjoin).order_by(text(order_by_text)).paginate(page=resolved_tickets_page, per_page=tickets_per_page)
+    if order_resolved is None:
+        order_resolved = 'c_time_asc'
 
-    elif order_unresolved_ticket_form.validate_on_submit():
-        order_by_text = sort_dict[order_unresolved_ticket_form.sort_by.data]
-        unresolved_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False)\
-            .outerjoin(Ticket.author).order_by(text(order_by_text)).paginate(page=unresolved_tickets_page, per_page=tickets_per_page)
-        resolved_tickets = db.session.query(Ticket).filter(Ticket.is_solved == True).outerjoin(Ticket.author)\
-            .order_by(text(order_by_text)).paginate(page=resolved_tickets_page, per_page=tickets_per_page)
+    if order_unresolved is None:
+        order_unresolved = 'c_time_asc'
 
-    return render_template("admin_bp/ticket_administration.html", unresolved_tickets=unresolved_tickets, resolved_tickets=resolved_tickets, **forms, order_resolved_ticket_form=order_resolved_ticket_form, order_unresolved_ticket_form=order_unresolved_ticket_form)
+    order_resolved_by_text = sort_dict[order_resolved]
+    order_unresolved_by_text = sort_dict[order_unresolved]
+
+    if order_resolved == 'solver_asc' or order_resolved == 'solver_desc':
+        user_to_outerjoin = Ticket.solver
+    else:
+        user_to_outerjoin = Ticket.author  
+
+    resolved_tickets = db.session.query(Ticket).filter(Ticket.is_solved == True)\
+                .outerjoin(user_to_outerjoin).order_by(text(order_resolved_by_text)).paginate(page=resolved_tickets_page, per_page=tickets_per_page)
+    
+    unresolved_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False)\
+            .outerjoin(Ticket.author).order_by(text(order_unresolved_by_text)).paginate(page=unresolved_tickets_page, per_page=tickets_per_page)    
+    
+    return render_template("admin_bp/ticket_administration.html", unresolved_tickets=unresolved_tickets, resolved_tickets=resolved_tickets, **forms, order_resolved_ticket_form=order_resolved_ticket_form, order_unresolved_ticket_form=order_unresolved_ticket_form, order_resolved=order_resolved, order_unresolved=order_unresolved)
 
 
 @admin_bp.route('/tickets/<int:ticket_id>/solve', methods=['POST'])

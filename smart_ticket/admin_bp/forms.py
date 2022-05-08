@@ -61,7 +61,6 @@ class UnresolvedTicketFilterForm(FlaskForm):
     """
     Form for selecting ordering of unresolved tickets
     """
-
     sort_by = SelectField(choices=[('c_time_asc', 'Creation time ascending \u2191'),
                                    ('c_time_desc', 'Creation time descending \u2193'),
                                    ('author_asc', 'Author ascending \u2191'),
