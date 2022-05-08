@@ -61,27 +61,33 @@ def ticket_list_page() -> Response:
                  'subject_asc': 'ticket.subject',
                  'subject_desc': 'ticket.subject desc',
                  }
-    order_by_text = sort_dict['c_time_asc']
-
-    if request.method == 'GET':
-        shown_tickets = db.session.query(Ticket).filter(
-            Ticket.is_solved == False).outerjoin(Ticket.author).order_by(text(order_by_text)).paginate(page=page, per_page=tickets_per_page)
 
     if filter_form.validate_on_submit():
-        order_by_text = sort_dict[filter_form.sort_by.data]
-        if filter_form.filter_by.data == 'all_active':
-            shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False)\
-                .outerjoin(Ticket.author).order_by(text(order_by_text)).paginate(page=page, per_page=tickets_per_page)
+        page = 1 #to prevent 404 when not enough data is present
+        filter = filter_form.filter_by.data
+        order = filter_form.sort_by.data
+    else:
+        filter = request.args.get('sort_by', default=None, type=str)
+        order = request.args.get('order_by', default=None, type=str)
+        if filter is None:
+            filter = 'all_active'
+            order = 'c_time_asc'
 
-        elif filter_form.filter_by.data == 'user_watchlist':
-            shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False, Ticket.currently_on_watchlist.contains(current_user))\
-                .outerjoin(Ticket.author).order_by(text(order_by_text)).paginate(page=page, per_page=tickets_per_page)
+    order_by_text = sort_dict[order]
 
-        elif filter_form.filter_by.data == 'user_is_solving':
-            shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False, Ticket.current_solvers.contains(current_user))\
-                .outerjoin(Ticket.author).order_by(text(order_by_text)).paginate(page=page, per_page=tickets_per_page)
+    if filter == 'all_active':
+        shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False)\
+            .outerjoin(Ticket.author).order_by(text(order_by_text)).paginate(page=page, per_page=tickets_per_page)
 
-    return render_template('ticket_bp/ticket_list.html', tickets=shown_tickets, filter_form=filter_form)
+    elif filter == 'user_watchlist':
+        shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False, Ticket.currently_on_watchlist.contains(current_user))\
+            .outerjoin(Ticket.author).order_by(text(order_by_text)).paginate(page=page, per_page=tickets_per_page)
+
+    elif filter == 'user_is_solving':
+        shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False, Ticket.current_solvers.contains(current_user))\
+            .outerjoin(Ticket.author).order_by(text(order_by_text)).paginate(page=page, per_page=tickets_per_page)
+
+    return render_template('ticket_bp/ticket_list.html', tickets=shown_tickets, filter_form=filter_form, order=order, filter=filter)
 
 
 @ticket_bp.route('/<int:ticket_id>')
@@ -311,29 +317,34 @@ def archive_page() -> Response:
                  'subject_desc': 'ticket.subject desc',
                  }
 
-    if filter_form.sort_by.data == 'solver_asc' or filter_form.sort_by.data == 'solver_desc':
+    if filter_form.validate_on_submit():
+        page = 1 #to prevent 404 when not enough data is present
+        filter = filter_form.filter_by.data
+        order = filter_form.sort_by.data
+    else:
+        filter = request.args.get('sort_by', default=None, type=str)
+        order = request.args.get('order_by', default=None, type=str)
+        if filter is None:
+            filter = 'all_solved'
+            order = 'solve_time_asc'
+
+    order_by_text = sort_dict[order]
+
+    if order == 'solver_asc' or order == 'solver_desc':
         user_to_outerjoin = Ticket.solver
     else:
         user_to_outerjoin = Ticket.author
 
-    if request.method == 'GET':
-        order_by_text = sort_dict['solve_time_asc']
-        tickets = db.session.query(Ticket).filter(Ticket.is_solved == True).outerjoin(user_to_outerjoin)\
-            .order_by(text(order_by_text)).paginate(page=page, per_page=tickets_per_page)
+    if filter == 'all_solved':
+        tickets = db.session.query(Ticket).filter(Ticket.is_solved == True)\
+            .outerjoin(user_to_outerjoin).order_by(text(order_by_text)).paginate(page=page, per_page=tickets_per_page)
 
-    if filter_form.validate_on_submit():
-        order_by_text = sort_dict[filter_form.sort_by.data]
+    elif filter == 'user_watchlist':
+        tickets = db.session.query(Ticket).filter(Ticket.is_solved == True, Ticket.currently_on_watchlist.contains(current_user))\
+            .outerjoin(user_to_outerjoin).order_by(text(order_by_text)).paginate(page=page, per_page=tickets_per_page)
 
-        if filter_form.filter_by.data == 'all_solved':
-            tickets = db.session.query(Ticket).filter(Ticket.is_solved == True)\
-                .outerjoin(user_to_outerjoin).order_by(text(order_by_text)).paginate(page=page, per_page=tickets_per_page)
+    elif filter == 'user_has_solved':
+        tickets = db.session.query(Ticket).filter(Ticket.is_solved == True, Ticket.solver == current_user)\
+            .outerjoin(user_to_outerjoin).order_by(text(order_by_text)).paginate(page=page, per_page=tickets_per_page)
 
-        elif filter_form.filter_by.data == 'user_watchlist':
-            tickets = db.session.query(Ticket).filter(Ticket.is_solved == True, Ticket.currently_on_watchlist.contains(current_user))\
-                .outerjoin(user_to_outerjoin).order_by(text(order_by_text)).paginate(page=page, per_page=tickets_per_page)
-
-        elif filter_form.filter_by.data == 'user_has_solved':
-            tickets = db.session.query(Ticket).filter(Ticket.is_solved == True, Ticket.solver == current_user)\
-                .outerjoin(user_to_outerjoin).order_by(text(order_by_text)).paginate(page=page, per_page=tickets_per_page)
-
-    return render_template('ticket_bp/archive.html', tickets=tickets, form=filter_form)
+    return render_template('ticket_bp/archive.html', tickets=tickets, form=filter_form, filter=filter, order=order)

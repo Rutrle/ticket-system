@@ -74,22 +74,22 @@ Ticket list
     </table>
     <div class="pagination-container">
         <div class="text-right">
-            <a href="{{ url_for('ticket_bp.ticket_list_page', page=tickets.prev_num) }}" class="btn  btn-dark
+            <a href="{{ url_for('ticket_bp.ticket_list_page', page=tickets.prev_num, sort_by=filter, order_by=order) }}" class="btn  btn-dark
             {% if tickets.page == 1 %}disabled{% endif %}">
                 &laquo;
             </a>
             {% for page_num in tickets.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
             {% if page_num %}
                     {% if tickets.page == page_num %}
-                    <a href="{{ url_for('ticket_bp.ticket_list_page', page=page_num) }}" class="btn btn-outline-info">{{ page_num }}</a>
+                    <a href="{{ url_for('ticket_bp.ticket_list_page', page=page_num, sort_by=filter, order_by=order) }}" class="btn btn-outline-info">{{ page_num }}</a>
                     {% else %}
-                    <a href="{{ url_for('ticket_bp.ticket_list_page', page=page_num) }}" class="btn btn-dark">{{ page_num }}</a>
+                    <a href="{{ url_for('ticket_bp.ticket_list_page', page=page_num, sort_by=filter, order_by=order) }}" class="btn btn-dark">{{ page_num }}</a>
                     {% endif %}
                 {% else %}
                     ...
                 {% endif %}
             {% endfor %}
-            <a href="{{ url_for('ticket_bp.ticket_list_page', page=tickets.next_num) }}" class="btn btn-dark 
+            <a href="{{ url_for('ticket_bp.ticket_list_page', page=tickets.next_num, sort_by=filter, order_by=order) }}" class="btn btn-dark 
             {% if tickets.page == tickets.pages %}disabled{% endif %}">
                 &raquo;
             </a>
