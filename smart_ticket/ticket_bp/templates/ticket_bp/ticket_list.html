@@ -43,7 +43,7 @@ Ticket list
             </tr>
         </thead>
         <tbody>
-            {% for ticket in tickets %}
+            {% for ticket in tickets.items %}
 
             <tr>
                 <td>{{ticket.id}}</td>
@@ -72,6 +72,32 @@ Ticket list
             {% endfor %}
         </tbody>
     </table>
+    <div class="pagination-container">
+        <div class="text-right">
+            <a href="{{ url_for('ticket_bp.ticket_list_page', page=tickets.prev_num) }}" class="btn  btn-dark
+            {% if tickets.page == 1 %}disabled{% endif %}">
+                &laquo;
+            </a>
+            {% for page_num in tickets.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+            {% if page_num %}
+                    {% if tickets.page == page_num %}
+                    <a href="{{ url_for('ticket_bp.ticket_list_page', page=page_num) }}" class="btn btn-outline-info">{{ page_num }}</a>
+                    {% else %}
+                    <a href="{{ url_for('ticket_bp.ticket_list_page', page=page_num) }}" class="btn btn-dark">{{ page_num }}</a>
+                    {% endif %}
+                {% else %}
+                    ...
+                {% endif %}
+            {% endfor %}
+            <a href="{{ url_for('ticket_bp.ticket_list_page', page=tickets.next_num) }}" class="btn btn-dark 
+            {% if tickets.page == tickets.pages %}disabled{% endif %}">
+                &raquo;
+            </a>
+        </div>
+        <p class="text-right mt-3">
+        Showing page {{ tickets.page }} of {{ tickets.pages }}
+        </p>
+    </div>
 </div>
 
 {% endblock content %}

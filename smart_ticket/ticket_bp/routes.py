@@ -50,6 +50,9 @@ def ticket_list_page() -> Response:
     """
     filter_form = TicketFilterForm()
 
+    page = request.args.get('page', 1, type=int)
+    tickets_per_page = 5
+
     sort_dict = {'c_time_asc': 'ticket_creation_time',
                  'c_time_desc': 'ticket_creation_time desc',
                  'author_asc': 'user.username',
@@ -61,21 +64,21 @@ def ticket_list_page() -> Response:
 
     if request.method == 'GET':
         shown_tickets = db.session.query(Ticket).filter(
-            Ticket.is_solved == False).outerjoin(Ticket.author).order_by(text(order_by_text))
+            Ticket.is_solved == False).outerjoin(Ticket.author).order_by(text(order_by_text)).paginate(page=page, per_page=tickets_per_page)
 
     if filter_form.validate_on_submit():
         order_by_text = sort_dict[filter_form.sort_by.data]
         if filter_form.filter_by.data == 'all_active':
             shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False)\
-                .outerjoin(Ticket.author).order_by(text(order_by_text))
+                .outerjoin(Ticket.author).order_by(text(order_by_text)).paginate(page=page, per_page=tickets_per_page)
 
         elif filter_form.filter_by.data == 'user_watchlist':
             shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False, Ticket.currently_on_watchlist.contains(current_user))\
-                .outerjoin(Ticket.author).order_by(text(order_by_text))
+                .outerjoin(Ticket.author).order_by(text(order_by_text)).paginate(page=page, per_page=tickets_per_page)
 
         elif filter_form.filter_by.data == 'user_is_solving':
             shown_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False, Ticket.current_solvers.contains(current_user))\
-                .outerjoin(Ticket.author).order_by(text(order_by_text))
+                .outerjoin(Ticket.author).order_by(text(order_by_text)).paginate(page=page, per_page=tickets_per_page)
 
     return render_template('ticket_bp/ticket_list.html', tickets=shown_tickets, filter_form=filter_form)
 
@@ -314,7 +317,8 @@ def archive_page() -> Response:
 
     if request.method == 'GET':
         order_by_text = sort_dict['solve_time_asc']
-        tickets = db.session.query(Ticket).filter(Ticket.is_solved == True).outerjoin(user_to_outerjoin).order_by(text(order_by_text)).paginate(page=page, per_page=tickets_per_page)
+        tickets = db.session.query(Ticket).filter(Ticket.is_solved == True).outerjoin(user_to_outerjoin)\
+            .order_by(text(order_by_text)).paginate(page=page, per_page=tickets_per_page)
 
     if filter_form.validate_on_submit():
         order_by_text = sort_dict[filter_form.sort_by.data]
