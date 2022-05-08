@@ -14,12 +14,13 @@
     <li><b>bcrypt</b> for hashing passwords</li>
     <li><b>phonenumbers</b> for validating phone numbers</li>
     <li><b>Pillow</b> for resizing profile pictures</li>
+    <li><b>faker</b> for for creating dummy data</li>
 </ul>
 
 
 <h3>TO DO:</h3>
 <ul>
     <li>add proper documentation to about page</li>
-    <li>adding pagination would be nice on some pages</li>
+    <li>adding ordering possibilities for admin might be a good idea</li>
     <li>maybe generate dummy data through faker?</li>
 </ul>
