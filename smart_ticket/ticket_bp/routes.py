@@ -292,6 +292,8 @@ def archive_page() -> Response:
     Page for displaying resolved tickets with different possiblities for filtering and ordering them
     """
     filter_form = ArchiveTicketFilterForm()
+    page = request.args.get('page', 1, type=int)
+    tickets_per_page = 5
 
     sort_dict = {'solve_time_asc': 'ticket_solved_on',
                  'solve_time_desc': 'ticket_solved_on desc',
@@ -312,21 +314,21 @@ def archive_page() -> Response:
 
     if request.method == 'GET':
         order_by_text = sort_dict['solve_time_asc']
-        tickets = db.session.query(Ticket).filter(Ticket.is_solved == True).outerjoin(user_to_outerjoin).order_by(text(order_by_text))
+        tickets = db.session.query(Ticket).filter(Ticket.is_solved == True).outerjoin(user_to_outerjoin).order_by(text(order_by_text)).paginate(page=page, per_page=tickets_per_page)
 
     if filter_form.validate_on_submit():
         order_by_text = sort_dict[filter_form.sort_by.data]
 
         if filter_form.filter_by.data == 'all_solved':
             tickets = db.session.query(Ticket).filter(Ticket.is_solved == True)\
-                .outerjoin(user_to_outerjoin).order_by(text(order_by_text))
+                .outerjoin(user_to_outerjoin).order_by(text(order_by_text)).paginate(page=page, per_page=tickets_per_page)
 
         elif filter_form.filter_by.data == 'user_watchlist':
             tickets = db.session.query(Ticket).filter(Ticket.is_solved == True, Ticket.currently_on_watchlist.contains(current_user))\
-                .outerjoin(user_to_outerjoin).order_by(text(order_by_text))
+                .outerjoin(user_to_outerjoin).order_by(text(order_by_text)).paginate(page=page, per_page=tickets_per_page)
 
         elif filter_form.filter_by.data == 'user_has_solved':
             tickets = db.session.query(Ticket).filter(Ticket.is_solved == True, Ticket.solver == current_user)\
-                .outerjoin(user_to_outerjoin).order_by(text(order_by_text))
+                .outerjoin(user_to_outerjoin).order_by(text(order_by_text)).paginate(page=page, per_page=tickets_per_page)
 
     return render_template('ticket_bp/archive.html', tickets=tickets, form=filter_form)

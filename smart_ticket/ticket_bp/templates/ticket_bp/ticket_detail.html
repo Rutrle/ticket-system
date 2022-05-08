@@ -56,12 +56,12 @@ Ticket {{ ticket.id }}
                     <form method="POST" action="{{url_for('ticket_bp.submit_new_log_ticket', ticket_id = ticket.id)}}">
                         <h3>Write an update</h3>
             
-                        {{form.hidden_tag()}}
+                        {{new_log_msg_form.hidden_tag()}}
 
-                        {{form.message_text(class="form-control w-10",placeholder="Issue update")}}
+                        {{new_log_msg_form.message_text(class="form-control w-10",placeholder="Issue update")}}
                         <br>
 
-                        {{form.submit_new_log_ticket(class="btn btn-lg btn-block btn-primary")}}
+                        {{new_log_msg_form.submit_new_log_ticket(class="btn btn-lg btn-block btn-primary")}}
                         <br>
                     </form>
                 </div>
