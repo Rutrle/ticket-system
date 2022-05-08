@@ -22,5 +22,4 @@
 <ul>
     <li>add proper documentation to about page</li>
     <li>adding ordering possibilities for admin might be a good idea</li>
-    <li>maybe generate dummy data through faker?</li>
 </ul>
