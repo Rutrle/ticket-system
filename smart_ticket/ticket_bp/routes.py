@@ -1,4 +1,4 @@
-from flask import Blueprint, Response, render_template, redirect, render_template, request, flash, url_for
+from flask import Blueprint, Response, Markup, render_template, redirect, render_template, request, flash, url_for
 from smart_ticket import db
 from smart_ticket.email.send_email import send_ticket_solved_email, send_ticket_updated_email
 from smart_ticket.models import Ticket, TicketLogMessage, User
@@ -33,7 +33,8 @@ def create_ticket_page() -> Response:
         db.session.add(creation_log_msg)
         db.session.commit()
 
-        flash(f"ticket submitted succesfully", category="success")
+        flash(Markup(f"ticket submitted succesfully, you can check it here:\
+             <a href='{url_for('ticket_bp.ticket_detail_page', ticket_id =new_ticket.id)}'>{new_ticket}</a>"), category="success")
 
     if form.errors != {}:
         for err_msg in form.errors.values():
