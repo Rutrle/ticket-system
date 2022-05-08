@@ -2,10 +2,11 @@ from flask import Blueprint, Response, render_template, redirect, flash, url_for
 from smart_ticket import db
 from smart_ticket.models import User, Ticket, TicketLogMessage, UserRole, admin_required
 from flask_login import current_user, login_required
-from smart_ticket.admin_bp.forms import ConfirmUserDeactivationForm, ConfirmUserReactivationForm, ConfirmTicketDeletionForm, ConfirmTicketReopeningForm, ConfirmUserUpgradeForm, ConfirmUserDowngradeForm
+from smart_ticket.admin_bp.forms import ConfirmUserDeactivationForm, ConfirmUserReactivationForm, ConfirmTicketDeletionForm, ConfirmTicketReopeningForm, ConfirmUserUpgradeForm, ConfirmUserDowngradeForm, ResolvedTicketFilterForm, UnresolvedTicketFilterForm
 from smart_ticket.ticket_bp.routes import solve_ticket
 from smart_ticket.ticket_bp.forms import ConfirmTicketSolutionForm
 from smart_ticket.email.send_email import send_deactivation_email, send_reactivation_email, send_ticket_reopened_email, send_upgrade_to_administrator_email, send_downgrade_to_user_email
+from sqlalchemy.sql import text
 
 admin_bp = Blueprint('admin_bp', __name__, template_folder='templates')
 
@@ -214,7 +215,7 @@ def downgrade_to_user_page(user_id: int) -> Response:
     return redirect(url_for("admin_bp.user_administration_page"))
 
 
-@admin_bp.route('/tickets', methods=['GET'])
+@admin_bp.route('/tickets', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def ticket_administration_page() -> Response:
@@ -223,11 +224,10 @@ def ticket_administration_page() -> Response:
     """
     unresolved_tickets_page = request.args.get('unresolved_page', 1, type=int)
     resolved_tickets_page = request.args.get('resolved_page', 1, type=int)
+    tickets_per_page = 5
 
-    unresolved_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False).outerjoin(
-        Ticket.author).paginate(page=unresolved_tickets_page, per_page=5)
-    resolved_tickets = db.session.query(Ticket).filter(Ticket.is_solved == True).outerjoin(
-        Ticket.author).paginate(page=resolved_tickets_page, per_page=5)
+    order_unresolved_ticket_form = UnresolvedTicketFilterForm()
+    order_resolved_ticket_form = ResolvedTicketFilterForm()
 
     forms = {
         'confirm_solution_form': ConfirmTicketSolutionForm(),
@@ -235,7 +235,47 @@ def ticket_administration_page() -> Response:
         'ticket_reopening_form': ConfirmTicketReopeningForm()
     }
 
-    return render_template("admin_bp/ticket_administration.html", unresolved_tickets=unresolved_tickets, resolved_tickets=resolved_tickets, **forms)
+    sort_dict = {'solve_time_asc': 'ticket_solved_on',
+                 'solve_time_desc': 'ticket_solved_on desc',
+                 'solver_asc': 'user.username',
+                 'solver_desc': 'user.username desc',
+                 'c_time_asc': 'ticket_creation_time',
+                 'c_time_desc': 'ticket_creation_time desc',
+                 'author_asc': 'user.username',
+                 'author_desc': 'user.username desc',
+                 'subject_asc': 'ticket.subject',
+                 'subject_desc': 'ticket.subject desc',
+                 }
+
+
+    if request.method == 'GET':
+        order_by_text = sort_dict['solve_time_asc']
+        resolved_tickets = db.session.query(Ticket).filter(Ticket.is_solved == True).outerjoin(Ticket.author)\
+            .order_by(text(order_by_text)).paginate(page=resolved_tickets_page, per_page=tickets_per_page)
+        unresolved_tickets = db.session.query(Ticket).filter(
+            Ticket.is_solved == False).outerjoin(Ticket.author).order_by(text(order_by_text)).paginate(page=unresolved_tickets_page, per_page=tickets_per_page)
+
+    elif order_resolved_ticket_form.validate_on_submit():
+        if order_resolved_ticket_form.sort_by.data == 'solver_asc' or order_resolved_ticket_form.sort_by.data == 'solver_desc':
+            user_to_outerjoin = Ticket.solver
+        else:
+            user_to_outerjoin = Ticket.author
+
+        order_by_text = sort_dict[order_resolved_ticket_form.sort_by.data]
+
+        unresolved_tickets = db.session.query(Ticket).filter(
+            Ticket.is_solved == False).outerjoin(Ticket.author).order_by(text(order_by_text)).paginate(page=unresolved_tickets_page, per_page=tickets_per_page)
+        resolved_tickets = db.session.query(Ticket).filter(Ticket.is_solved == True)\
+                .outerjoin(user_to_outerjoin).order_by(text(order_by_text)).paginate(page=resolved_tickets_page, per_page=tickets_per_page)
+
+    elif order_unresolved_ticket_form.validate_on_submit():
+        order_by_text = sort_dict[order_unresolved_ticket_form.sort_by.data]
+        unresolved_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False)\
+            .outerjoin(Ticket.author).order_by(text(order_by_text)).paginate(page=unresolved_tickets_page, per_page=tickets_per_page)
+        resolved_tickets = db.session.query(Ticket).filter(Ticket.is_solved == True).outerjoin(Ticket.author)\
+            .order_by(text(order_by_text)).paginate(page=resolved_tickets_page, per_page=tickets_per_page)
+
+    return render_template("admin_bp/ticket_administration.html", unresolved_tickets=unresolved_tickets, resolved_tickets=resolved_tickets, **forms, order_resolved_ticket_form=order_resolved_ticket_form, order_unresolved_ticket_form=order_unresolved_ticket_form)
 
 
 @admin_bp.route('/tickets/<int:ticket_id>/solve', methods=['POST'])

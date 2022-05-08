@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField
+from wtforms import StringField, SubmitField, PasswordField, SelectField
 from wtforms.validators import DataRequired, Length
 
 
@@ -56,3 +56,34 @@ class ConfirmTicketReopeningForm(FlaskForm):
     reason_for_reopening = StringField(label="Please state reason for reopening the ticket", validators=[DataRequired(), Length(min=5, max=45)])
     password = PasswordField(label="Please enter your password")
     confirm_ticket_reopening = SubmitField(label="Confirm ticket reopening")
+
+class UnresolvedTicketFilterForm(FlaskForm):
+    """
+    Form for selecting ordering of unresolved tickets
+    """
+
+    sort_by = SelectField(choices=[('c_time_asc', 'Creation time ascending \u2191'),
+                                   ('c_time_desc', 'Creation time descending \u2193'),
+                                   ('author_asc', 'Author ascending \u2191'),
+                                   ('author_desc', 'Author descending \u2193'),
+                                   ('subject_asc', 'Subject ascending \u2191'),
+                                   ('subject_desc', 'Subject descending \u2193')],
+                          label='Sort by')
+    order = SubmitField(label="Apply")
+
+class ResolvedTicketFilterForm(FlaskForm):
+    """
+    Form for selecting ordering of resolved tickets
+    """
+    sort_by = SelectField(choices=[('solve_time_asc', 'Time of solution ascending \u2191'),
+                                   ('solve_time_desc', 'Time of solution descending \u2193'),
+                                   ('c_time_asc', 'Creation time ascending \u2191'),
+                                   ('c_time_desc', 'Creation time descending \u2193'),
+                                   ('solver_asc', 'Solver ascending \u2191'),
+                                   ('solver_desc', 'Solver descending \u2193'),
+                                   ('author_asc', 'Author ascending \u2191'),
+                                   ('author_desc', 'Author descending \u2193'),
+                                   ('subject_asc', 'Subject ascending \u2191'),
+                                   ('subject_desc', 'Subject descending \u2193')],
+                          label='Sort by')
+    order = SubmitField(label="Apply")

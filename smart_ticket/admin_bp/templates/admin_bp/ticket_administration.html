@@ -12,6 +12,23 @@ Ticket administration
     <br>
     <div>
         <h4>Unresolved tickets</h4>
+        <div class="container">
+            <form method="POST" class="row g-3">
+                <div class="col-auto">
+                    {{order_unresolved_ticket_form.hidden_tag()}}
+                </div>
+                <div class="col-auto">
+                    {{order_unresolved_ticket_form.sort_by.label(class="col-form-label")}}
+                </div>
+                <div class="col-auto">
+                    {{order_unresolved_ticket_form.sort_by(class="form-select")}}
+                </div>
+                <div class="col-auto">
+                    {{order_unresolved_ticket_form.order(class="btn btn-block btn-secondary")}}
+                </div>
+            </form>
+        </div>
+        <br>
         <table class="table table-hover table-dark">
             <thead>
                 <tr>
@@ -103,6 +120,23 @@ Ticket administration
     <br>
     <div>
         <h4>Resolved tickets</h4>
+        <div class="container">
+            <form method="POST" class="row g-3">
+                <div class="col-auto">
+                    {{order_resolved_ticket_form.hidden_tag()}}
+                </div>
+                <div class="col-auto">
+                    {{order_resolved_ticket_form.sort_by.label(class="col-form-label")}}
+                </div>
+                <div class="col-auto">
+                    {{order_resolved_ticket_form.sort_by(class="form-select")}}
+                </div>
+                <div class="col-auto">
+                    {{order_resolved_ticket_form.order(class="btn btn-block btn-secondary")}}
+                </div>
+            </form>
+        </div>
+        <br>
         <table class="table table-hover table-dark">
             <thead>
                 <tr>
