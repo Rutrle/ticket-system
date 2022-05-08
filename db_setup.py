@@ -5,11 +5,13 @@ from faker import Faker
 from random import randint
 from sqlalchemy import func
 
-'''
+""" 
 script for deleting and recreating the database and filling it in with some data
 
-also used for trying out database communication during development - these parts will be deleted later
-'''
+database reset needs to be done before running SmartTicket application
+
+rest of functions only fill database with dummy data and so their running is optional
+"""
 
 
 def database_reset() -> None:
