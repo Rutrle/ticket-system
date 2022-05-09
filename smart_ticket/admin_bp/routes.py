@@ -36,6 +36,15 @@ def user_administration_page() -> Response:
     order_active_users_form = SortActiveUserForm()
     order_inactive_users_form = SortInactiveUserForm()
 
+    forms = {'user_deactivation_form': ConfirmUserDeactivationForm(),
+             'user_reactivation_form': ConfirmUserReactivationForm(),
+             'user_upgrade_form': ConfirmUserUpgradeForm(),
+             'user_downgrade_form': ConfirmUserDowngradeForm(),
+             'order_active_users_form': order_active_users_form,
+             'order_inactive_users_form': order_inactive_users_form
+             }
+
+
     sort_dict = {'c_time_asc': 'user_creation_time',
                 'c_time_desc': 'user_creation_time desc',
                 'username_asc': 'user_username',
@@ -69,13 +78,7 @@ def user_administration_page() -> Response:
     inactive_users = db.session.query(User).filter(User.is_active == False).outerjoin(User.user_role).order_by(
         text(sort_dict[order_inactive])).paginate(page=inactive_users_page, per_page=tickets_per_page)
 
-    forms = {'user_deactivation_form': ConfirmUserDeactivationForm(),
-             'user_reactivation_form': ConfirmUserReactivationForm(),
-             'user_upgrade_form': ConfirmUserUpgradeForm(),
-             'user_downgrade_form': ConfirmUserDowngradeForm()
-             }
-
-    return render_template("admin_bp/user_administration.html", active_users=active_users, inactive_users=inactive_users, **forms, order_active_users_form=order_active_users_form, order_inactive_users_form=order_inactive_users_form, order_active=order_active, order_inactive=order_inactive)
+    return render_template("admin_bp/user_administration.html", active_users=active_users, inactive_users=inactive_users, **forms, order_active=order_active, order_inactive=order_inactive)
 
 
 def deactivate_user(user: User) -> None:
@@ -265,6 +268,8 @@ def ticket_administration_page() -> Response:
         'confirm_solution_form': ConfirmTicketSolutionForm(),
         'ticket_deletion_form': ConfirmTicketDeletionForm(),
         'ticket_reopening_form': ConfirmTicketReopeningForm(),
+        'order_resolved_ticket_form': order_resolved_ticket_form,
+        'order_unresolved_ticket_form': order_unresolved_ticket_form       
     }
 
     sort_dict = {'solve_time_asc': 'ticket_solved_on',
@@ -277,10 +282,7 @@ def ticket_administration_page() -> Response:
                  'author_desc': 'user.username desc',
                  'subject_asc': 'ticket.subject',
                  'subject_desc': 'ticket.subject desc',
-                 }
-
-
-    
+                 }    
 
     if order_unresolved_ticket_form.order_unresolved.data and order_unresolved_ticket_form.validate_on_submit():
         unresolved_tickets_page = 1 #to prevent 404 when not enough data is present
@@ -316,7 +318,7 @@ def ticket_administration_page() -> Response:
     unresolved_tickets = db.session.query(Ticket).filter(Ticket.is_solved == False)\
             .outerjoin(Ticket.author).order_by(text(order_unresolved_by_text)).paginate(page=unresolved_tickets_page, per_page=tickets_per_page)    
     
-    return render_template("admin_bp/ticket_administration.html", unresolved_tickets=unresolved_tickets, resolved_tickets=resolved_tickets, **forms, order_resolved_ticket_form=order_resolved_ticket_form, order_unresolved_ticket_form=order_unresolved_ticket_form, order_resolved=order_resolved, order_unresolved=order_unresolved)
+    return render_template("admin_bp/ticket_administration.html", unresolved_tickets=unresolved_tickets, resolved_tickets=resolved_tickets, **forms, order_resolved=order_resolved, order_unresolved=order_unresolved)
 
 
 @admin_bp.route('/tickets/<int:ticket_id>/solve', methods=['POST'])
