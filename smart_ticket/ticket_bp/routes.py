@@ -33,8 +33,11 @@ def create_ticket_page() -> Response:
         db.session.add(creation_log_msg)
         db.session.commit()
 
-        flash(Markup(f"ticket submitted succesfully, you can check it here:\
-             <a href='{url_for('ticket_bp.ticket_detail_page', ticket_id =new_ticket.id)}'>{new_ticket}</a>"), category="success")
+        if current_user.is_authenticated:
+            flash(Markup(f"ticket submitted succesfully, you can check it here:\
+                <a href='{url_for('ticket_bp.ticket_detail_page', ticket_id =new_ticket.id)}'>{new_ticket}</a>"), category="success")
+        else:
+            flash(f"ticket {new_ticket} submitted succesfully", category="success")          
 
     if form.errors != {}:
         for err_msg in form.errors.values():
