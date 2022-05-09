@@ -206,10 +206,11 @@ def fill_in_database() -> None:
 if __name__ == "__main__":
     database_reset()
     fill_in_database()
-    create_solved_dummy_tickets()
-    create_dummy_tickets()
+
     create_dummy_users(10, "CZ")
     create_dummy_users(10, "DE")
     create_dummy_users(10, "en_GB")
     create_dummy_users(10, "en_US")
     create_dummy_users(10, "fr_FR")
+    create_solved_dummy_tickets()
+    create_dummy_tickets()
