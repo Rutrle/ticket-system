@@ -10,8 +10,8 @@ class SortUserForm(FlaskForm):
                                    ('c_time_desc', 'Creation time descending \u2193'),
                                    ('username_asc', 'Username ascending \u2191'),
                                    ('username_desc', 'Username descending \u2193'),
-                                   ('subject_asc', 'Subject ascending \u2191'),
-                                   ('subject_desc', 'Subject descending \u2193')],
+                                   ('user_role_asc', 'User role ascending \u2191'),
+                                   ('user_role_desc', 'User role descending \u2193')],
                           label='Sort by')
     order = SubmitField(label="Apply")
 

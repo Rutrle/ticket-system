@@ -12,6 +12,23 @@ User administration
     <br>
     <div>
         <h4>Active users</h4>
+        <div class="container">
+            <form method="POST" class="row g-3">
+                <div class="col-auto">
+                    {{order_active_users_form.hidden_tag()}}
+                </div>
+                <div class="col-auto">
+                    {{order_active_users_form.sort_by.label(class="col-form-label")}}
+                </div>
+                <div class="col-auto">
+                    {{order_active_users_form.sort_by(class="form-select")}}
+                </div>
+                <div class="col-auto">
+                    {{order_active_users_form.order(class="btn btn-block btn-secondary")}}
+                </div>
+            </form>
+        </div>
+        <br>
         <table class="table table-hover table-dark">
             <thead>
                 <tr>
@@ -44,7 +61,7 @@ User administration
                     <td>{{user.created_tickets|length}}</td>
                     <td>
                         {% for ticket in user.currently_solving %}
-                        <a href="{{ url_for('ticket_bp.ticket_detail_page', current_ticket_id=ticket.id) }}">{{ticket.id}}</a>
+                        <a href="{{ url_for('ticket_bp.ticket_detail_page', ticket_id=ticket.id) }}">{{ticket.id}}</a>
                         {{ ", " if not loop.last else "" }}
                         {% endfor %}
                     </td>
@@ -86,22 +103,22 @@ User administration
         </table>
         <div class="pagination-container">
             <div class="text-right">
-                <a href="{{ url_for('admin_bp.user_administration_page', active_users_page=active_users.prev_num) }}" class="btn  btn-dark
+                <a href="{{ url_for('admin_bp.user_administration_page', active_users_page=active_users.prev_num, order_active=order_active, order_inactive=order_inactive) }}" class="btn  btn-dark
                 {% if active_users.page == 1 %}disabled{% endif %}">
                     &laquo;
                 </a>
                 {% for page_num in active_users.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
                 {% if page_num %}
                         {% if active_users.page == page_num %}
-                        <a href="{{ url_for('admin_bp.user_administration_page', active_users_page=page_num) }}" class="btn btn-outline-info">{{ page_num }}</a>
+                        <a href="{{ url_for('admin_bp.user_administration_page', active_users_page=page_num, order_active=order_active, order_inactive=order_inactive) }}" class="btn btn-outline-info">{{ page_num }}</a>
                         {% else %}
-                        <a href="{{ url_for('admin_bp.user_administration_page', active_users_page=page_num) }}" class="btn btn-dark">{{ page_num }}</a>
+                        <a href="{{ url_for('admin_bp.user_administration_page', active_users_page=page_num, order_active=order_active, order_inactive=order_inactive) }}" class="btn btn-dark">{{ page_num }}</a>
                         {% endif %}
                     {% else %}
                         ...
                     {% endif %}
                 {% endfor %}
-                <a href="{{ url_for('admin_bp.user_administration_page', page=active_users.next_num) }}" class="btn btn-dark 
+                <a href="{{ url_for('admin_bp.user_administration_page', page=active_users.next_num, order_active=order_active, order_inactive=order_inactive) }}" class="btn btn-dark 
                 {% if active_users.page == active_users.pages %}disabled{% endif %}">
                     &raquo;
                 </a>
@@ -115,6 +132,23 @@ User administration
     <br>
     <div>
         <h4>Inactive users</h4>
+        <div class="container">
+            <form method="POST" class="row g-3">
+                <div class="col-auto">
+                    {{order_inactive_users_form.hidden_tag()}}
+                </div>
+                <div class="col-auto">
+                    {{order_inactive_users_form.sort_by.label(class="col-form-label")}}
+                </div>
+                <div class="col-auto">
+                    {{order_inactive_users_form.sort_by(class="form-select")}}
+                </div>
+                <div class="col-auto">
+                    {{order_inactive_users_form.order(class="btn btn-block btn-secondary")}}
+                </div>
+            </form>
+        </div>
+        <br>
         <table class="table table-hover table-dark">
             <thead>
                 <tr>
@@ -167,22 +201,22 @@ User administration
         </table>
         <div class="pagination-container">
             <div class="text-right">
-                <a href="{{ url_for('admin_bp.user_administration_page', inactive_users_page=inactive_users.prev_num) }}" class="btn  btn-dark
+                <a href="{{ url_for('admin_bp.user_administration_page', inactive_users_page=inactive_users.prev_num, order_active=order_active, order_inactive=order_inactive) }}" class="btn  btn-dark
                 {% if inactive_users.page == 1 %}disabled{% endif %}">
                     &laquo;
                 </a>
                 {% for page_num in inactive_users.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
                 {% if page_num %}
                         {% if inactive_users.page == page_num %}
-                        <a href="{{ url_for('admin_bp.user_administration_page', inactive_users_page=page_num) }}" class="btn btn-outline-info">{{ page_num }}</a>
+                        <a href="{{ url_for('admin_bp.user_administration_page', inactive_users_page=page_num, order_active=order_active, order_inactive=order_inactive) }}" class="btn btn-outline-info">{{ page_num }}</a>
                         {% else %}
-                        <a href="{{ url_for('admin_bp.user_administration_page', inactive_users_page=page_num) }}" class="btn btn-dark">{{ page_num }}</a>
+                        <a href="{{ url_for('admin_bp.user_administration_page', inactive_users_page=page_num, order_active=order_active, order_inactive=order_inactive) }}" class="btn btn-dark">{{ page_num }}</a>
                         {% endif %}
                     {% else %}
                         ...
                     {% endif %}
                 {% endfor %}
-                <a href="{{ url_for('admin_bp.user_administration_page', page=inactive_users.next_num) }}" class="btn btn-dark 
+                <a href="{{ url_for('admin_bp.user_administration_page', page=inactive_users.next_num, order_active=order_active, order_inactive=order_inactive) }}" class="btn btn-dark 
                 {% if inactive_users.page == inactive_users.pages %}disabled{% endif %}">
                     &raquo;
                 </a>
