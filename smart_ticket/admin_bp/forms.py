@@ -80,7 +80,7 @@ class UnresolvedTicketFilterForm(FlaskForm):
                                    ('subject_asc', 'Subject ascending \u2191'),
                                    ('subject_desc', 'Subject descending \u2193')],
                           label='Sort by')
-    order = SubmitField(label="Apply")
+    order_unresolved = SubmitField(label="Apply")
 
 class ResolvedTicketFilterForm(FlaskForm):
     """
@@ -97,4 +97,4 @@ class ResolvedTicketFilterForm(FlaskForm):
                                    ('subject_asc', 'Subject ascending \u2191'),
                                    ('subject_desc', 'Subject descending \u2193')],
                           label='Sort by')
-    order = SubmitField(label="Apply")
+    order_resolved = SubmitField(label="Apply")

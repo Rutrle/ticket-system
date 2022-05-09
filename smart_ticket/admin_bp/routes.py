@@ -264,7 +264,7 @@ def ticket_administration_page() -> Response:
     forms = {
         'confirm_solution_form': ConfirmTicketSolutionForm(),
         'ticket_deletion_form': ConfirmTicketDeletionForm(),
-        'ticket_reopening_form': ConfirmTicketReopeningForm()
+        'ticket_reopening_form': ConfirmTicketReopeningForm(),
     }
 
     sort_dict = {'solve_time_asc': 'ticket_solved_on',
@@ -279,12 +279,15 @@ def ticket_administration_page() -> Response:
                  'subject_desc': 'ticket.subject desc',
                  }
 
-    if order_unresolved_ticket_form.validate_on_submit():
+
+    
+
+    if order_unresolved_ticket_form.order_unresolved.data and order_unresolved_ticket_form.validate_on_submit():
         unresolved_tickets_page = 1 #to prevent 404 when not enough data is present
         order_unresolved = order_unresolved_ticket_form.sort_by.data
         order_resolved = request.args.get('order_resolved', default=None, type=str)
 
-    elif order_resolved_ticket_form.validate_on_submit():
+    elif order_resolved_ticket_form.order_resolved.data and order_resolved_ticket_form.validate_on_submit():
         resolved_tickets_page = 1 #to prevent 404 when not enough data is present
         order_unresolved = request.args.get('order_unresolved', default=None, type=str)
         order_resolved = order_resolved_ticket_form.sort_by.data
