@@ -2,9 +2,9 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, SelectField
 from wtforms.validators import DataRequired, Length
 
-class SortUserForm(FlaskForm):
+class SortActiveUserForm(FlaskForm):
     """
-    Form for selecting ordering of users
+    Form for selecting ordering of active users
     """
     sort_by = SelectField(choices=[('c_time_asc', 'Creation time ascending \u2191'),
                                    ('c_time_desc', 'Creation time descending \u2193'),
@@ -13,7 +13,21 @@ class SortUserForm(FlaskForm):
                                    ('user_role_asc', 'User role ascending \u2191'),
                                    ('user_role_desc', 'User role descending \u2193')],
                           label='Sort by')
-    order = SubmitField(label="Apply")
+    order_active = SubmitField(label="Apply")
+
+class SortInactiveUserForm(FlaskForm):
+    """
+    Form for selecting ordering of inactive users has to be different from SortActiveUserForm,
+    because they are on same page and would override themselves
+    """
+    sort_by = SelectField(choices=[('c_time_asc', 'Creation time ascending \u2191'),
+                                   ('c_time_desc', 'Creation time descending \u2193'),
+                                   ('username_asc', 'Username ascending \u2191'),
+                                   ('username_desc', 'Username descending \u2193'),
+                                   ('user_role_asc', 'User role ascending \u2191'),
+                                   ('user_role_desc', 'User role descending \u2193')],
+                          label='Sort by')
+    order_inactive = SubmitField(label="Apply")
 
 class ConfirmUserDeactivationForm(FlaskForm):
     """

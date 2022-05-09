@@ -2,7 +2,7 @@ from flask import Blueprint, Response, render_template, redirect, flash, url_for
 from smart_ticket import db
 from smart_ticket.models import User, Ticket, TicketLogMessage, UserRole, admin_required
 from flask_login import current_user, login_required
-from smart_ticket.admin_bp.forms import ConfirmUserDeactivationForm, ConfirmUserReactivationForm, ConfirmTicketDeletionForm, ConfirmTicketReopeningForm, ConfirmUserUpgradeForm, ConfirmUserDowngradeForm, ResolvedTicketFilterForm, UnresolvedTicketFilterForm, SortUserForm
+from smart_ticket.admin_bp.forms import ConfirmUserDeactivationForm, ConfirmUserReactivationForm, ConfirmTicketDeletionForm, ConfirmTicketReopeningForm, ConfirmUserUpgradeForm, ConfirmUserDowngradeForm, ResolvedTicketFilterForm, UnresolvedTicketFilterForm, SortActiveUserForm, SortInactiveUserForm
 from smart_ticket.ticket_bp.routes import solve_ticket
 from smart_ticket.ticket_bp.forms import ConfirmTicketSolutionForm
 from smart_ticket.email.send_email import send_deactivation_email, send_reactivation_email, send_ticket_reopened_email, send_upgrade_to_administrator_email, send_downgrade_to_user_email
@@ -33,8 +33,8 @@ def user_administration_page() -> Response:
     inactive_users_page = request.args.get('inactive_users_page', 1, type=int)
     tickets_per_page = 5
 
-    order_active_users_form = SortUserForm()
-    order_inactive_users_form = SortUserForm()
+    order_active_users_form = SortActiveUserForm()
+    order_inactive_users_form = SortInactiveUserForm()
 
     sort_dict = {'c_time_asc': 'user_creation_time',
                 'c_time_desc': 'user_creation_time desc',
@@ -44,12 +44,12 @@ def user_administration_page() -> Response:
                 'user_role_desc': 'userrole.name desc',                
                 }
 
-    if order_active_users_form.validate_on_submit():
+    if order_active_users_form.order_active.data and order_active_users_form.validate_on_submit():
         active_users_page = 1 #to prevent 404 when not enough data is present
         order_active = order_active_users_form.sort_by.data
         order_inactive = request.args.get('order_inactive', default=None, type=str)
 
-    elif order_inactive_users_form.validate_on_submit():
+    elif order_inactive_users_form.order_inactive.data and order_inactive_users_form.validate_on_submit():
         inactive_users_page = 1 #to prevent 404 when not enough data is present
         order_active = request.args.get('order_active', default=None, type=str)
         order_inactive = order_inactive_users_form.sort_by.data
@@ -66,7 +66,7 @@ def user_administration_page() -> Response:
 
     active_users = db.session.query(User).filter(User.is_active == True).outerjoin(User.user_role).order_by(
         text(sort_dict[order_active])).paginate(page=active_users_page, per_page=tickets_per_page)
-    inactive_users = db.session.query(User).filter(User.is_active == False).order_by(
+    inactive_users = db.session.query(User).filter(User.is_active == False).outerjoin(User.user_role).order_by(
         text(sort_dict[order_inactive])).paginate(page=inactive_users_page, per_page=tickets_per_page)
 
     forms = {'user_deactivation_form': ConfirmUserDeactivationForm(),
