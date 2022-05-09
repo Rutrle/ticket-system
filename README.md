@@ -21,5 +21,4 @@
 <h3>TO DO:</h3>
 <ul>
     <li>add proper documentation to about page</li>
-    <li>adding ordering possibilities for admin might be a good idea</li>
 </ul>
