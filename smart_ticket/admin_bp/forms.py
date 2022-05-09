@@ -2,6 +2,18 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, SelectField
 from wtforms.validators import DataRequired, Length
 
+class SortUserForm(FlaskForm):
+    """
+    Form for selecting ordering of users
+    """
+    sort_by = SelectField(choices=[('c_time_asc', 'Creation time ascending \u2191'),
+                                   ('c_time_desc', 'Creation time descending \u2193'),
+                                   ('username_asc', 'Username ascending \u2191'),
+                                   ('username_desc', 'Username descending \u2193'),
+                                   ('subject_asc', 'Subject ascending \u2191'),
+                                   ('subject_desc', 'Subject descending \u2193')],
+                          label='Sort by')
+    order = SubmitField(label="Apply")
 
 class ConfirmUserDeactivationForm(FlaskForm):
     """
