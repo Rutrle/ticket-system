@@ -8,6 +8,7 @@
 <h3>Used libraries:</h3>
 <ul>
     <li><b>Poetry</b> for libraries managment</li>
+    <li><b>Flask</b> for website backend</li>
     <li><b>Flask-SQLAlchemy</b> for database setup and communication</li>
     <li><b>WTForms</b> for forms and forms validation</li>
     <li><b>CKEditor</b> rich text editor</li>
