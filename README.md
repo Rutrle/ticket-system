@@ -39,16 +39,11 @@
                     <b>"SmartTicket"</b> which will take you to the home page
                 </li>
                 <li>
-                    <b>"About"</b> ,which will take you to page with information about this website (you are on this
-                    page
-                    right
-                    now)
+                    <b>"About"</b> ,which will take you to page with information about this website
                 </li>
                 <li>
                     <b>"New Ticket"</b> ,which will allow you to create new support ticket in rich text editor, however
-                    as
-                    you
-                    are not logged in, author of it will be anonymous
+                    as you are not logged in, author of it will be anonymous
                 </li>
                 <li>
                     <b>"Login"</b> ,which will take you to the page where you can log in with existing account. If you
@@ -56,10 +51,8 @@
                 </li>
                 <li>
                     <b>"Register"</b> ,which will allow you to create new account. Althought it's not required to enter
-                    your
-                    real e-mail, SmartTicket has e-mail sending functionalities, so it's higly recommended to use a real
-                    one
-                    which you can access. Registering will create a standard user account for you.
+                    your real e-mail, SmartTicket has e-mail sending functionalities, so it's higly recommended to use a real
+                    one which you can access. Registering will create a standard user account for you.
                 </li>
             </ul>
             <hr>
