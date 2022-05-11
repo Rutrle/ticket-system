@@ -10,6 +10,7 @@
                 things that could be probably done better on frontend are done in backend</p>
             <p>Apart from CRUD interface for creating and manipulating tickets this project also includes handling user
                 profiles and sending automatical e-mails</p>
+            <p>Project also contains script for resetting database and filling it with dummy data - <b>db_setup.py</b></p>
             <hr>
             <h3>Used libraries:</h3>
             <ul>
