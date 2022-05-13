@@ -4,13 +4,13 @@
             <h1>Welcome to the Smart Ticket</h1>
             <hr>
             <p>Aim of this project was creating a ticketing website system, with flask backend and SQLlite database. For
-                frontend were used
-                mainly Bootstrap5 templates.</p>
+                frontend were used mainly Bootstrap5 templates.</p>
             <p>Main purpose of this project is for me to get better with flask framework - because of this many of
                 things that could be probably done better on frontend are done in backend</p>
             <p>Apart from CRUD interface for creating and manipulating tickets this project also includes handling user
                 profiles and sending automatical e-mails</p>
             <p>Project also contains script for resetting database and filling it with dummy data - <b>db_setup.py</b></p>
+            <p> You can find the website running on following <a href="https://rutrle.pythonanywhere.com/">link</a>
             <hr>
             <h3>Used libraries:</h3>
             <ul>
@@ -24,7 +24,6 @@
                 <li><b>Pillow</b> for resizing profile pictures</li>
                 <li><b>faker</b> for for creating dummy data</li>
             </ul>
-            <p> You can find the code here: <a href="https://github.com/Rutrle/ticket-system">Github repository</a> </p>
             <hr>
         </div>
         <div>
