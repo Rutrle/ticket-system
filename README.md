@@ -3,7 +3,7 @@
         <div>
             <h1>Welcome to the Smart Ticket</h1>
             <hr>
-            <p>Aim of this project was creating a ticketing website system, with flask backend and SQLlite database. For
+            <p>Aim of this project was creating a ticketing website system, with flask backend and SQLite database. For
                 frontend were used mainly Bootstrap5 templates.</p>
             <p>Main purpose of this project is for me to get better with flask framework - because of this many of
                 things that could be probably done better on frontend are done in backend</p>
