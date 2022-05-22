@@ -11,6 +11,7 @@
                 profiles and sending automatical e-mails</p>
             <p>Project also contains script for resetting database and filling it with dummy data - <b>db_setup.py</b></p>
             <p> You can find the website running on following <a href="https://rutrle.pythonanywhere.com/">link</a>
+            <p><b>There is one file that missing in the repository for safety reasons - "settings.py", which contains password to email<b><p>
             <hr>
             <h3>Used libraries:</h3>
             <ul>
