@@ -3,12 +3,11 @@ import ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from smart_ticket.models import Ticket, User
-from smart_ticket.settings import EMAIL_PASSWORD
 from flask import url_for
+import json
+import os
+from pathlib import Path
 
-PORT = 465  # For SSL
-SMTP_SERVER = "smtp.gmail.com"
-SENDER_EMAIL = "smartticketbot@gmail.com"  # Enter your address
 
 
 def send_email(receiver_email: str, subject: str, email_text: str, email_html: str) -> None:
@@ -18,9 +17,24 @@ def send_email(receiver_email: str, subject: str, email_text: str, email_html: s
     used by all individual e-mail sending functions
     """
 
+    settings_filepath = os.path.join(Path(__file__).parent.absolute(),'email_settings.json')
+    passwords_filepath = os.path.join(Path(__file__).parent.absolute(),'passwords.json')
+
+    with open(settings_filepath,'r') as json_settings:
+        settings = json.load(json_settings)
+
+    with open(passwords_filepath,'r') as json_passwords:
+        passwords = json.load(json_passwords)
+
+    port = settings['port']
+    smtp_server = settings['smtp_server']
+    sender_email = settings['sender_email']
+    email_password = passwords['email_password']
+
+
     message = MIMEMultipart("alternative")
     message["Subject"] = subject
-    message["From"] = SENDER_EMAIL
+    message["From"] = sender_email
     message["To"] = receiver_email
 
     part1 = MIMEText(email_text, "plain")
@@ -30,9 +44,9 @@ def send_email(receiver_email: str, subject: str, email_text: str, email_html: s
     message.attach(part2)
 
     context = ssl.create_default_context()
-    with smtplib.SMTP_SSL(SMTP_SERVER, PORT, context=context) as server:
-        server.login(SENDER_EMAIL, EMAIL_PASSWORD)
-        server.sendmail(SENDER_EMAIL, receiver_email, message.as_string())
+    with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+        server.login(sender_email, email_password)
+        server.sendmail(sender_email, receiver_email, message.as_string())
 
 
 def send_registration_email(receiver_email: str, username: str) -> None:
